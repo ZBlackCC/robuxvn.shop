@@ -2,48 +2,214 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>ROBUXVN.SHOP - RÚT ROBUX GIÁ RẺ</title>
+<title>ROBUXVN.SHOP - RÚT ROBUX GIÁ RẺ NHẤT 2025</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  :root{--bg:#f0f2f5;--card:#fff;--text:#000;--accent:#00d4aa;--gold:#f1c40f;--border:#00d4aa;}
+  :root{
+    --bg:#f0f2f5;
+    --card:#ffffff;
+    --text:#000000;
+    --accent:#00d4aa;
+    --gold:#f1c40f;
+    --red:#e74c3c;
+    --border:#00d4aa;
+  }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;min-height:100vh;}
-  .header{background:linear-gradient(135deg,#00d4aa,#00a085);padding:30px;text-align:center;box-shadow:0 8px 30px rgba(0,212,170,0.4);}
-  .header h1{font-family:'Orbitron',sans-serif;font-size:4.5rem;color:#fff;text-shadow:0 0 20px #000,4px 4px var(--gold);}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Roboto',sans-serif;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
 
-  .nav{display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding:15px;background:#fff;position:sticky;top:0;z-index:99;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
-  .nav button{white-space:nowrap;background:#fff;color:#000;padding:12px 20px;border:2px solid transparent;border-radius:12px;font-weight:700;cursor:pointer;transition:.3s;min-width:110px;}
-  .nav button:hover,.nav button.active{background:var(--accent);color:#fff;box-shadow:0 0 20px rgba(0,212,170,0.5);}
+  /* TUYẾT RƠI ĐẸP LUNG LINH */
+  .snow{
+    position:fixed;
+    width:8px;
+    height:8px;
+    background:#fff;
+    border-radius:50%;
+    pointer-events:none;
+    box-shadow:0 0 15px #fff;
+    opacity:0.9;
+    z-index:9999;
+    animation:snowfall linear infinite;
+  }
+  @keyframes snowfall{
+    0%{transform:translateY(-100vh) rotate(0deg);}
+    100%{transform:translateY(100vh) rotate(360deg);}
+  }
 
-  .container{max-width:700px;margin:30px auto;background:var(--card);padding:30px;border-radius:20px;border:3px solid var(--border);box-shadow:0 15px 50px rgba(0,212,170,0.25);}
-  h2{color:var(--accent);text-align:center;margin-bottom:25px;font-size:2.3rem;}
-  .tab{display:none}.tab.active{display:block}
+  /* HEADER SIÊU CHẤT */
+  .header{
+    background:linear-gradient(135deg,#00d4aa,#00a085);
+    padding:35px 20px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,212,170,0.4);
+  }
+  .header h1{
+    font-family:'Orbitron',sans-serif;
+    font-size:5.5rem;
+    color:#fff;
+    text-shadow:0 0 30px #000, 5px 5px 0 var(--gold);
+    letter-spacing:8px;
+  }
 
-  input,button{width:100%;padding:16px;margin:12px 0;border:none;border-radius:12px;font-size:17px;}
-  input{background:#f5f5f5;color:#000;border:2px solid #ddd;}
-  button{background:linear-gradient(45deg,var(--accent),#00b894);color:#fff;font-weight:700;cursor:pointer;}
-  button:hover{transform:translateY(-4px);box-shadow:0 15px 35px rgba(0,212,170,0.7);}
+  /* TAB NGANG ĐẸP, KHÔNG DỌC */
+  .nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    gap:10px;
+    padding:15px;
+    background:#fff;
+    position:sticky;
+    top:0;
+    z-index:99;
+    box-shadow:0 5px 25px rgba(0,0,0,0.1);
+    scrollbar-width:none;
+  }
+  .nav::-webkit-scrollbar{display:none;}
+  .nav button{
+    white-space:nowrap;
+    background:#fff;
+    color:#000;
+    padding:14px 24px;
+    border:3px solid transparent;
+    border-radius:15px;
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+    transition:all 0.4s;
+    min-width:130px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  }
+  .nav button:hover,.nav button.active{
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+    transform:translateY(-5px);
+    box-shadow:0 15px 30px rgba(0,212,170,0.5);
+  }
 
-  #robuxPreview{font-size:32px;color:var(--gold);font-weight:bold;text-align:center;margin:20px 0;}
-  .qr{max-width:300px;margin:30px auto;display:block;border:6px solid var(--accent);border-radius:18px;}
+  /* CONTAINER CHÍNH */
+  .container{
+    max-width:750px;
+    margin:40px auto;
+    background:var(--card);
+    padding:40px;
+    border-radius:25px;
+    border:4px solid var(--border);
+    box-shadow:0 20px 60px rgba(0,212,170,0.3);
+  }
+  h2{
+    color:var(--accent);
+    text-align:center;
+    margin-bottom:30px;
+    font-size:2.8rem;
+    text-shadow:0 3px 10px rgba(0,0,0,0.2);
+  }
+
+  /* INPUT & BUTTON SIÊU ĐẸP */
+  input{
+    width:100%;
+    padding:18px;
+    margin:15px 0;
+    border:3px solid #ddd;
+    border-radius:15px;
+    font-size:18px;
+    background:#f8f9fa;
+    transition:0.4s;
+  }
+  input:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 20px rgba(0,212,170,0.4);
+    outline:none;
+  }
+  button{
+    width:100%;
+    padding:18px;
+    margin:15px 0;
+    border:none;
+    border-radius:15px;
+    font-size:18px;
+    font-weight:700;
+    background:linear-gradient(45deg,var(--accent),#00b894);
+    color:#fff;
+    cursor:pointer;
+    transition:0.4s;
+    box-shadow:0 10px 30px rgba(0,212,170,0.4);
+  }
+  button:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(0,212,170,0.6);
+  }
+
+  #robuxPreview{
+    font-size:38px;
+    color:var(--gold);
+    font-weight:bold;
+    text-align:center;
+    margin:30px 0;
+    text-shadow:0 0 20px var(--gold);
+  }
+  .qr{
+    max-width:320px;
+    margin:30px auto;
+    display:block;
+    border:8px solid var(--accent);
+    border-radius:20px;
+    box-shadow:0 0 50px var(--accent);
+  }
+
+  /* VÒNG QUAY SIÊU XỊN */
+  #wheelContainer{text-align:center;margin:50px 0;}
+  #wheel{
+    width:360px;
+    height:360px;
+    border-radius:50%;
+    border:15px solid #fff;
+    box-shadow:0 0 60px var(--accent), inset 0 0 60px rgba(0,0,0,0.3);
+    transition:transform 6s cubic-bezier(0.17,0.67,0.12,0.99);
+  }
+  .prize{
+    font-size:3rem;
+    color:var(--gold);
+    font-weight:bold;
+    margin:30px 0;
+    text-shadow:0 0 20px var(--gold);
+  }
+
   .hidden{display:none}
+  .tab{display:none}
+  .tab.active{display:block}
 </style>
 </head>
 <body>
 
-<div class="header"><h1>ROBUXVN.SHOP</h1></div>
+<!-- TUYẾT RƠI -->
+<div id="snowZone"></div>
 
-<!-- Login / Register -->
+<div class="header">
+  <h1>ROBUXVN.SHOP</h1>
+  <p style="color:#fff;font-size:1.5rem;margin-top:10px">RÚT ROBUX GIÁ RẺ NHẤT VIỆT NAM – NOEL 2025</p>
+</div>
+
+<!-- LOGIN PAGE -->
 <div id="loginPage" class="container" style="max-width:500px;margin-top:100px">
-  <h2 style="color:var(--accent)">ĐĂNG NHẬP / ĐĂNG KÝ</h2>
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Mật khẩu">
+  <h2>ĐĂNG NHẬP / ĐĂNG KÝ</h2>
+  <input type="text" id="username" placeholder="Nhập Username">
+  <input type="password" id="password" placeholder="Nhập Mật khẩu">
   <button onclick="login()">ĐĂNG NHẬP</button>
   <button onclick="register()" style="background:#f1c40f;color:#000">ĐĂNG KÝ MIỄN PHÍ</button>
 </div>
 
-<!-- Main App (ẩn lúc đầu) -->
+<!-- MAIN APP -->
 <div id="app" class="hidden">
   <div class="nav">
     <button onclick="openTab('home')" class="active">TRANG CHỦ</button>
@@ -52,53 +218,65 @@
     <button onclick="openTab('vongquay')">VÒNG QUAY</button>
     <button onclick="openTab('giftcode')">GIFTCODE</button>
     <button onclick="openTab('danhgia')">ĐÁNH GIÁ</button>
-    <button onclick="logout()" style="background:#e74c3c">ĐĂNG XUẤT</button>
+    <button onclick="logout()" style="background:var(--red)">ĐĂNG XUẤT</button>
   </div>
 
   <div class="container">
 
+    <!-- TRANG CHỦ -->
     <div id="home" class="tab active">
       <h2>Xin chào <span id="name">bạn</span>!</h2>
-      <p style="text-align:center;font-size:28px;margin:30px 0">
+      <p style="text-align:center;font-size:32px;margin:40px 0">
         Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux
       </p>
-      <div style="text-align:center"><button onclick="openTab('nap')" style="padding:20px 60px;font-size:22px">NẠP ROBUX NGAY</button></div>
+      <div style="text-align:center">
+        <button onclick="openTab('nap')" style="padding:22px 80px;font-size:24px">NẠP ROBUX NGAY</button>
+      </div>
     </div>
 
+    <!-- NẠP ROBUX -->
     <div id="nap" class="tab">
-      <h2>NẠP ROBUX (10k = 65R)</h2>
+      <h2>NẠP ROBUX QUA NGÂN HÀNG</h2>
+      <p style="text-align:center;font-size:20px;color:#555;margin-bottom:20px">10.000đ = 65 Robux</p>
       <input type="number" id="amount" placeholder="Nhập số tiền (VD: 100000)" oninput="calcRobux()">
       <div id="robuxPreview">0 Robux</div>
-      <button onclick="createQR()">TẠO MÃ QR</button>
+      <button onclick="createQR()">TẠO MÃ QR THANH TOÁN</button>
       <div id="qrDiv"></div>
     </div>
 
+    <!-- RÚT ROBUX -->
     <div id="rut" class="tab">
       <h2>RÚT ROBUX</h2>
       <input type="text" id="rbxUser" placeholder="Username Roblox">
       <input type="number" id="rbxAmt" placeholder="Số Robux muốn rút">
-      <button onclick="sendRut()">GỬI YÊU CẦU</button>
+      <button onclick="sendRut()">GỬI YÊU CẦU RÚT</button>
       <p id="rutMsg"></p>
     </div>
 
+    <!-- VÒNG QUAY MAY MẮN -->
     <div id="vongquay" class="tab">
-      <h2>VÒNG QUAY MAY MẮN – 30 Robux/lần</h2>
-      <div style="text-align:center;margin:30px 0">
-        <canvas id="wheel" width="340" height="340"></canvas>
-        <div style="font-size:2.5rem;color:var(--gold);margin:20px 0" id="prizeText">Nhấn QUAY để thử vận may!</div>
-        <button onclick="spin()" style="padding:18px 60px;font-size:20px">QUAY NGAY – 30 Robux</button>
+      <h2>VÒNG QUAY MAY MẮN</h2>
+      <p style="text-align:center;font-size:24px;margin-bottom:30px">
+        Giá quay: <b style="color:var(--gold)">30 Robux</b> / lần
+      </p>
+      <div id="wheelContainer">
+        <canvas id="wheel" width="360" height="360"></canvas>
+        <div class="prize" id="prizeText">Nhấn QUAY để thử vận may!</div>
+        <button onclick="spin()" style="padding:20px 70px;font-size:22px">QUAY NGAY – 30 Robux</button>
       </div>
     </div>
 
+    <!-- GIFTCODE -->
     <div id="giftcode" class="tab">
       <h2>NHẬP GIFTCODE</h2>
       <input type="text" id="giftInput" placeholder="Nhập mã giftcode">
-      <button onclick="useGift()">SỬ DỤNG</button>
+      <button onclick="useGift()">SỬ DỤNG NGAY</button>
       <p id="giftMsg"></p>
     </div>
 
+    <!-- ĐÁNH GIÁ -->
     <div id="danhgia" class="tab">
-      <h2>ĐÁNH GIÁ 5★</h2>
+      <h2>ĐÁNH GIÁ TỪ KHÁCH HÀNG (5★)</h2>
       <div id="reviews"></div>
     </div>
 
@@ -106,117 +284,175 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-let currentUser = null;
+// TUYẾT RƠI SIÊU ĐẸP
+setInterval(() => {
+  const snow = document.createElement("div");
+  snow.classList.add("snow");
+  snow.style.left = Math.random() * 100 + "vw";
+  snow.style.animationDuration = Math.random() * 4 + 4 + "s";
+  snow.style.opacity = Math.random() * 0.7 + 0.3;
+  document.getElementById("snowZone").appendChild(snow);
+  setTimeout(() => snow.remove(), 10000);
+}, 80);
 
-// Login / Register
-async function login(){
+// POPUP + PHÁO HOA KHI THÀNH CÔNG
+function showPopup(title, text, icon = "success") {
+  Swal.fire({
+    title: title,
+    html: text,
+    icon: icon,
+    background: "#fff",
+    color: "#000",
+    confirmButtonColor: "#00d4aa",
+    timer: 6000,
+    willClose: () => { fireworks(); }
+  });
+}
+function fireworks() {
+  for(let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const fire = document.createElement("div");
+      fire.style.cssText = `position:fixed;width:10px;height:10px;border-radius:50%;background:${["#00d4aa","#f1c40f","#e74c3c"][Math.floor(Math.random()*3)]};left:${Math.random()*100}vw;top:${Math.random()*100}vh;z-index:9999;animation:boom 1.5s forwards;`;
+      document.body.appendChild(fire);
+      setTimeout(() => fire.remove(), 1500);
+    }, i * 60);
+  }
+}
+@keyframes boom { to { transform: translateY(-120vh) scale(3); opacity: 0; } }
+
+// ĐĂNG NHẬP / ĐĂNG KÝ / ĐĂNG XUẤT
+let currentUser = null;
+async function login() {
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
-  if(!u||!p) return alert("Nhập đầy đủ");
-  const res = await axios.post("/login",{username:u,password:p}).catch(()=>[{data:{success:false,msg:"Lỗi server"}}]);
-  if(res.data.success){
+  if (!u || !p) return showPopup("Lỗi", "Vui lòng nhập đầy đủ!", "error");
+  const res = await axios.post("/login", { username: u, password: p }).catch(() => null);
+  if (res?.data?.success) {
     currentUser = res.data.user;
     document.getElementById("loginPage").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
     document.getElementById("name").innerText = u;
-    document.getElementById("bal").innerText = res.data.user.balance.toLocaleString();
-  }else alert(res.data.msg || "Sai tài khoản hoặc mật khẩu");
+    document.getElementById("bal").innerText = Number(currentUser.balance).toLocaleString();
+    showPopup("ĐĂNG NHẬP THÀNH CÔNG!", `Chào mừng <b>${u}</b> trở lại ROBUXVN.SHOP`);
+  } else showPopup("LỖI", "Sai tài khoản hoặc mật khẩu!", "error");
 }
-async function register(){
+async function register() {
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
-  if(!u||!p) return alert("Nhập đầy đủ");
-  const res = await axios.post("/register",{username:u,password:p});
-  alert(res.data.msg);
+  if (!u || !p) return showPopup("Lỗi", "Vui lòng nhập đầy đủ!", "error");
+  const res = await axios.post("/register", { username: u, password: p });
+  showPopup("THÀNH CÔNG", res.data.msg || "Đăng ký thành công!");
 }
-function logout(){
-  location.reload();
-}
-
-// Tab
-function openTab(t){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
-  document.getElementById(t).classList.add('active');
-  document.querySelector(`button[onclick="openTab('${t}')"]`).classList.add('active');
+function logout() {
+  showPopup("Tạm biệt!", "Hẹn gặp lại bạn!", "info");
+  setTimeout(() => location.reload(), 2000);
 }
 
-// Nạp tiền
-function calcRobux(){
-  const money = parseInt(document.getElementById("amount").value)||0;
-  const robux = Math.floor(money/10000*65);
+// TAB
+function openTab(tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabName).classList.add('active');
+  document.querySelector(`button[onclick="openTab('${tabName}')"]`).classList.add('active');
+}
+
+// NẠP TIỀN
+function calcRobux() {
+  const money = parseInt(document.getElementById("amount").value) || 0;
+  const robux = Math.floor(money / 10000 * 65);
   document.getElementById("robuxPreview").innerHTML = `<b>${robux.toLocaleString()}</b> Robux`;
 }
-async function createQR(){
-  const a = document.getElementById("amount").value;
-  if(a<50000) return alert("Tối thiểu 50k");
-  const r = await axios.post("/qr",{amount:Number(a),user:currentUser.username});
-  document.getElementById("qrDiv").innerHTML = `<p style="text-align:center">Nạp <b>${(a/10000*65).toLocaleString()} Robux</b></p>
-    <img class="qr" src="${r.data.qr}">
-    <p style="text-align:center;word-break:break-all"><b>Nội dung:</b> ${r.data.desc}</p>`;
+async function createQR() {
+  const amount = document.getElementById("amount").value;
+  if (amount < 50000) return showPopup("Lỗi", "Tối thiểu 50.000đ", "warning");
+  const res = await axios.post("/qr", { amount: Number(amount), user: currentUser.username });
+  document.getElementById("qrDiv").innerHTML = `
+    <p style="text-align:center;font-size:24px">Bạn sẽ nhận <b>${(amount/10000*65).toLocaleString()} Robux</b></p>
+    <img class="qr" src="${res.data.qr}">
+    <p style="text-align:center;word-break:break-all;margin-top:20px"><b>Nội dung chuyển khoản:</b><br>${res.data.desc}</p>
+  `;
+  showPopup("QR ĐÃ TẠO!", "Chuyển khoản ngay để nhận Robux!");
 }
 
-// Vòng quay (6 phần bằng nhau, tỉ lệ thật hiếm)
+// VÒNG QUAY – 6 PHẦN BẰNG NHAU, TỈ LỆ THẬT HIẾM
 const prizes = ["5 Robux","10 Robux","30 Robux","50 Robux","200 Robux","500 Robux"];
-const weights = [300,250,200,150,5,1]; // 200 & 500 cực hiếm
+const weights = [300, 250, 200, 150, 5, 1];
+const colors = ["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"];
 let spinning = false;
-function drawWheel(){
-  const c = document.getElementById("wheel");
-  const ctx = c.getContext("2d");
-  const colors = ["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"];
-  prizes.forEach((p,i)=>{
+
+function drawWheel() {
+  const canvas = document.getElementById("wheel");
+  const ctx = canvas.getContext("2d");
+  prizes.forEach((prize, i) => {
     ctx.fillStyle = colors[i];
     ctx.beginPath();
-    ctx.moveTo(170,170);
-    ctx.arc(170,170,170,i*60*Math.PI/180,(i+1)*60*Math.PI/180);
+    ctx.moveTo(180, 180);
+    ctx.arc(180, 180, 180, i * 60 * Math.PI / 180, (i + 1) * 60 * Math.PI / 180);
     ctx.fill();
     ctx.save();
-    ctx.translate(170,170);
-    ctx.rotate((i+0.5)*60*Math.PI/180);
+    ctx.translate(180, 180);
+    ctx.rotate((i + 0.5) * 60 * Math.PI / 180);
     ctx.fillStyle = "#fff";
-    ctx.font = "bold 20px Roboto";
-    ctx.fillText(p, 90, 10);
+    ctx.font = "bold 24px Roboto";
+    ctx.fillText(prize, 100, 10);
     ctx.restore();
   });
 }
 drawWheel();
 
-function spin(){
-  if(spinning) return;
-  if((currentUser?.balance||0) < 30) return alert("Không đủ Robux (cần 30R)");
+function spin() {
+  if (spinning) return;
+  if ((currentUser?.balance || 0) < 30) return showPopup("Lỗi", "Không đủ 30 Robux để quay!", "error");
   spinning = true;
-  const total = weights.reduce((a,b)=>a+b,0);
-  let roll = Math.random()*total;
-  let winIndex = 0;
-  for(let i=0;i<weights.length;i++){
+  const total = weights.reduce((a, b) => a + b, 0);
+  let roll = Math.random() * total;
+  let winnerIndex = 0;
+  for (let i = 0; i < weights.length; i++) {
     roll -= weights[i];
-    if(roll <= 0){winIndex = i; break;}
+    if (roll <= 0) { winnerIndex = i; break; }
   }
-  const deg = winIndex*60 + 1800 + Math.random()*60;
-  document.getElementById("wheel").style.transition = "5s";
+  const deg = winnerIndex * 60 + 2160 + Math.random() * 60;
   document.getElementById("wheel").style.transform = `rotate(${deg}deg)`;
-  setTimeout(()=>{
-    document.getElementById("prizeText").innerHTML = `CHÚC MỪNG!<br><b style="font-size:3rem;color:${["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"][winIndex]}">${prizes[winIndex]}</b>`;
+  setTimeout(() => {
+    document.getElementById("prizeText").innerHTML = `CHÚC MỪNG!<br><b style="font-size:4rem;color:${colors[winnerIndex]}">${prizes[winnerIndex]}</b>`;
+    showPopup("CHÚC MỪNG!", `Bạn đã trúng <b>${prizes[winnerIndex]}</b>!`, "success");
     spinning = false;
-  },5200);
+  }, 6200);
 }
 
-// Giftcode + đánh giá
-function useGift(){
-  const c = document.getElementById("giftInput").value.trim().toUpperCase();
-  if(c==="NOEL2025") alert("Nhận 500 Robux thành công!");
-  else alert("Mã không đúng");
+// GIFTCODE + ĐÁNH GIÁ
+function useGift() {
+  const code = document.getElementById("giftInput").value.trim().toUpperCase();
+  if (["NOEL2025", "ROBUXVN", "FREE500"].includes(code)) {
+    showPopup("THÀNH CÔNG!", "Bạn nhận được <b>500 Robux</b> từ giftcode!", "success");
+  } else {
+    showPopup("LỖI", "Mã giftcode không hợp lệ!", "error");
+  }
 }
-const fakeReviews = ["Rút siêu nhanh","Giá rẻ nhất VN","Trúng 200R từ vòng quay","Admin donate đúng user","Shop đẹp như Roblox","Nạp 1 triệu được đúng 6500R"];
-function genReviews(){
-  const d = document.getElementById("reviews");
-  fakeReviews.sort(()=>Math.random()-0.5).forEach(t=>{
-    d.innerHTML += `<div style="background:#f9f9f9;padding:20px;margin:15px 0;border-radius:15px;border-left:5px solid var(--gold)">
-      <div style="color:var(--gold);font-size:1.5rem">★★★★★</div><p><b>Khách hàng</b>: ${t}</p></div>`;
+
+function generateReviews() {
+  const reviews = [
+    "Rút siêu nhanh, chỉ 2 phút có Robux!",
+    "Nạp 1 triệu được đúng 6500R, uy tín!",
+    "Trúng 500R từ vòng quay, quá ngon!",
+    "Admin donate đúng username, 5 sao!",
+    "Shop đẹp nhất mình từng thấy",
+    "Hỗ trợ 24/7, rút 3h sáng vẫn có người duyệt"
+  ];
+  const container = document.getElementById("reviews");
+  reviews.forEach(text => {
+    container.innerHTML += `
+      <div style="background:#f9f9f9;padding:25px;margin:20px 0;border-radius:20px;border-left:6px solid var(--gold);box-shadow:0 5px 20px rgba(0,0,0,0.1)">
+        <div style="color:var(--gold);font-size:2rem">★★★★★</div>
+        <p style="margin:15px 0;font-size:18px"><b>Khách hàng ẩn danh</b></p>
+        <p style="font-size:20px">${text}</p>
+      </div>
+    `;
   });
 }
-genReviews();
+generateReviews();
 </script>
 </body>
 </html>
