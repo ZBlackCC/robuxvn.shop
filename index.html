@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>ROBUX ME OHIA - Rút Robux Giá Rẻ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body{font-family:Arial;background:#111;color:#fff;margin:0;padding:20px}
+  .c{max-width:500px;margin:auto;background:#1a1a2e;padding:20px;border-radius:15px}
+  input,button{width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px}
+  button{background:#00ff9d;color:#000;font-weight:bold;cursor:pointer}
+  button:hover{background:#00cc7a}
+  .hidden{display:none}
+  .qr{max-width:300px;margin:20px auto;display:block}
+  table{width:100%;border-collapse:collapse;margin-top:20px}
+  th,td{border:1px solid #333;padding:10px;text-align:center}
+  th{background:#ff4500}
+</style>
+</head>
+<body>
+<div class="c">
+  <h1 style="text-align:center;color:#ff4500">ROBUX ME OHIA</h1>
+
+  <!-- Login -->
+  <div id="login">
+    <input type="text" id="user" placeholder="Username">
+    <input type="password" id="pass" placeholder="Mật khẩu">
+    <button onclick="login()">Đăng Nhập</button>
+    <button onclick="reg()">Đăng Ký</button>
+  </div>
+
+  <!-- Main -->
+  <div id="main" class="hidden">
+    <h2>Xin chào <span id="name"></span>!</h2>
+    <p>Số dư: <b id="bal">0</b> VNĐ</p>
+    <button onclick="nap()">Nạp Tiền</button>
+    <button onclick="rut()">Rút Robux</button>
+    <button onclick="out()">Đăng Xuất</button>
+    <button onclick="location.href='/admin'" id="adminBtn" class="hidden">Admin Panel</button>
+  </div>
+
+  <!-- Nạp -->
+  <div id="napDiv" class="hidden">
+    <h2>Nạp Tiền Ngân Hàng</h2>
+    <input type="number" id="amount" placeholder="Số tiền (tối thiểu 50k)">
+    <button onclick="createQR()">Tạo QR</button>
+    <div id="qrDiv"></div>
+  </div>
+
+  <!-- Rút -->
+  <div id="rutDiv" class="hidden">
+    <h2>Rút Robux</h2>
+    <input type="text" id="rbxUser" placeholder="Username Roblox">
+    <input type="number" id="rbxAmt" placeholder="Số Robux">
+    <button onclick="sendRut()">Gửi Yêu Cầu</button>
+    <p id="rutMsg"></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+let u = null;
+async function reg(){const r=await axios.post("/reg",{u:user.value,p:pass.value});alert(r.data.msg);}
+async function login(){
+  const r=await axios.post("/login",{u:user.value,p:pass.value});
+  if(r.data.ok){
+    u=r.data.user; name.innerText=u.username; bal.innerText=u.balance;
+    if(u.username==="admin") adminBtn.classList.remove("hidden");
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("main").classList.remove("hidden");
+  }else alert(r.data.msg);
+}
+function nap(){document.getElementById("main").classList.add("hidden");document.getElementById("napDiv").classList.remove("hidden");}
+function rut(){document.getElementById("main").classList.add("hidden");document.getElementById("rutDiv").classList.remove("hidden");}
+function out(){location.reload();}
+async function createQR(){
+  const a=amount.value;
+  if(a<50000)return alert("Tối thiểu 50k");
+  const r=await axios.post("/qr",{amount:a,user:u.username});
+  qrDiv.innerHTML=`<p>Chuyển khoản <b>${a.toLocaleString()}đ</b></p>
+    <img class="qr" src="${r.data.qr}">
+    <p>Nội dung: <b>${r.data.desc}</b></p>`;
+}
+async function sendRut(){
+  const rb=rbxUser.value, ra=rbxAmt.value;
+  if(!rb||!ra)return alert("Nhập đầy đủ");
+  const r=await axios.post("/rut",{user:u.username,rbxUser:rb,robux:ra});
+  rutMsg.innerHTML="<p style='color:lime'>"+r.data.msg+"</p>";
+}
+</script>
+</body>
+</html>
