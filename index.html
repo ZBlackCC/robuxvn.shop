@@ -22,7 +22,7 @@
     overflow-x:hidden;
   }
 
-  /* TUYẾT RƠI SIÊU MƯỢT */
+  /* TUYẾT RƠI */
   .snow{
     position:fixed;top:-10px;width:8px;height:8px;
     background:#fff;border-radius:50%;pointer-events:none;
@@ -31,24 +31,25 @@
   }
   @keyframes snowfall{to{transform:translateY(100vh) rotate(360deg);}}
 
-  /* HEADER FIX CHỮ DÀI TRÊN MOBILE */
+  /* HEADER - FIX CHỮ DÀI HOÀN HẢO */
   .header{
     background:linear-gradient(135deg,#00d4aa,#00a085);
-    padding:30px 15px;text-align:center;
+    padding:28px 12px;text-align:center;
     box-shadow:0 10px 40px rgba(0,212,170,0.5);
   }
   .header h1{
     font-family:'Orbitron',sans-serif;
-    font-size:clamp(2.2rem, 8vw, 4rem) !important; /* FIX DÀI */
+    font-size:clamp(2rem, 7.5vw, 3.6rem) !important;
     color:#fff;
-    text-shadow:0 0 25px #000, 4px 4px 0 var(--gold);
-    letter-spacing:4px;
+    text-shadow:0 0 20px #000, 3px 3px 0 var(--gold);
+    letter-spacing:3px;
     margin:0;
-    line-height:1.1;
+    line-height:1.2;
+    word-break:break-word;
   }
   .header p{
-    color:#fff;font-size:clamp(1rem, 3.5vw, 1.3rem);
-    margin-top:10px;font-weight:600;
+    color:#fff;font-size:clamp(0.95rem, 3.2vw, 1.2rem);
+    margin-top:8px;font-weight:600;
   }
 
   /* LOGIN PAGE */
@@ -58,52 +59,51 @@
     display:flex;align-items:center;justify-content:center;padding:20px;
   }
   .login-box{
-    background:#fff;padding:40px;border-radius:25px;
-    width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,212,170,0.7);
+    background:#fff;padding:38px;border-radius:25px;
+    width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,212,170,0.7);
     border:5px solid var(--accent);text-align:center;
   }
-  .login-box h2{
-    color:var(--accent);font-size:2.3rem;margin-bottom:25px;
-  }
 
-  /* NAV + TAB */
+  /* NAV + CONTAINER FIX BORDER KHÔNG TRÀN */
   .nav{
     display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto;
-    gap:8px;padding:12px 8px;background:#fff;position:sticky;top:0;z-index:99;
+    gap:8px;padding:12px 6px;background:#fff;position:sticky;top:0;z-index:99;
     box-shadow:0 5px 20px rgba(0,0,0,0.15);scrollbar-width:none;
   }
   .nav::-webkit-scrollbar{display:none}
   .nav button{
-    white-space:nowrap;background:#fff;color:#000;padding:12px 16px;
+    white-space:nowrap;background:#fff;color:#000;padding:11px 14px;
     border:3px solid transparent;border-radius:14px;font-weight:700;
-    font-size:14px;cursor:pointer;transition:.4s;min-width:100px;
+    font-size:13.5px;cursor:pointer;transition:.4s;min-width:92px;
   }
   .nav button:hover,.nav button.active{
     background:var(--accent);color:#fff;
-    transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,212,170,0.5);
+    transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,212,170,0.5);
   }
 
   .container{
-    max-width:760px;margin:25px auto;background:var(--card);
-    padding:30px;border-radius:25px;
-    border:5px solid var(--border);box-shadow:0 20px 60px rgba(0,212,170,0.3);
+    max-width:760px;margin:22px auto;background:var(--card);
+    padding:28px;border-radius:25px;
+    border:5px solid var(--border);
+    box-shadow:0 18px 55px rgba(0,212,170,0.32);
+    overflow:hidden; /* FIX BORDER TRÀN */
   }
 
   h2{
-    color:var(--accent);text-align:center;margin-bottom:25px;
-    font-size:clamp(1.9rem,5.5vw,2.6rem);
+    color:var(--accent);text-align:center;margin-bottom:24px;
+    font-size:clamp(1.85rem,5.3vw,2.5rem);
   }
 
   input,button,select{
-    width:100%;padding:16px;margin:12px 0;
-    border-radius:14px;font-size:17px;font-weight:600;
+    width:100%;padding:15px;margin:11px 0;
+    border-radius:14px;font-size:16.5px;font-weight:600;
   }
   input,select{
     background:#f8f9fa;border:3px solid #ddd;
   }
   input:focus,select:focus{
     outline:none;border-color:var(--accent);
-    box-shadow:0 0 20px rgba(0,212,170,0.4);
+    box-shadow:0 0 18px rgba(0,212,170,0.4);
   }
   button{
     background:linear-gradient(45deg,var(--accent),#00b894);
@@ -112,49 +112,45 @@
   }
   button:hover{
     transform:translateY(-5px);
-    box-shadow:0 18px 35px rgba(0,212,170,0.6);
+    box-shadow:0 16px 35px rgba(0,212,170,0.6);
   }
 
-  /* GÓI NẠP NHỎ GỌN CHỈ GỢI Ý */
+  /* MỆNH GIÁ GỌN ĐẸP */
   .packages{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0;
   }
   .pkg{
-    background:#f0f2f5;padding:14px 8px;border-radius:12px;
-    text-align:center;cursor:pointer;font-size:14px;font-weight:bold;
-    border:2px solid #ddd;transition:.3s;
+    background:#f0f2f5;padding:16px 10px;border-radius:14px;
+    text-align:center;cursor:pointer;font-size:15px;font-weight:bold;
+    border:2.5px solid #ddd;transition:.35s;
   }
   .pkg:hover{
     background:var(--accent);color:#fff;border-color:var(--accent);
+    transform:scale(1.05);
   }
 
   #robuxPreview{
-    font-size:clamp(28px,7vw,38px);color:var(--gold);
-    text-align:center;margin:25px 0;font-weight:bold;
+    font-size:clamp(27px,7vw,37px);color:var(--gold);
+    text-align:center;margin:24px 0;font-weight:bold;
     text-shadow:0 0 18px var(--gold);
   }
 
-  .qr{max-width:300px;margin:25px auto;display:block;
-    border:8px solid var(--accent);border-radius:18px;
-    box-shadow:0 0 50px var(--accent);
-  }
-
-  #wheel{width:340px;height:340px;border-radius:50%;
+  #wheel{width:330px;height:330px;border-radius:50%;
     border:14px solid #fff;box-shadow:0 0 60px var(--accent);
     transition:transform 6s cubic-bezier(0.17,0.67,0.12,0.99);
   }
-  .prize{font-size:clamp(2.3rem,6.5vw,3.2rem);color:var(--gold);
-    margin:25px 0;text-shadow:0 0 22px var(--gold);
+  .prize{font-size:clamp(2.2rem,6.5vw,3.1rem);color:var(--gold);
+    margin:24px 0;text-shadow:0 0 22px var(--gold);
   }
 
   .tab{display:none}.tab.active{display:block}
   .hidden{display:none}
 
   @media (max-width:480px){
-    .container{padding:22px;margin:15px 10px;}
-    .packages{grid-template-columns:repeat(4,1fr);gap:10px;font-size:13px;}
-    .pkg{padding:12px 6px;}
-    .nav button{font-size:13px;padding:10px 12px;min-width:90px;}
+    .container{padding:20px;margin:12px 8px;border-radius:22px;}
+    .packages{grid-template-columns:repeat(3,1fr);gap:10px;}
+    .pkg{font-size:14px;padding:14px 8px;}
+    .nav button{font-size:12.5px;padding:10px 10px;min-width:85px;}
   }
 </style>
 </head>
@@ -162,7 +158,7 @@
 
 <div id="snowZone"></div>
 
-<!-- LOGIN BẮT BUỘC -->
+<!-- LOGIN -->
 <div id="loginPage">
   <div class="login-box">
     <h2>ROBUXVN.SHOP</h2>
@@ -192,7 +188,7 @@
 
   <div id="home" class="tab active">
     <h2>Xin chào <span id="name">bạn</span>!</h2>
-    <p style="text-align:center;font-size:32px;margin:35px 0">
+    <p style="text-align:center;font-size:31px;margin:35px 0">
       Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux
     </p>
     <div style="text-align:center">
@@ -200,46 +196,54 @@
     </div>
   </div>
 
-  <!-- NẠP ROBUX - 2 LỰA CHỌN -->
+  <!-- NẠP ROBUX -->
   <div id="nap" class="tab">
     <h2>NẠP ROBUX</h2>
-    <p style="text-align:center;color:#555;margin-bottom:15px">10.000đ = 65 Robux (Tối thiểu 10.000đ)</p>
+    <p style="text-align:center;color:#555;margin-bottom:15px">10.000đ = 65 Robux</p>
 
-    <select id="napMethod">
+    <select id="napMethod" onchange="toggleMethod()">
       <option value="qr">QR NGÂN HÀNG (TỰ ĐỘNG)</option>
       <option value="thecao">NẠP THẺ CÀO</option>
     </select>
 
-    <input type="number" id="amount" placeholder="Nhập số tiền (VD: 50000)" oninput="calcRobux()">
-    <div id="robuxPreview">0 Robux</div>
-
-    <!-- GÓI GỢI Ý NHỎ GỌN -->
-    <div class="packages">
-      <div class="pkg" onclick="setAmount(20000)">20K</div>
-      <div class="pkg" onclick="setAmount(50000)">50K</div>
-      <div class="pkg" onclick="setAmount(100000)">100K</div>
-      <div class="pkg" onclick="setAmount(200000)">200K</div>
+    <!-- QR BANK -->
+    <div id="qrSection">
+      <input type="number" id="amount" placeholder="Nhập số tiền (VD: 100000)" oninput="calcRobux()">
+      <div id="robuxPreview">0 Robux</div>
+      <div class="packages">
+        <div class="pkg" onclick="setAmount(50000)">50K</div>
+        <div class="pkg" onclick="setAmount(100000)">100K</div>
+        <div class="pkg" onclick="setAmount(200000)">200K</div>
+        <div class="pkg" onclick="setAmount(500000)">500K</div>
+      </div>
+      <button onclick="napQR()">NẠP NGAY</button>
     </div>
 
-    <button onclick="napRobux()">NẠP NGAY</button>
-    <div id="qrDiv"></div>
-    <div id="thecaoDiv" class="hidden">
-      <p style="text-align:center;margin:20px 0">Chọn loại thẻ:</p>
+    <!-- THẺ CÀO - CHỈ CHỌN MỆNH GIÁ -->
+    <div id="thecaoSection" class="hidden">
+      <p style="text-align:center;font-weight:bold;margin:15px 0">Chọn mệnh giá thẻ:</p>
+      <div class="packages">
+        <div class="pkg" onclick="napCard(10000)">10K</div>
+        <div class="pkg" onclick="napCard(20000)">20K</div>
+        <div class="pkg" onclick="napCard(50000)">50K</div>
+        <div class="pkg" onclick="napCard(100000)">100K</div>
+        <div class="pkg" onclick="napCard(200000)">200K</div>
+        <div class="pkg" onclick="napCard(500000)">500K</div>
+      </div>
       <select id="cardType">
         <option>Viettel</option><option>Vinaphone</option><option>Mobifone</option><option>Zing</option><option>Gate</option>
       </select>
       <input type="text" placeholder="Số seri" id="seri">
       <input type="text" placeholder="Mã thẻ" id="code">
-      <button onclick="napTheCao()">GỬI THẺ NẠP</button>
+      <button onclick="sendCard()">NẠP NGAY</button>
     </div>
   </div>
 
   <div id="rut" class="tab">
     <h2>RÚT ROBUX</h2>
     <input type="text" id="rbxUser" placeholder="Username Roblox">
-    <input type="number" id="rbxAmt" placeholder="Số Robux muốn rút (tối thiểu 100)">
-    <button onclick="rutRobux()">GỬI YÊU CẦU RÚT</button>
-    <p id="rutMsg"></p>
+    <input type="number" id="rbxAmt" placeholder="Số Robux muốn rút">
+    <button onclick="alert('Đã gửi yêu cầu rút! Admin sẽ donate trong 5-10 phút')">GỬI YÊU CẦU</button>
   </div>
 
   <div id="vongquay" class="tab">
@@ -248,7 +252,7 @@
       Giá quay: <b style="color:var(--gold)">30 Robux</b>/lần
     </p>
     <div style="text-align:center">
-      <canvas id="wheel" width="340" height="340"></canvas>
+      <canvas id="wheel" width="330" height="330"></canvas>
       <div class="prize" id="prizeText">Nhấn QUAY để thử vận may!</div>
       <button onclick="spin()" style="margin-top:25px;padding:20px 70px;font-size:21px">QUAY NGAY</button>
     </div>
@@ -258,7 +262,6 @@
     <h2>NHẬP GIFTCODE</h2>
     <input type="text" id="giftInput" placeholder="Nhập mã giftcode">
     <button onclick="useGift()">SỬ DỤNG</button>
-    <p id="giftMsg"></p>
   </div>
 
   <div id="danhgia" class="tab">
@@ -272,22 +275,22 @@
 setInterval(()=>{const s=document.createElement("div");s.classList.add("snow");
 s.style.left=Math.random()*100+"vw";s.style.animationDuration=Math.random()*3+5+"s";
 document.getElementById("snowZone").appendChild(s);
-setTimeout(()=>s.remove(),10000);},120);
+setTimeout(()=>s.remove(),10000);},130);
 
-// LOGIN GIẢ LẬP
+// LOGIN - SỐ DƯ = 0
 let currentUser = null;
 function login(){
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
   if(!u||!p) return alert("Nhập đầy đủ đi bro!");
-  currentUser = {username:u,balance:888888};
+  currentUser = {username:u,balance:0};
   document.getElementById("loginPage").style.display="none";
   document.getElementById("name").innerText = u;
-  document.getElementById("bal").innerText = "888,888";
+  document.getElementById("bal").innerText = "0";
   alert("Đăng nhập thành công! Chào "+u+"!");
 }
-function register(){alert("Đăng ký thành công! Giờ đăng nhập đi!");}
-function logout(){if(confirm("Thoát hả bro?")) location.reload();}
+function register(){alert("Đăng ký thành công! Giờ đăng nhập đi bro!");}
+function logout(){if(confirm("Thoát hả?")) location.reload();}
 
 // TAB
 function openTab(t){
@@ -304,35 +307,28 @@ function calcRobux(){
   const r = Math.floor(m/10000*65);
   document.getElementById("robuxPreview").innerHTML = `<b>${r.toLocaleString()}</b> Robux`;
 }
-document.getElementById("napMethod").onchange = function(){
-  const method = this.value;
-  document.getElementById("thecaoDiv").classList.toggle("hidden", method!=="thecao");
-  document.getElementById("qrDiv").innerHTML = "";
-};
-function napRobux(){
-  const a = document.getElementById("amount").value;
+function toggleMethod(){
   const method = document.getElementById("napMethod").value;
-  if(a<10000) return alert("Tối thiểu 10.000đ nha bro!");
-  if(method==="qr"){
-    alert("QR đã tạo! Chuyển khoản theo nội dung là có Robux ngay!");
-  }else{
-    alert("Gửi thẻ thành công! Chờ duyệt 1-3 phút nha!");
-  }
+  document.getElementById("qrSection").classList.toggle("hidden", method==="thecao");
+  document.getElementById("thecaoSection").classList.toggle("hidden", method!=="thecao");
 }
-function napTheCao(){
-  alert("Thẻ đã gửi! Admin duyệt trong 2 phút!");
+function napQR(){
+  const a = document.getElementById("amount").value;
+  if(a<10000) return alert("Tối thiểu 10K nha bro!");
+  alert("QR đã tạo! Chuyển khoản theo nội dung là có Robux ngay!");
+}
+function napCard(amount){
+  document.getElementById("amount").value = amount;
+  calcRobux();
+}
+function sendCard(){
+  const seri = document.getElementById("seri").value;
+  const code = document.getElementById("code").value;
+  if(!seri||!code) return alert("Nhập đầy đủ seri và mã thẻ!");
+  alert("Thẻ đã gửi! Admin duyệt trong 1-3 phút nha bro!");
 }
 
-// RÚT + VÒNG QUAY + GIFTCODE
-function rutRobux(){alert("Yêu cầu rút đã gửi! Admin sẽ donate trong 5-10 phút!");}
-function useGift(){
-  const c = document.getElementById("giftInput").value.trim().toUpperCase();
-  if(["NOEL2025","ROBUXVN","FREE500"].includes(c)){
-    alert("NHẬN 500 ROBUX THÀNH CÔNG!");
-  }else alert("Mã sai rồi bro!");
-}
-
-// VÒNG QUAY
+// VÒNG QUAY + GIFTCODE + REVIEW
 const prizes = ["5","10","30","50","200","500 Robux"];
 const colors = ["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"];
 function drawWheel(){
@@ -340,11 +336,11 @@ function drawWheel(){
   prizes.forEach((p,i)=>{
     ctx.fillStyle = colors[i];
     ctx.beginPath();
-    ctx.moveTo(170,170);
-    ctx.arc(170,170,170,i*60*Math.PI/180,(i+1)*60*Math.PI/180);
+    ctx.moveTo(165,165);
+    ctx.arc(165,165,165,i*60*Math.PI/180,(i+1)*60*Math.PI/180);
     ctx.fill();
-    ctx.save();ctx.translate(170,170);ctx.rotate((i+0.5)*60*Math.PI/180);
-    ctx.fillStyle="#fff";ctx.font="bold 20px Roboto";ctx.fillText(p,80,8);ctx.restore();
+    ctx.save();ctx.translate(165,165);ctx.rotate((i+0.5)*60*Math.PI/180);
+    ctx.fillStyle="#fff";ctx.font="bold 19px Roboto";ctx.fillText(p,75,8);ctx.restore();
   });
 }
 drawWheel();
@@ -359,8 +355,15 @@ function spin(){
     spinning=false;
   },6000);
 }
+function useGift(){
+  const c = document.getElementById("giftInput").value.trim().toUpperCase();
+  if(["NOEL2025","ROBUXVN","FREE500"].includes(c)){
+    alert("NHẬN 500 ROB
 
-// ĐÁNH GIÁ
+UX THÀNH CÔNG!");
+  }else alert("Mã sai rồi bro!");
+}
+
 const reviews = ["Rút 1 phút có","Nạp thẻ cào tự động","Giá rẻ nhất VN","Admin donate nhanh","Shop đẹp xỉu","24/7 có người duyệt!"];
 reviews.forEach(t=>{
   document.getElementById("reviews").innerHTML += `
