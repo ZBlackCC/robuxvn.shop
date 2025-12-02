@@ -28,7 +28,7 @@
   }
   @keyframes snowfall{to{transform:translateY(100vh) rotate(360deg);}}
 
-  /* HEADER - KHÔNG TRÀN CHỮ TRÊN ĐIỆN THOẠI */
+  /* HEADER KHÔNG TRÀN CHỮ */
   .header{
     background:linear-gradient(135deg,#00d4aa,#00a085);
     padding:24px 10px;text-align:center;
@@ -76,7 +76,7 @@
     transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,212,170,0.5);
   }
 
-  /* CONTAINER - FIX TRÀN BORDER */
+  /* CONTAINER KHÔNG TRÀN BORDER */
   .container{
     max-width:760px;margin:18px auto;background:#fff;
     padding:24px;border-radius:25px;
@@ -195,7 +195,7 @@
       <button onclick="createQR()">NẠP NGAY</button>
     </div>
 
-    <!-- THẺ CÀO - CHỈ CHỌN MỆNH GIÁ -->
+    <!-- THẺ CÀO -->
     <div id="cardBox" class="hidden">
       <p style="text-align:center;font-weight:bold;margin:15px 0">Chọn mệnh giá:</p>
       <div class="packages">
@@ -234,7 +234,7 @@
     </div>
   </div>
 
-  <div id="gift" class="tab">
+  <div id="giftcode" class="tab">
     <h2>NHẬP GIFTCODE</h2>
     <input type="text" id="giftInput" placeholder="Nhập mã giftcode">
     <button onclick="useGift()">SỬ DỤNG</button>
@@ -253,17 +253,21 @@ s.style.left=Math.random()*100+"vw";s.style.animationDuration=Math.random()*3+5+
 document.getElementById("snowZone").appendChild(s);
 setTimeout(()=>s.remove(),10000);},130);
 
-// AUTO LOGOUT SAU 20 PHÚT KHÔNG HOẠT ĐỘNG
+// AUTO LOGOUT 20 PHÚT
 let timeoutId;
 function resetTimeout(){
   clearTimeout(timeoutId);
-  timeoutId = setTimeout(()=>{ 
+  timeoutId = setTimeout(()=>{
     alert("Đã quá 20 phút không hoạt động – Tự động đăng xuất!");
     location.reload();
   }, 20*60*1000);
 }
 window.onload = resetTimeout;
-document.onmousemove = document.ontouchstart = document.onkeypress = document.onclick = resetTimeout;
+document.onmousemove = resetTimeout;
+document.ontouchstart = resetTimeout;
+document.onkeypress = resetTimeout;
+document.onclick = resetTimeout;
+document.onscroll = resetTimeout;
 
 // LOGIN - SỐ DƯ = 0
 let currentUser = null;
@@ -272,16 +276,19 @@ let cardAmount = 0;
 function login(){
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
-  if(!u || !p) return alert("Nhập đầy đủ username và mật khẩu!");
+  if(!u || !p) return alert("Nhập đầy đủ username và mật khẩu bro!");
   currentUser = {username:u, balance:0};
   document.getElementById("loginPage").style.display="none";
   document.getElementById("name").innerText = u;
   document.getElementById("bal").innerText = "0";
-  alert("Đăng nhập thành công! Chào " + u);
+  alert("Đăng nhập thành công! Chào " + u + "!");
   resetTimeout();
 }
+
 function register(){alert("Đăng ký thành công! Giờ đăng nhập đi bro!");}
-function logout(){if(confirm("Đăng xuất ngay?")) location.reload();}
+function logout(){
+  if(confirm("Đăng xuất ngay hả bro?")) location.reload();
+}
 
 // TAB
 function openTab(id){
@@ -301,8 +308,8 @@ function calcQR(){
 function setQR(x){document.getElementById("qrAmount").value=x;calcQR();}
 function createQR(){
   const a = document.getElementById("qrAmount").value;
-  if(a<10000) return alert("Tối thiểu 10.000đ bro!");
-  alert("QR đã tạo! Chuyển đúng nội dung để được cộng tự động!");
+  if(a<10000) return alert("Tối thiểu 10.000đ nha bro!");
+  alert("QR đã tạo! Chuyển đúng nội dung là có Robux ngay!");
 }
 
 // NẠP THẺ CÀO
@@ -320,15 +327,15 @@ function sendCard(){
   if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
   const seri = document.getElementById("seri").value.trim();
   const code = document.getElementById("code").value.trim();
-  if(!seri || !code) return alert("Nhập đầy đủ seri và mã thẻ!");
-  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin duyệt trong 1-3 phút nha!`);
+  if(!seri || !code) return alert("Nhập đầy đủ seri + mã thẻ!");
+  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin duyệt 1-3 phút nha!`);
   document.getElementById("seri").value = "";
   document.getElementById("code").value = "";
   cardAmount = 0;
   document.querySelectorAll("#cardBox .pkg").forEach(p=>p.classList.remove("selected"));
 }
 
-// GIFTCODE
+// GIFTCODE + VÒNG QUAY + REVIEW
 function useGift(){
   const c = document.getElementById("giftInput").value.trim().toUpperCase();
   if(["NOEL2025","ROBUXVN","FREE500"].includes(c)){
@@ -336,7 +343,6 @@ function useGift(){
   }else alert("Mã giftcode sai rồi bro!");
 }
 
-// VÒNG QUAY
 const prizes = ["5","10","30","50","200","500 Robux"];
 const colors = ["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"];
 function drawWheel(){
