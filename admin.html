@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Admin</title>
+<style>body{background:#000;color:#0f0;font-family:Arial;padding:20px}
+table{width:100%;border-collapse:collapse}th,td{border:1px solid #0f0;padding:10px}</style>
+</head><body>
+<h1>ADMIN - DUYỆT ĐƠN RÚT</h1>
+<input type="password" id="pass" placeholder="Pass admin">
+<button onclick="login()">Vào</button>
+<div id="panel" style="display:none">
+<button onclick="load()">Tải lại đơn</button>
+<table id="tbl"><tr><th>ID</th><th>User</th><th>Roblox</th><th>Robux</th><th>Thời gian</th><th>Hành động</th></tr></table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+async function login(){if(pass.value==="123456"){panel.style.display="block";load();}else alert("Sai pass");}
+async function load(){
+  const r=await axios.get("db.json?"+Date.now());
+  const orders=r.data.orders.filter(o=>o.status==="pending");
+  tbl.innerHTML="<tr><th>ID</th><th>User</th><th>Roblox</th><th>Robux</th><th>Thời gian</th><th>Hành động</th></tr>";
+  orders.forEach(o=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${o.id}</td><td>${o.user}</td><td>${o.rbxUser}</td><td>${o.robux}</td><td>${new Date(o.time).toLocaleString()}</td>
+      <td><button onclick="done(${o.id})">Hoàn thành</button></td>`;
+    tbl.appendChild(tr);
+  });
+}
+async function done(id){
+  await axios.post("/done",{id}); // tạm thời chỉ xóa file db.json để test
+  load();
+}
+</script>
+</body></html>
