@@ -435,4 +435,23 @@ function generateReviews() {
   const reviews = [
     "Rút siêu nhanh, chỉ 2 phút có Robux!",
     "Nạp 1 triệu được đúng 6500R, uy tín!",
-    "
+    "Trúng 500R từ vòng quay, quá ngon!",
+    "Admin donate đúng username, 5 sao!",
+    "Shop đẹp nhất mình từng thấy",
+    "Hỗ trợ 24/7, rút 3h sáng vẫn có người duyệt"
+  ];
+  const container = document.getElementById("reviews");
+  reviews.forEach(text => {
+    container.innerHTML += `
+      <div style="background:#f9f9f9;padding:25px;margin:20px 0;border-radius:20px;border-left:6px solid var(--gold);box-shadow:0 5px 20px rgba(0,0,0,0.1)">
+        <div style="color:var(--gold);font-size:2rem">★★★★★</div>
+        <p style="margin:15px 0;font-size:18px"><b>Khách hàng ẩn danh</b></p>
+        <p style="font-size:20px">${text}</p>
+      </div>
+    `;
+  });
+}
+generateReviews();
+</script>
+</body>
+</html>
