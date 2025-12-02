@@ -5,44 +5,52 @@
 <title>ROBUXVN.SHOP - RÚT ROBUX GIÁ RẺ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  :root{--bg:#f0f2f5;--card:#ffffff;--text:#000;--accent:#00d4aa;--gold:#ffbb00;--border:#00d4aa;}
+  :root{--bg:#f0f2f5;--card:#fff;--text:#000;--accent:#00d4aa;--gold:#f1c40f;--border:#00d4aa;}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:#f0f2f5 url('https://i.imgur.com/5wR1pXb.png') repeat;color:var(--text);font-family:'Roboto',sans-serif;min-height:100vh;}
-  .header{background:linear-gradient(135deg,#00d4aa,#0099cc);padding:30px;text-align:center;box-shadow:0 8px 30px rgba(0,212,170,0.4);}
-  .header h1{font-family:'Orbitron',sans-serif;font-size:4.5rem;color:#fff;text-shadow:0 0 20px #000,4px 4px #ffbb00;}
-  .nav{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;padding:15px;background:#fff;position:sticky;top:0;z-index:99;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
-  .nav button{background:#fff;color:#000;padding:12px 25px;border:2px solid transparent;border-radius:12px;font-weight:700;cursor:pointer;transition:.3s;}
-  .nav button:hover,.nav button.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 20px rgba(0,212,170,0.5);}
+  .header{background:linear-gradient(135deg,#00d4aa,#00a085);padding:30px;text-align:center;box-shadow:0 8px 30px rgba(0,212,170,0.4);}
+  .header h1{font-family:'Orbitron',sans-serif;font-size:4.5rem;color:#fff;text-shadow:0 0 20px #000,4px 4px var(--gold);}
 
-  .container{max-width:680px;margin:30px auto;background:var(--card);padding:30px;border-radius:20px;
+  /* Tab ngang đẹp */
+  .nav{
+    display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto;gap:5px;padding:15px 10px;
+    background:#fff;position:sticky;top:0;z-index:99;box-shadow:0 4px 20px rgba(0,0,0,0.1);
+    scrollbar-width:none;
+  }
+  .nav::-webkit-scrollbar{display:none;}
+  .nav button{
+    white-space:nowrap;background:#fff;color:#000;padding:12px 22px;border:2px solid transparent;
+    border-radius:12px;font-weight:700;cursor:pointer;transition:.3s;min-width:120px;
+  }
+  .nav button:hover,.nav button.active{
+    background:var(--accent);color:#fff;border-color:var(--accent);
+    box-shadow:0 0 20px rgba(0,212,170,0.5);
+  }
+
+  .container{max-width:700px;margin:30px auto;background:var(--card);padding:30px;border-radius:20px;
     border:3px solid var(--border);box-shadow:0 15px 50px rgba(0,212,170,0.25);}
 
-  h2{color:var(--accent);text-align:center;margin-bottom:25px;font-size:2.2rem;}
+  h2{color:var(--accent);text-align:center;margin-bottom:25px;font-size:2.3rem;}
   .tab{display:none}.tab.active{display:block}
 
+  /* Nạp tiền */
   .packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:20px;margin:30px 0;}
   .pkg{background:#f8f9fa;padding:25px;border-radius:15px;text-align:center;cursor:pointer;border:2px solid #eee;transition:.4s;}
-  .pkg:hover{border-color:var(--accent);transform:translateY(-12px);box-shadow:0 20px 40px rgba(0,212,170,0.3);}
-  .pkg h3{font-size:2.2rem;color:var(--gold);}
+  .pkg:hover{border-color:var(--accent);transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,212,170,0.3);}
+  .pkg h3{font-size:2rem;color:var(--gold);}
+  #robuxPreview{font-size:28px;color:var(--gold);font-weight:bold;text-align:center;margin:20px 0;}
 
   input,button{width:100%;padding:16px;margin:12px 0;border:none;border-radius:12px;font-size:17px;}
   input{background:#f5f5f5;color:#000;border:2px solid #ddd;}
-  button{background:linear-gradient(45deg,var(--accent),#00b894);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 8px 25px rgba(0,212,170,0.5);}
+  button{background:linear-gradient(45deg,var(--accent),#00b894);color:#fff;font-weight:700;cursor:pointer;}
   button:hover{transform:translateY(-4px);box-shadow:0 15px 35px rgba(0,212,170,0.7);}
 
-  .qr{max-width:300px;margin:25px auto;display:block;border:6px solid var(--accent);border-radius:18px;box-shadow:0 0 30px var(--accent);}
-  .hidden{display:none}
+  .qr{max-width:300px;margin:30px auto;display:block;border:6px solid var(--accent);border-radius:18px;}
 
-  /* Vòng quay */
-  #wheelContainer{text-align:center;margin:40px 0;}
-  #wheel{width:320px;height:320px;border-radius:50%;border:12px solid #fff;box-shadow:0 0 50px var(--accent);transition:transform 5s cubic-bezier(0.17,0.67,0.12,0.99);}
-  .prize{text-align:center;margin-top:20px;font-size:2rem;color:var(--gold);font-weight:bold;}
-
-  /* Đánh giá */
-  .review{background:#f9f9f9;padding:20px;margin:15px 0;border-radius:15px;border-left:5px solid var(--gold);}
-  .stars{color:#ffbb00;font-size:1.5rem;}
+  /* Vòng quay – 6 phần bằng nhau */
+  #wheel{width:340px;height:340px;border-radius:50%;border:12px solid #fff;box-shadow:0 0 50px var(--accent);}
+  .prize{font-size:2.5rem;color:var(--gold);font-weight:bold;margin-top:20px;}
 </style>
 </head>
 <body>
@@ -63,23 +71,27 @@
   <!-- Trang chủ -->
   <div id="home" class="tab active">
     <h2>Xin chào <span id="name">khách</span>!</h2>
-    <p style="text-align:center;font-size:26px;margin:25px 0">
+    <p style="text-align:center;font-size:28px;margin:30px 0">
       Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux
     </p>
-    <div style="text-align:center"><button style="padding:20px 60px;font-size:22px">NẠP ROBUX NGAY</button></div>
+    <div style="text-align:center"><button onclick="openTab('nap')" style="padding:20px 60px;font-size:22px">NẠP ROBUX NGAY</button></div>
   </div>
 
   <!-- Nạp Robux -->
   <div id="nap" class="tab">
     <h2>NẠP ROBUX QUA NGÂN HÀNG</h2>
-    <p style="text-align:center;color:#555;margin-bottom:20px"><b>10.000đ = 65 Robux</b></p>
+    <p style="text-align:center;color:#555;margin-bottom:15px"><b>10.000đ = 65 Robux</b></p>
+    
+    <input type="number" id="amount" placeholder="Nhập số tiền (VD: 100000)" oninput="calcRobux()">
+    <div id="robuxPreview">0 Robux</div>
+    
     <div class="packages">
-      <div class="pkg" onclick="setAmount(100000)"><h3>650 Robux</h3><p>100k</p></div>
-      <div class="pkg" onclick="setAmount(200000)"><h3>1.300 Robux</h3><p>200k</p></div>
-      <div class="pkg" onclick="setAmount(500000)"><h3>3.250 Robux</h3><p>500k</p></div>
-      <div class="pkg" onclick="setAmount(1000000)"><h3>6.500 Robux</h3><p>1 triệu</p></div>
+      <div class="pkg" onclick="document.getElementById('amount').value=100000;calcRobux()"><h3>100K</h3><p>650 Robux</p></div>
+      <div class="pkg" onclick="document.getElementById('amount').value=200000;calcRobux()"><h3>200K</h3><p>1.300 Robux</p></div>
+      <div class="pkg" onclick="document.getElementById('amount').value=500000;calcRobux()"><h3>500K</h3><p>3.250 Robux</p></div>
+      <div class="pkg" onclick="document.getElementById('amount').value=1000000;calcRobux()"><h3>1 TRIỆU</h3><p>6.500 Robux</p></div>
     </div>
-    <input type="number" id="amount" placeholder="Nhập số tiền (tối thiểu 50k)">
+    
     <button onclick="createQR()">TẠO MÃ QR</button>
     <div id="qrDiv"></div>
   </div>
@@ -96,78 +108,68 @@
   <!-- Vòng quay may mắn -->
   <div id="vongquay" class="tab">
     <h2>VÒNG QUAY MAY MẮN</h2>
-    <p style="text-align:center;font-size:20px;margin-bottom:20px">
+    <p style="text-align:center;font-size:22px;margin-bottom:25px">
       Giá quay: <b style="color:var(--gold)">30 Robux</b> / lần
     </p>
-    <div id="wheelContainer">
+    <div style="text-align:center">
       <canvas id="wheel" width="340" height="340"></canvas>
       <div class="prize" id="prizeText">Nhấn QUAY để bắt đầu!</div>
-      <button onclick="spin()" style="margin-top:25px;padding:18px 50px;font-size:20px">QUAY NGAY – 30 Robux</button>
+      <button onclick="spin()" style="margin-top:25px;padding:18px 60px;font-size:20px">QUAY NGAY – 30 Robux</button>
     </div>
   </div>
 
-  <!-- Giftcode -->
-  <div id="giftcode" class="tab">
-    <h2>NHẬP GIFTCODE</h2>
-    <input type="text" id="giftInput" placeholder="Nhập mã giftcode">
-    <button onclick="useGift()">SỬ DỤNG</button>
-    <p id="giftMsg"></p>
-  </div>
-
-  <!-- Đánh giá -->
-  <div id="danhgia" class="tab">
-    <h2>ĐÁNH GIÁ TỪ KHÁCH HÀNG (5★)</h2>
-    <div id="reviews"></div>
-  </div>
+  <!-- Giftcode & Đánh giá giữ nguyên đẹp như cũ -->
+  <div id="giftcode" class="tab"><h2>NHẬP GIFTCODE</h2><input type="text" id="giftInput" placeholder="Nhập mã"><button onclick="useGift()">SỬ DỤNG</button><p id="giftMsg"></p></div>
+  <div id="danhgia" class="tab"><h2>ĐÁNH GIÁ 5★</h2><div id="reviews"></div></div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 // Tab
-function openTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+function openTab(t){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
   document.getElementById(t).classList.add('active');
-  document.querySelector(`button[onclick="openTab('${t}')"]`).classList.add('active');}
+  document.querySelector(`button[onclick="openTab('${t}')"]`).classList.add('active');
+}
 
-// Nạp
-function setAmount(v){document.getElementById("amount").value=v;}
+// Tự động đổi tiền → Robux
+function calcRobux(){
+  const money = parseInt(document.getElementById("amount").value) || 0;
+  const robux = Math.floor(money / 10000 * 65);
+  document.getElementById("robuxPreview").innerHTML = `<b style="font-size:32px">${robux.toLocaleString()}</b> Robux`;
+}
+calcRobux(); // init
+
+// Nạp QR
 async function createQR(){
-  const a=document.getElementById("amount").value;
-  if(!a||a<50000)return Swal.fire({icon:"warning",title:"Tối thiểu 50.000đ"});
-  const r=await axios.post("/qr",{amount:Number(a),user:"demo"});
+  const a = document.getElementById("amount").value;
+  if(!a||a<50000)return alert("Tối thiểu 50k");
+  const r = await axios.post("/qr",{amount:Number(a),user:"demo"});
   document.getElementById("qrDiv").innerHTML=`
     <p style="text-align:center">Nạp <b>${(a/10000*65).toLocaleString()} Robux</b></p>
     <img class="qr" src="${r.data.qr}">
     <p style="text-align:center;word-break:break-all"><b>Nội dung:</b> ${r.data.desc}</p>`;
 }
 
-// Rút
-async function sendRut(){
-  const u=document.getElementById("rbxUser").value;
-  const r=document.getElementById("rbxAmt").value;
-  if(!u||!r)return Swal.fire({icon:"warning",title:"Nhập đầy đủ"});
-  Swal.fire({icon:"success",title:"Đã gửi yêu cầu!",text:"Admin sẽ donate trong 1-3 phút"});
-}
-
-// Vòng quay
+// Vòng quay – 6 phần bằng nhau, tỉ lệ thật siêu hiếm
 const prizes = [
-  {text:"5 Robux",   color:"#7289da", chance:30},
-  {text:"10 Robux",  color:"#99aab5", chance:25},
-  {text:"30 Robux",  color:"#2ecc71", chance:20},
-  {text:"50 Robux",  color:"#3498db", chance:15},
-  {text:"200 Robux", color:"#e91e63", chance:0.5},
-  {text:"500 Robux", color:"#f1c40f", chance:0.1}
+  {text:"5 Robux",   color:"#95a5a6", weight:300},
+  {text:"10 Robux",  color:"#7289da", weight:250},
+  {text:"30 Robux",  color:"#2ecc71", weight:200},
+  {text:"50 Robux",  color:"#3498db", weight:150},
+  {text:"200 Robux", color:"#e74c3c", weight:5},
+  {text:"500 Robux", color:"#f1c40f", weight:1}
 ];
 let spinning = false;
 function drawWheel(){
-  const canvas = document.getElementById("wheel");
-  const ctx = canvas.getContext("2d");
-  let total = prizes.reduce((a,b)=>a+b.chance,0);
+  const c = document.getElementById("wheel");
+  const ctx = c.getContext("2d");
+  const total = prizes.reduce((a,b)=>a+b.weight,0);
   let start = 0;
   prizes.forEach((p,i)=>{
-    let angle = (p.chance/total)*2*Math.PI;
+    const angle = (p.weight/total)*2*Math.PI;
     ctx.fillStyle = p.color;
     ctx.beginPath();
     ctx.moveTo(170,170);
@@ -176,10 +178,9 @@ function drawWheel(){
     ctx.save();
     ctx.translate(170,170);
     ctx.rotate(start+angle/2);
-    ctx.textAlign="center";
-    ctx.fillStyle="#fff";
-    ctx.font="bold 18px Roboto";
-    ctx.fillText(p.text,100,10);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 20px Roboto";
+    ctx.fillText(p.text, 90, 10);
     ctx.restore();
     start += angle;
   });
@@ -188,50 +189,40 @@ drawWheel();
 
 function spin(){
   if(spinning) return;
-  // Giả lập trừ 30 Robux (thực tế sẽ gọi API trừ ở đây)
-  Swal.fire({
-    title:"Đang quay...",allowOutsideClick:false,
-    didOpen:()=>{Swal.showLoading()}
-  });
-  spinning=true;
-  const canvas=document.getElementById("wheel");
-  let rot = Math.floor(Math.random()*10)+15; // 15-25 vòng
-  canvas.style.transform = `rotate(${canvas.style.transform||'rotate(0deg)'} rotate(${rot*360}deg)`;
-  
+  spinning = true;
+  document.getElementById("prizeText").innerText = "Đang quay...";
+  const canvas = document.getElementById("wheel");
+  const spins = Math.floor(Math.random()*10) + 15;
+  const rand = Math.random() * 3600 + 720;
+  canvas.style.transition = "transform 5s cubic-bezier(0.17,0.67,0.12,0.99)";
+  canvas.style.transform = `rotate(${rand}deg)`;
+
   setTimeout(()=>{
-    let rand = Math.random()*100;
-    let sum = 0, win;
+    const total = prizes.reduce((a,b)=>a+b.weight,0);
+    let roll = Math.random() * total;
+    let winner;
     for(let p of prizes){
-      sum += p.chance;
-      if(rand <= sum){win=p;break;}
+      roll -= p.weight;
+      if(roll <= 0){winner = p; break;}
     }
-    document.getElementById("prizeText").innerHTML = `CHÚC MỪNG BẠN NHẬN ĐƯỢC<br><b style="font-size:3rem;color:${win.color}">${win.text}</b>`;
-    Swal.fire({icon:"success",title:"CHÚC MỪNG!",html:`Bạn đã trúng <b>${win.text}</b>`,timer:5000});
-    spinning=false;
-  },5500);
+    document.getElementById("prizeText").innerHTML = `CHÚC MỪNG!<br><b style="font-size:3rem;color:${winner.color}">${winner.text}</b>`;
+    spinning = false;
+  }, 5200);
 }
 
-// Giftcode demo
+// Giftcode + đánh giá giữ nguyên đẹp
 function useGift(){
   const c = document.getElementById("giftInput").value.trim().toUpperCase();
   if(["NOEL2025","ROBUXVN","FREE500"].includes(c)){
-    Swal.fire({icon:"success",title:"Thành công!",text:"Bạn nhận được 500 Robux!"});
-  }else{
-    Swal.fire({icon:"error",title:"Sai mã!",text:"Mã giftcode không tồn tại"});
-  }
+    alert("Nhận thành công 500 Robux!");
+  }else alert("Mã sai!");
 }
-
-// Tự sinh đánh giá
-const fakeReviews = [
-  "Shop uy tín, rút siêu nhanh trong 2 phút! 5 sao","Nạp 500k được đúng 3250 Robux, chuẩn luôn","Vòng quay trúng 200R, ngon quá admin ơi","Hỗ trợ nhiệt tình, lần sau lại ủng hộ","Rút 10k Robux chỉ 3 phút có, shop chất lượng","Đã nạp hơn 5 triệu, chưa bao giờ bị lỗi","Shop đẹp, giao diện như Roblox thật","Admin dễ thương, donate đúng username luôn","Giá rẻ nhất thị trường hiện tại","Rút lúc 3h sáng vẫn có người duyệt, tuyệt vời!"
-];
+const reviews = ["Shop uy tín, rút siêu nhanh!","Nạp 500k được đúng 3250R","Trúng 200R từ vòng quay, ngon!","Admin nhiệt tình, donate đúng user","Giá rẻ nhất thị trường","Rút 3h sáng vẫn có người duyệt!"];
 function genReviews(){
-  const container = document.getElementById("reviews");
-  fakeReviews.sort(()=>Math.random()-0.5);
-  fakeReviews.slice(0,12).forEach((text,i)=>{
-    const r=document.createElement("div");r.className="review";
-    r.innerHTML = `<div class="stars">★★★★★</div><b>Khách hàng #${2025+i}</b><p>${text}</p>`;
-    container.appendChild(r);
+  const div = document.getElementById("reviews");
+  reviews.sort(()=>Math.random()-0.5).forEach(t=>{
+    div.innerHTML += `<div style="background:#f9f9f9;padding:20px;margin:15px 0;border-radius:15px;border-left:5px solid var(--gold)">
+      <div style="color:#f1c40f;font-size:1.5rem">★★★★★</div><b>Khách hàng ẩn danh</b><p>${t}</p></div>`;
   });
 }
 genReviews();
