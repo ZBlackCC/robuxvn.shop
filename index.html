@@ -5,6 +5,7 @@
 <title>ROBUXVN.SHOP - RÚT ROBUX GIÁ RẺ NHẤT 2025</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   :root{--accent:#00d4aa;--gold:#f1c40f;--border:#00d4aa;}
   *{margin:0;padding:0;box-sizing:border-box}
@@ -12,7 +13,61 @@
   .snow{position:fixed;top:-10px;width:8px;height:8px;background:#fff;border-radius:50%;box-shadow:0 0 12px #fff;opacity:0.8;z-index:9999;pointer-events:none;animation:snowfall linear infinite;}
   @keyframes snowfall{to{transform:translateY(100vh) rotate(360deg);}}
 
-  /* LOGIN SIÊU ĐẸP */
+  /* ==================== POPUP CHÀO SIÊU ĐẸP ==================== */
+  #welcomePopup{
+    position:fixed;inset:0;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;z-index:9999999;
+    animation:fadeIn 1s ease;backdrop-filter:blur(15px);
+  }
+  .welcome-content{
+    background:linear-gradient(135deg,#0f0033,#1a0033);padding:45px 35px;border-radius:35px;width:92%;max-width:480px;
+    text-align:center;border:5px solid var(--accent);box-shadow:0 0 90px rgba(0,212,170,0.7);position:relative;overflow:hidden;
+    animation:pop 0.9s ease;
+  }
+  .welcome-content::before{
+    content:'';position:absolute;top:-60%;left:-60%;width:220%;height:220%;
+    background:conic-gradient(from 0deg at 50% 50%,transparent,#00d4aa 18%,transparent 36%);
+    animation:spin 32s linear infinite;opacity:0.25;
+  }
+  .welcome-content h3{
+    font-family:'Orbitron',sans-serif;font-size:3rem;color:#fff;text-shadow:0 0 40px var(--accent);margin-bottom:15px;position:relative;z-index:2;
+  }
+  .welcome-content p{
+    color:#a0f0d8;line-height:2.1;font-size:17px;margin:18px 0;position:relative;z-index:2;
+  }
+  .welcome-content i{
+    font-size:3.2rem;color:var(--gold);margin:18px 0;display:block;
+  }
+  .welcome-content button{
+    margin-top:28px;padding:18px 55px;font-size:21px;background:linear-gradient(45deg,var(--accent),#00a085);
+    color:#fff;border:none;border-radius:30px;cursor:pointer;box-shadow:0 15px 45px rgba(0,212,170,0.6);
+    transition:.4s;position:relative;z-index:2;
+  }
+  .welcome-content button:hover{
+    transform:translateY(-10px);box-shadow:0 25px 60px rgba(0,212,170,0.8);
+  }
+
+  /* ==================== NAV PC - ĐẸP, DÀN ĐỀU, CĂN GIỮA ==================== */
+  .nav-pc{
+    display:flex;justify-content:center;gap:20px;padding:20px 15px;background:rgba(255,255,255,0.98);
+    position:sticky;top:0;z-index:99;box-shadow:0 8px 35px rgba(0,0,0,0.22);border-bottom:6px solid var(--accent);
+    overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;backdrop-filter:blur(12px);
+  }
+  .nav-pc::-webkit-scrollbar{display:none}
+  .nav-pc button{
+    flex:0 0 auto;min-width:150px;padding:17px 28px;white-space:nowrap;background:#fff;color:#000;
+    border-radius:35px;font-weight:700;font-size:16px;border:3px solid #eee;transition:all .35s;
+    box-shadow:0 7px 22px rgba(0,0,0,0.14);
+  }
+  .nav-pc button:hover,.nav-pc button.active{
+    background:var(--accent);color:#fff;transform:translateY(-7px);
+    box-shadow:0 18px 45px rgba(0,212,170,0.55);border-color:var(--accent);
+  }
+  .nav-pc button:last-child{
+    background:#e74c3c;color:#fff;border-color:#e74c3c;
+  }
+  .nav-pc button:last-child:hover{transform:translateY(-7px);box-shadow:0 18px 45px rgba(231,76,60,0.6);}
+
+  /* ==================== CÁC PHẦN CŨ GIỮ NGUYÊN ==================== */
   #loginPage{position:fixed;inset:0;background:linear-gradient(135deg,#0f0033,#1a0033);z-index:999999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 1.2s ease;}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   .login-wrapper{background:rgba(255,255,255,0.1);backdrop-filter:blur(22px);padding:50px 40px;border-radius:32px;width:100%;max-width:440px;border:4px solid rgba(0,212,170,0.7);box-shadow:0 30px 80px rgba(0,0,0,0.8);text-align:center;position:relative;overflow:hidden;}
@@ -28,20 +83,9 @@
   .login-box button:first-of-type{background:linear-gradient(45deg,#00d4aa,#00a085);color:#fff;border:none;box-shadow:0 14px 40px rgba(0,212,170,0.7);}
   .login-box button:first-of-type:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,212,170,0.9);}
   .login-box button:last-of-type{background:#f1c40f;color:#000;border:none;}
-
-  /* HEADER */
   .header{background:linear-gradient(135deg,#00d4aa,#00a085);padding:26px 10px;text-align:center;box-shadow:0 12px 45px rgba(0,212,170,0.5);}
   .header h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,8vw,3.6rem);color:#fff;text-shadow:0 0 20px #000,4px 4px 0 var(--gold);letter-spacing:3px;}
   .header p{color:#fff;font-size:clamp(1.2rem,4.5vw,1.6rem);margin-top:10px;font-weight:900;text-shadow:0 0 14px #000;}
-
-  /* NAV PC - NGANG SCROLL */
-  .nav-pc{display:flex;justify-content:flex-start;gap:12px;padding:14px 10px;background:#fff;position:sticky;top:0;z-index:99;box-shadow:0 6px 25px rgba(0,0,0,0.18);border-bottom:4px solid var(--accent);overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;}
-  .nav-pc::-webkit-scrollbar{display:none}
-  .nav-pc button{flex:0 0 auto;min-width:120px;padding:14px 16px;white-space:nowrap;background:#fff;color:#000;border-radius:25px;font-weight:700;font-size:15px;border:3px solid #eee;transition:all .3s;box-shadow:0 4px 15px rgba(0,0,0,0.1);scroll-snap-align:center;}
-  .nav-pc button:hover,.nav-pc button.active{background:var(--accent);color:#fff;transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,212,170,0.5);border-color:var(--accent);}
-  .nav-pc button:last-child{background:#e74c3c;color:#fff;border-color:#e74c3c;}
-
-  /* NAV MOBILE - DỌC HAMBURGER */
   .nav-mobile{display:none;position:sticky;top:0;z-index:99;background:#fff;padding:14px 20px;box-shadow:0 6px 25px rgba(0,0,0,0.18);border-bottom:4px solid var(--accent);}
   .hamburger{font-size:32px;cursor:pointer;color:#333;}
   .mobile-menu{position:fixed;top:0;left:-100%;width:280px;height:100vh;background:#111;transition:left .35s ease;z-index:9999;padding-top:90px;overflow-y:auto;}
@@ -51,8 +95,6 @@
   .mobile-menu button:last-child{background:#e74c3c;}
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);opacity:0;visibility:hidden;transition:opacity .35s;z-index:9998;}
   .overlay.active{opacity:1;visibility:visible;}
-
-  /* NỘI DUNG CHÍNH */
   .container{max-width:780px;margin:20px auto;background:#fff;padding:26px;border-radius:28px;border:6px solid var(--border);box-shadow:0 20px 60px rgba(0,212,170,0.35);}
   h2{color:var(--accent);text-align:center;margin-bottom:22px;font-size:clamp(1.9rem,5.5vw,2.6rem);}
   input,button,select{width:100%;padding:16px;margin:12px 0;border-radius:16px;font-size:17px;font-weight:600;}
@@ -72,15 +114,40 @@
   #popup{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;justify-content:center;align-items:center;z-index:999999;}
   #popupBox{background:#fff;padding:35px 28px;border-radius:25px;width:90%;max-width:410px;text-align:center;animation:pop 0.5s ease;box-shadow:0 30px 70px rgba(0,0,0,0.7);}
   @keyframes pop{from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1}}
-
   @media (max-width:768px){.nav-pc{display:none;}.nav-mobile{display:block;}}
   @media (min-width:769px){.nav-mobile,.mobile-menu,.overlay{display:none !important;}}
 </style>
 </head>
 <body>
+
 <div id="snowZone"></div>
 
-<!-- LOGIN - SHOP ROBUX UY TÍN NHẤT 2025 -->
+<!-- POPUP CHÀO KHI VÀO TRANG -->
+<div id="welcomePopup" style="display:flex">
+  <div class="welcome-content">
+    <h3>ROBUXVN.SHOP</h3>
+    <p style="font-size:26px;color:var(--gold);margin:20px 0">
+      <i class="fas fa-crown"></i> CHÀO MỪNG AE GHÉ THĂM <i class="fas fa-crown"></i>
+    </p>
+    <div style="background:rgba(0,212,170,0.15);padding:25px;border-radius:25px;margin:25px 0;">
+      <p><i class="fas fa-clock"></i> Thời gian duyệt đơn: <b>1 ngày - 3 tuần</b> (tuỳ game)</p>
+      <p><i class="fas fa-ban"></i> <b>HIỆN TẠI KHÔNG NHẬN THẺ VIETNAMMOBILE</b></p>
+      <p><i class="fas fa-credit-card"></i> Nạp được: Thẻ cào (trừ VMS), QR tự động</p>
+      <p><i class="fas fa-truck"></i> Đơn đặt trước sẽ xử lý khi shop có kho</p>
+      <p><i class="fas fa-headset"></i> Có vấn đề? Inbox Zalo ngay nhé!</p>
+      <p><i class="fas fa-shield-alt"></i> "Rẻ thế có scam không?" → Nạp thử 10K là biết liền!</p>
+      <p style="margin-top:20px;font-size:19px;color:var(--gold)">
+        <i class="fas fa-heart"></i> Shop bán không lời - chỉ mong ae ủng hộ lâu dài <i class="fas fa-heart"></i>
+      </p>
+    </div>
+    <p style="font-size:19px;color:#00d4aa">
+      <i class="fab fa-facebook-messenger"></i> Zalo: <b>0939546882</b>
+    </p>
+    <button onclick="document.getElementById('welcomePopup').style.display='none'">VÀO SHOP NGAY</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
 <div id="loginPage">
   <div class="login-wrapper">
     <div class="login-content">
@@ -98,7 +165,7 @@
 
 <div class="header"><h1>ROBUXVN.SHOP</h1><p>SHOP ROBUX RẺ NHẤT 2025</p></div>
 
-<!-- NAV PC -->
+<!-- NAV PC ĐÃ FIX ĐẸP -->
 <div class="nav-pc">
   <button onclick="openTab('home')" class="active">TRANG CHỦ</button>
   <button onclick="openTab('nap')">NẠP ROBUX</button>
@@ -122,6 +189,7 @@
 </div>
 <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
 
+<!-- NỘI DUNG CHÍNH -->
 <div class="container">
   <div id="home" class="tab active">
     <h2>Xin chào <span id="name">bạn</span>!</h2>
@@ -194,17 +262,7 @@
 </div>
 
 <div id="popup">
-  <div id="popupBox">
-    <h3 style="color:var(--accent);font-size:26px;margin-bottom:18px">CHÀO MỪNG BẠN ĐÃ QUAY LẠI!</h3>
-    <p style="font-size:17px;line-height:1.9;color:#333">
-      Thời gian duyệt thẻ: <b>1 - 3 phút</b><br>
-      QR tự động cộng ngay khi chuyển đúng nội dung<br><br>
-      Không nhận thẻ VietnamMobile<br>
-      Giá rẻ nhất thị trường - Nạp thử 10K để kiểm tra uy tín!<br><br>
-      <b style="color:var(--accent)">Liên hệ Zalo: 0939546882</b>
-    </p>
-    <button onclick="closePopup()" style="margin-top:22px;padding:16px 40px;font-size:19px;background:var(--accent);color:#fff;border:none;border-radius:16px;">VÀO SHOP NGAY</button>
-  </div>
+  <div id="popupBox"></div>
 </div>
 
 <script>
@@ -216,13 +274,16 @@ let lsRut = JSON.parse(localStorage.getItem("lsRut_v2") || "[]");
 function maskName(name){if(!name||name.length<4)return"******";const half=Math.ceil(name.length/2);return name.substring(0,half)+"*".repeat(name.length-half+2);}
 function showPopup(html){document.getElementById("popup").style.display="flex";document.getElementById("popupBox").innerHTML=html;}
 function closePopup(){document.getElementById("popup").style.display="none";}
+
 function login(){
   const u=document.getElementById("username").value.trim();
   const p=document.getElementById("password").value;
   if(u.length<6||p.length<6)return alert("Username và mật khẩu phải ≥ 6 ký tự!");
   currentUser.username=u;document.getElementById("loginPage").style.display="none";
   document.getElementById("name").innerText=u;document.getElementById("bal").innerText="0";
-  if(localStorage.getItem("welcomeShown")!=="true"){setTimeout(()=>{document.getElementById("popup").style.display="flex";localStorage.setItem("welcomeShown","true");},800);}
+  if(localStorage.getItem("welcomeShown")!=="true"){
+    setTimeout(()=>{document.getElementById("popup").style.display="flex";localStorage.setItem("welcomeShown","true");},800);
+  }
   updateAllHistory();renderFeed();
 }
 function register(){alert("Đăng ký thành công! Giờ đăng nhập đi bro!");}
@@ -260,6 +321,7 @@ document.getElementById("rutBtn").onclick=function(){
   setTimeout(()=>approveRut(id),30000);
 };
 function approveRut(id){const idx=lsRut.findIndex(x=>x.id===id);if(idx>-1){lsRut[idx].status="success";localStorage.setItem("lsRut_v2",JSON.stringify(lsRut));updateAllHistory();renderFeed();}}
+
 const fakeNames=["tranvanlong","nguyenvana","levinh","phamminhk","hotuananh","dangthilan","buithilan"];
 function addTransaction(text){const div=document.createElement("div");div.className="gd-item";div.innerText=text;document.getElementById("gdList").prepend(div);setTimeout(renderFeed,1000);}
 function renderFeed(){
@@ -270,6 +332,7 @@ function renderFeed(){
   document.getElementById("gdList").innerHTML=shuffled.map(t=>`<div class="gd-item">${t}</div>`).join('');
 }
 setInterval(renderFeed,4000);renderFeed();
+
 function updateAllHistory(){updateNapLS();updateRutLS();}
 function updateNapLS(){
   const box=document.getElementById("lsNapBox");const list=lsNap.filter(x=>x.user===currentUser.username).reverse();
@@ -279,6 +342,7 @@ function updateRutLS(){
   const box=document.getElementById("lsRutBox");const list=lsRut.filter(x=>x.user===currentUser.username).reverse();
   box.innerHTML=list.length===0?`<div class="hist-box rut">Chưa có lịch sử rút</div>`:list.map(x=>`<div class="hist-box rut">-${x.robux} Robux → <b>${x.to}</b> <span class="status ${x.status}">${x.status==="pending"?"Đang xét duyệt":"Thành công"}</span><br><small>${x.time}</small></div>`).join('');
 }
+
 function openTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.nav-pc button,.mobile-menu button').forEach(b=>b.classList.remove('active'));
@@ -306,12 +370,15 @@ function useGift(){
   if(["NOEL2025","ROBUXVN","FREE500"].includes(c)){pushNap({user:currentUser.username,robux:500,time:new Date().toLocaleString(),status:"success",note:"Giftcode "+c});alert("NHẬN 500 ROBUX THÀNH CÔNG!");updateAllHistory();renderFeed();}
   else alert("Mã sai rồi bro!");
 }
+
 for(let i=0;i<120;i++){
   const s=document.createElement("div");s.className="snow";s.style.left=Math.random()*100+"vw";s.style.animationDuration=8+Math.random()*14+"s";s.style.animationDelay=Math.random()*12+"s";s.style.opacity=Math.random()*0.7+0.3;
   document.getElementById("snowZone").appendChild(s);
 }
+
 const reviews=["Rút 1 phút có","Nạp thẻ cào tự động","Giá rẻ nhất VN","Admin donate nhanh","Shop đẹp xỉu","24/7 có người duyệt!"];
 reviews.forEach(t=>document.getElementById("reviews").innerHTML+=`<div style="background:#f9f9f9;padding:22px;margin:18px 0;border-radius:20px;border-left:7px solid var(--gold);box-shadow:0 10px 30px rgba(0,0,0,0.12)"><div style="color:var(--gold);font-size:2.2rem">★★★★★</div><p style="margin:10px 0;font-weight:bold">Khách hàng ẩn danh</p><p style="font-size:19px">${t}</p></div>`);
+
 function pushNap(obj){lsNap.push(obj);localStorage.setItem("lsNap_v2",JSON.stringify(lsNap));}
 function pushRut(obj){lsRut.push(obj);localStorage.setItem("lsRut_v2",JSON.stringify(lsRut));}
 </script>
