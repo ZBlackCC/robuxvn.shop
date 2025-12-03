@@ -62,33 +62,7 @@
     border:5px solid var(--accent);text-align:center;
   }
 
-  /* MODAL ĐẸP SAU ĐĂNG NHẬP - MỚI THÊM */
-  #noticeModal{
-    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999999;
-    align-items:center;justify-content:center;padding:15px;
-  }
-  .modal-content{
-    background:#fff;max-width:480px;width:100%;border-radius:22px;
-    padding:30px 25px;box-shadow:0 25px 70px rgba(0,212,170,0.7);
-    border:5px solid var(--accent);position:relative;
-    animation:popin 0.5s ease-out;
-  }
-  @keyframes popin{from{transform:scale(0.6);opacity:0}to{transform:scale(1);opacity:1}}
-  .modal-content h3{color:var(--accent);text-align:center;font-size:26px;margin-bottom:18px;}
-  .modal-content p{font-size:17px;line-height:1.9;color:#333;margin:12px 0;}
-  .modal-content b{color:var(--accent);}
-  .close-modal{
-    position:absolute;top:12px;right:16px;background:var(--accent);color:#fff;
-    width:42px;height:42px;border-radius:50%;font-size:28px;font-weight:bold;
-    cursor:pointer;border:none;box-shadow:0 5px 20px rgba(0,0,0,0.4);
-  }
-
-  /* QR MỚI THÊM */
-  #qrContainer{text-align:center;margin:20px 0;}
-  #qrContainer img{max-width:280px;width:100%;border:6px solid var(--accent);border-radius:16px;}
-  #noidungCK{font-size:21px;color:#e74c3c;font-weight:bold;margin-top:15px;}
-
-  /* NAV + CONTAINER + CÁC PHẦN KHÁC GIỮ NGUYÊN 100% */
+  /* NAV + CONTAINER */
   .nav{
     display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto;
     gap:6px;padding:10px 5px;background:#fff;position:sticky;top:0;z-index:99;
@@ -156,31 +130,33 @@
     .packages{grid-template-columns:repeat(3,1fr);gap:10px;}
     .pkg{font-size:14px;padding:14px 6px;}
   }
+
+  /* POPUP ĐẸP */
+  #popup{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.7);
+    display:none; justify-content:center; align-items:center;
+    z-index:999999;
+  }
+  #popupBox{
+    background:#fff; padding:25px; border-radius:18px;
+    width:90%; max-width:360px; text-align:center;
+    animation:pop .35s ease;
+  }
+  @keyframes pop {from{transform:scale(.6); opacity:0} to{transform:scale(1); opacity:1}}
+
 </style>
 </head>
 <body>
 
 <div id="snowZone"></div>
 
-<!-- MODAL ĐẸP SAU ĐĂNG NHẬP -->
-<div id="noticeModal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="document.getElementById('noticeModal').style.display='none'">×</button>
-    <h3>THÔNG BÁO QUAN TRỌNG</h3>
-    <p><b>Thời gian duyệt đơn có thể chậm 1-3 ngày</b></p>
-    <p><b>Không nhận thẻ VietnamMobile</b> – Nạp bằng thẻ khác nhé!</p>
-    <p>Hỗ trợ nạp: <b>Thẻ cào</b> – <b>Chuyển khoản</b> – <b>QR tự động siêu nhanh</b></p>
-    <p>Có vấn đề? <b>Liên hệ Shop ngay</b> nha!</p>
-    <p><i>"Rẻ quá sợ scam?"</i> → Nạp thử <b>10K</b> là biết shop thật 100%!</p>
-  </div>
-</div>
-
 <!-- LOGIN -->
 <div id="loginPage">
   <div class="login-box">
     <h2>ROBUXVN.SHOP</h2>
-    <input type="text" id="username" placeholder="Username (tối thiểu 6 ký tự)">
-    <input type="password" id="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Mật khẩu">
     <button onclick="login()">ĐĂNG NHẬP</button>
     <button onclick="register()" style="background:#f1c40f;color:#000">ĐĂNG KÝ NGAY</button>
   </div>
@@ -203,7 +179,7 @@
 </div>
 
 <div class="container">
-  <!-- TRANG CHỦ -->
+  <!-- HOME -->
   <div id="home" class="tab active">
     <h2>Xin chào <span id="name">bạn</span>!</h2>
     <p style="text-align:center;font-size:31px;margin:35px 0">
@@ -225,19 +201,17 @@
     </select>
 
     <div id="qrBox">
-      <input type="number" id="qrAmount" placeholder="Nhập số tiền (VD: 100000)" oninput="generateQR()">
-      <div id="qrPreview" style="font-size:32px;color:var(--gold);text-align:center;margin:20px 0;font-weight:bold">0 Robux</div>
-      <div id="qrContainer"></div>
+      <input type="number" id="qrAmount" placeholder="Nhập số tiền (VD: 100000)" oninput="calcQR()">
+      <div id="qrPreview">0 Robux</div>
       <div class="packages">
         <div class="pkg" onclick="setQR(50000)">50K</div>
         <div class="pkg" onclick="setQR(100000)">100K</div>
         <div class="pkg" onclick="setQR(200000)">200K</div>
         <div class="pkg" onclick="setQR(500000)">500K</div>
       </div>
-      <button onclick="generateQR()">TẠO QR NGAY</button>
+      <button onclick="createQR()">NẠP NGAY</button>
     </div>
 
-    <!-- THẺ CÀO GIỮ NGUYÊN -->
     <div id="cardBox" class="hidden">
       <p style="text-align:center;font-weight:bold;margin:15px 0">Chọn mệnh giá:</p>
       <div class="packages">
@@ -257,7 +231,7 @@
     </div>
   </div>
 
-  <!-- CÁC TAB KHÁC GIỮ NGUYÊN 100% -->
+  <!-- RÚT -->
   <div id="rut" class="tab">
     <h2>RÚT ROBUX</h2>
     <input type="text" placeholder="Username Roblox" id="rbxUser">
@@ -265,6 +239,7 @@
     <button onclick="alert('Yêu cầu đã gửi! Admin donate trong 5-10 phút')">GỬI YÊU CẦU</button>
   </div>
 
+  <!-- VÒNG QUAY -->
   <div id="vongquay" class="tab">
     <h2>VÒNG QUAY MAY MẮN</h2>
     <p style="text-align:center;font-size:23px;margin-bottom:20px">
@@ -277,34 +252,48 @@
     </div>
   </div>
 
+  <!-- GIFTCODE -->
   <div id="giftcode" class="tab">
     <h2>NHẬP GIFTCODE</h2>
     <input type="text" id="giftInput" placeholder="Nhập mã giftcode">
     <button onclick="useGift()">SỬ DỤNG</button>
   </div>
 
+  <!-- ĐÁNH GIÁ -->
   <div id="danhgia" class="tab">
     <h2>ĐÁNH GIÁ 5★</h2>
     <div id="reviews"></div>
   </div>
 </div>
 
-<script>
-// TUYẾT RƠI
-setInterval(() => {
-  const s = document.createElement("div");
-  s.className = "snow";
-  s.style.left = Math.random() * 100 + "vw";
-  s.style.animationDuration = Math.random() * 3 + 5 + "s";
-  document.getElementById("snowZone").appendChild(s);
-  setTimeout(() => s.remove(), 10000);
-}, 130);
+<!-- POPUP ĐẸP -->
+<div id="popup">
+  <div id="popupBox">
+    <h3 style="font-size:22px;color:#00d4aa;margin-bottom:10px">THÔNG BÁO</h3>
+    <p id="popupText" style="font-size:16px; line-height:1.6; margin-bottom:20px"></p>
+    <button onclick="closePopup()"
+      style="background:#00d4aa;color:#fff;padding:12px 25px;border:none;border-radius:12px;font-weight:bold">
+      Đóng
+    </button>
+  </div>
+</div>
 
-// ĐĂNG NHẬP + BẮT BUỘC 6 KÝ TỰ + MODAL ĐẸP
+<script>
+/* ---------- POPUP ĐẸP ---------- */
+function showPopup(text){
+  document.getElementById("popupText").innerHTML = text;
+  document.getElementById("popup").style.display="flex";
+}
+function closePopup(){document.getElementById("popup").style.display="none";}
+
+/* ---------- LOGIN (THÊM KIỂM TRA 6 KÝ TỰ + POPUP ĐẸP) ---------- */
 function login(){
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
-  if(u.length < 6 || p.length < 6) return alert("Username và mật khẩu phải từ 6 ký tự trở lên bro!");
+
+  if(u.length < 6) return alert("Username phải ít nhất 6 ký tự!");
+  if(p.length < 6) return alert("Mật khẩu phải ít nhất 6 ký tự!");
+
   if(!u || !p) return alert("Nhập đầy đủ username và mật khẩu bro!");
   
   currentUser = {username:u, balance:0};
@@ -313,31 +302,43 @@ function login(){
   document.getElementById("bal").innerText = "0";
   
   alert("Đăng nhập thành công! Chào " + u + "!");
-  setTimeout(() => { document.getElementById("noticeModal").style.display = "flex"; }, 700);
+
+  setTimeout(()=>{
+    showPopup(`
+      ⏳ <b>THỜI GIAN DUYỆT ĐƠN:</b> 1 - 3 ngày<br><br>
+      ❌ Không nhận thẻ VietnamMobile<br>
+      💳 Hỗ trợ thẻ cào / chuyển khoản / auto<br><br>
+      ⚠️ Có thắc mắc hãy liên hệ Shop<br><br>
+      ❗ <i>"Giá rẻ quá scam?"</i><br>
+      → Hãy thử nạp 10.000đ để test nhé!
+    `);
+  },600);
+
   resetTimeout();
 }
 
-// TẠO QR MBBANK TỰ ĐỘNG
-function generateQR(){
-  const amount = parseInt(document.getElementById("qrAmount").value) || 0;
-  const robux = Math.floor(amount / 10000 * 65);
-  document.getElementById("qrPreview").innerHTML = `<b>${robux.toLocaleString()}</b> Robux`;
+/* ---------- QR AUTO MB BANK ---------- */
+function createQR(){
+  const amount = document.getElementById("qrAmount").value;
+  if(amount < 10000) return alert("Tối thiểu 10.000đ nha bro!");
 
-  if(amount >= 10000){
-    const noidung = "ROBUX" + Date.now().toString().slice(-6);
-    const qrUrl = `https://img.vietqr.io/image/MBBANK-0939546882-compact2.png?amount=${amount}&addInfo=${noidung}&accountName=NGUYEN VAN A`;
-    document.getElementById("qrContainer").innerHTML = `
-      <img src="${qrUrl}" alt="QR Code">
-      <div id="noidungCK">Nội dung chuyển khoản: <span style="color:#e74c3c">${noidung}</span></div>
-      <p style="margin-top:10px;color:#e74c3c;font-weight:bold">Chuyển đúng nội dung để được cộng tự động!</p>
-    `;
-  } else {
-    document.getElementById("qrContainer").innerHTML = "";
-  }
+  const user = currentUser.username.toUpperCase();
+  const noiDung = `ROBUXVN-${user}-${amount}`;
+
+  const qrUrl = 
+    `https://img.vietqr.io/image/mbbank-0939546882-compact.png?amount=${amount}&addInfo=${encodeURIComponent(noiDung)}&accountName=ROBUXVN%20SHOP`;
+
+  showPopup(`
+    <b>Quét QR để chuyển khoản</b><br><br>
+    <img src="${qrUrl}" style="width:230px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.4)"><br><br>
+    <b>STK:</b> 0939546882 (MB Bank)<br>
+    <b>Nội dung CK:</b><br>
+    <span style="color:#00d4aa">${noiDung}</span><br><br>
+    Sau khi chuyển khoản, Robux sẽ cộng ngay!
+  `);
 }
-function setQR(x){ document.getElementById("qrAmount").value = x; generateQR(); }
 
-// GIỮ NGUYÊN 100% CÁC HÀM CŨ
+/* ---------- CODE CŨ GIỮ NGUYÊN ---------- */
 function register(){alert("Đăng ký thành công! Giờ đăng nhập đi bro!");}
 function logout(){if(confirm("Đăng xuất ngay hả bro?")) location.reload();}
 function openTab(id){
@@ -352,9 +353,7 @@ function calcQR(){
   const r = Math.floor(m/10000*65);
   document.getElementById("qrPreview").innerHTML = `<b>${r.toLocaleString()}</b> Robux`;
 }
-function createQR(){
-  generateQR();
-}
+function setQR(x){document.getElementById("qrAmount").value=x;calcQR();}
 function toggleNap(){
   const v = document.getElementById("napMethod").value;
   document.getElementById("qrBox").classList.toggle("hidden", v==="thecao");
@@ -376,12 +375,14 @@ function sendCard(){
   cardAmount = 0;
   document.querySelectorAll("#cardBox .pkg").forEach(p=>p.classList.remove("selected"));
 }
+
 function useGift(){
   const c = document.getElementById("giftInput").value.trim().toUpperCase();
   if(["NOEL2025","ROBUXVN","FREE500"].includes(c)){
     alert("NHẬN 500 ROBUX THÀNH CÔNG!");
   }else alert("Mã giftcode sai rồi bro!");
 }
+
 const prizes = ["5","10","30","50","200","500 Robux"];
 const colors = ["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"];
 function drawWheel(){
@@ -397,6 +398,7 @@ function drawWheel(){
   });
 }
 drawWheel();
+
 let spinning = false;
 function spin(){
   if(spinning) return; spinning=true;
@@ -408,6 +410,7 @@ function spin(){
     spinning=false;
   },6000);
 }
+
 const reviews = ["Rút 1 phút có","Nạp thẻ cào tự động","Giá rẻ nhất VN","Admin donate nhanh","Shop đẹp xỉu","24/7 có người duyệt!"];
 reviews.forEach(t=>{
   document.getElementById("reviews").innerHTML += `
@@ -418,5 +421,6 @@ reviews.forEach(t=>{
     </div>`;
 });
 </script>
+
 </body>
 </html>
