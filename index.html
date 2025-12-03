@@ -19,7 +19,7 @@
   }
   @keyframes snowfall{to{transform:translateY(100vh) rotate(360deg);}}
 
-  /* ====================== ĐĂNG NHẬP SIÊU ĐẸP ====================== */
+  /* ====================== LOGIN SIÊU ĐẸP + CÂN ĐỐI TRÊN ĐIỆN THOẠI ====================== */
   #loginPage{
     position:fixed;inset:0;background:linear-gradient(135deg,#0f0033,#1a0033);z-index:999999;
     display:flex;align-items:center;justify-content:center;padding:20px;
@@ -27,103 +27,114 @@
   }
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   .login-wrapper{
-    background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);
-    padding:45px 35px;border-radius:30px;width:100%;max-width:420px;
-    border:4px solid rgba(0,212,170,0.7);box-shadow:0 25px 70px rgba(0,0,0,0.7);
+    background:rgba(255,255,255,0.1);backdrop-filter:blur(22px);
+    padding:50px 40px;border-radius:32px;width:100%;max-width:440px;
+    border:4px solid rgba(0,212,170,0.7);box-shadow:0 30px 80px rgba(0,0,0,0.8);
     text-align:center;position:relative;overflow:hidden;
   }
   .login-wrapper::before{
-    content:'';position:absolute;top:-60%;left:-60%;width:220%;height:220%;
-    background:conic-gradient(from 0deg at 50% 50%,transparent,#00d4aa,#00d4aa,transparent);
-    animation:spin 25s linear infinite;opacity:0.25;
+    content:'';position:absolute;top:-70%;left:-70%;width:240%;height:240%;
+    background:conic-gradient(from 0deg at 50% 50%,transparent,#00d4aa 15%,transparent 30%);
+    animation:spin 28s linear infinite;opacity:0.3;
   }
   @keyframes spin{to{transform:rotate(360deg)}}
   .login-content{position:relative;z-index:2;}
   .login-wrapper h2{
-    font-family:'Orbitron',sans-serif;font-size:clamp(2.2rem,9vw,4rem);color:#fff;
-    text-shadow:0 0 25px #00d4aa,0 0 50px #00d4aa;margin-bottom:12px;
+    font-family:'Orbitron',sans-serif;font-size:clamp(2.3rem,9vw,4.2rem);color:#fff;
+    text-shadow:0 0 30px #00d4aa,0 0 60px #00d4aa;margin-bottom:8px;
   }
-  .login-wrapper p{
-    color:#a0f0d8;font-size:17px;margin-bottom:30px;font-weight:500;
+  .login-wrapper .subtitle{
+    color:#a0f0d8;font-size:18px;font-weight:700;margin-bottom:35px;letter-spacing:1px;
   }
   .login-box input{
-    background:rgba(255,255,255,0.15);border:2px solid rgba(0,212,170,0.6);
-    color:#fff;padding:18px;border-radius:18px;margin:14px 0;font-size:17px;width:100%;
+    background:rgba(255,255,255,0.18);border:2px solid rgba(0,212,170,0.6);
+    color:#fff;padding:19px;border-radius:20px;margin:15px 0;font-size:17px;width:100%;
     transition:.4s;
   }
-  .login-box input::placeholder{color:#a0f0d8;opacity:0.85;}
+  .login-box input::placeholder{color:#a0f0d8;opacity:0.9;}
   .login-box input:focus{
-    border-color:#00d4aa;box-shadow:0 0 25px rgba(0,212,170,0.6);
-    background:rgba(255,255,255,0.25);
+    border-color:#00d4aa;box-shadow:0 0 28px rgba(0,212,170,0.7);
+    background:rgba(255,255,255,0.28);
   }
   .login-box button{
-    width:100%;padding:18px;margin:14px 0;border-radius:18px;font-weight:700;font-size:19px;
+    width:100%;padding:19px;margin:15px 0;border-radius:20px;font-weight:700;font-size:19px;
     cursor:pointer;transition:.4s;transform:translateY(0);
   }
   .login-box button:first-of-type{
     background:linear-gradient(45deg,#00d4aa,#00a085);color:#fff;border:none;
-    box-shadow:0 12px 35px rgba(0,212,170,0.6);
+    box-shadow:0 14px 40px rgba(0,212,170,0.7);
   }
   .login-box button:first-of-type:hover{
-    transform:translateY(-7px);box-shadow:0 18px 45px rgba(0,212,170,0.8);
+    transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,212,170,0.9);
   }
   .login-box button:last-of-type{
     background:#f1c40f;color:#000;border:none;
   }
 
-  /* ====================== TRANG CHÍNH ====================== */
-  .header{
-    background:linear-gradient(135deg,#00d4aa,#00a085);padding:24px 10px;text-align:center;
-    box-shadow:0 10px 40px rgba(0,212,170,0.5);
-  }
-  .header h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,7vw,3.4rem);color:#fff;
-    text-shadow:0 0 18px #000,3px 3px 0 var(--gold);letter-spacing:2px;}
-  .header p{color:#fff;font-size:clamp(1.1rem,4vw,1.5rem);margin-top:8px;font-weight:900;text-shadow:0 0 12px #000;}
-
+  /* ====================== THANH NAV ĐẸP + MƯỢT TRÊN ĐIỆN THOẠI ====================== */
   .nav{
-    display:flex;justify-content:center;flex-wrap:wrap;gap:10px;padding:12px 8px;
+    display:flex;justify-content:flex-start;gap:12px;padding:14px 10px;
     background:#fff;position:sticky;top:0;z-index:99;
-    box-shadow:0 5px 20px rgba(0,0,0,0.15);border-bottom:3px solid var(--accent);
-    overflow-x:auto;scrollbar-width:none;
+    box-shadow:0 6px 25px rgba(0,0,0,0.18);border-bottom:4px solid var(--accent);
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    scroll-snap-type:x mandatory;
   }
   .nav::-webkit-scrollbar{display:none}
   .nav button{
-    flex:1 1 110px; min-width:100px;max-width:180px;
-    white-space:nowrap;background:#fff;color:#000;padding:12px 8px;
-    border-radius:20px;font-weight:700;font-size:14px;
-    border:2px solid #eee;transition:.25s;
+    flex:0 0 auto;min-width:120px;padding:14px 16px;
+    white-space:nowrap;background:#fff;color:#000;
+    border-radius:25px;font-weight:700;font-size:15px;
+    border:3px solid #eee;transition:all .3s;box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    scroll-snap-align:center;
   }
   .nav button:hover,.nav button.active{
-    background:var(--accent);color:#fff;transform:translateY(-3px);
-    box-shadow:0 10px 25px rgba(0,212,170,0.5);
+    background:var(--accent);color:#fff;transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(0,212,170,0.5);border-color:var(--accent);
   }
-  .container{max-width:760px;margin:18px auto;background:#fff;padding:24px;border-radius:25px;
-    border:5px solid var(--border);box-shadow:0 18px 55px rgba(0,212,170,0.32);}
-  h2{color:var(--accent);text-align:center;margin-bottom:20px;font-size:clamp(1.8rem,5vw,2.5rem);}
-  input,button,select{width:100%;padding:15px;margin:10px 0;border-radius:14px;font-size:16.5px;font-weight:600;}
+  .nav button:last-child{background:#e74c3c;color:#fff;border-color:#e74c3c;}
+  .nav button:last-child:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(231,76,60,0.6);}
+
+  /* ====================== TRANG CHÍNH ====================== */
+  .header{
+    background:linear-gradient(135deg,#00d4aa,#00a085);padding:26px 10px;text-align:center;
+    box-shadow:0 12px 45px rgba(0,212,170,0.5);
+  }
+  .header h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,8vw,3.6rem);color:#fff;
+    text-shadow:0 0 20px #000,4px 4px 0 var(--gold);letter-spacing:3px;}
+  .header p{color:#fff;font-size:clamp(1.2rem,4.5vw,1.6rem);margin-top:10px;font-weight:900;text-shadow:0 0 14px #000;}
+
+  .container{max-width:780px;margin:20px auto;background:#fff;padding:26px;border-radius:28px;
+    border:6px solid var(--border);box-shadow:0 20px 60px rgba(0,212,170,0.35);}
+
+  h2{color:var(--accent);text-align:center;margin-bottom:22px;font-size:clamp(1.9rem,5.5vw,2.6rem);}
+  input,button,select{width:100%;padding:16px;margin:12px 0;border-radius:16px;font-size:17px;font-weight:600;}
   input,select{background:#f8f9fa;border:3px solid #ddd;}
-  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 18px rgba(0,212,170,0.4);}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 20px rgba(0,212,170,0.45);}
   button{background:linear-gradient(45deg,var(--accent),#00b894);color:#fff;border:none;cursor:pointer;
-    box-shadow:0 8px 25px rgba(0,212,170,0.4);}
-  button:hover{transform:translateY(-5px);box-shadow:0 16px 35px rgba(0,212,170,0.6);}
-  .packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:12px;margin:20px 0;}
-  .pkg{background:#f0f2f5;padding:16px;border-radius:14px;text-align:center;cursor:pointer;
-    font-weight:bold;font-size:15px;border:2.5px solid #ddd;transition:.3s;}
-  .pkg:hover,.pkg.selected{background:var(--accent);color:#fff;border-color:var(--accent);transform:scale(1.06);}
-  .tab{display:none}.tab.active{display:block}
-  .hidden{display:none}
-  .gd-item{padding:12px;background:#fff;margin:6px 0;border-radius:10px;border-left:5px solid var(--accent);}
-  .hist-box{padding:14px;margin:10px 0;border-radius:12px;background:#fafafa;border-left:6px solid var(--accent);position:relative;}
+    box-shadow:0 10px 28px rgba(0,212,170,0.45);}
+  button:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,212,170,0.7);}
+
+  .packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:14px;margin:22px 0;}
+  .pkg{background:#f0f2f5;padding:18px;border-radius:16px;text-align:center;cursor:pointer;
+    font-weight:bold;font-size:16px;border:3px solid #ddd;transition:.35s;}
+  .pkg:hover,.pkg.selected{background:var(--accent);color:#fff;border-color:var(--accent);transform:scale(1.08);}
+
+  .tab{display:none}.tab.active{display:block}.hidden{display:none}
+  .gd-item{padding:14px;background:#fff;margin:8px 0;border-radius:12px;border-left:6px solid var(--accent);font-size:15px;}
+  .hist-box{padding:16px;margin:12px 0;border-radius:14px;background:#fafafa;border-left:7px solid var(--accent);position:relative;font-size:15px;}
   .hist-box.rut{border-left-color:#e74c3c;}
-  .status{font-size:12px;color:#e67e22;font-weight:bold;position:absolute;top:8px;right:10px;}
+  .status{font-size:13px;font-weight:bold;position:absolute;top:10px;right:12px;}
   .status.success{color:#27ae60;}
-  #popup{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:none;justify-content:center;align-items:center;z-index:999999;}
-  #popupBox{background:#fff;padding:30px 25px;border-radius:22px;width:90%;max-width:390px;text-align:center;
-    animation:pop 0.45s ease;box-shadow:0 25px 60px rgba(0,0,0,0.6);}
-  @keyframes pop{from{transform:scale(0.6);opacity:0} to{transform:scale(1);opacity:1}}
+
+  #popup{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;justify-content:center;align-items:center;z-index:999999;}
+  #popupBox{background:#fff;padding:35px 28px;border-radius:25px;width:90%;max-width:410px;text-align:center;
+    animation:pop 0.5s ease;box-shadow:0 30px 70px rgba(0,0,0,0.7);}
+  @keyframes pop{from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1}}
+
   @media (max-width:480px){
-    .container{padding:18px;margin:12px 8px;}
-    .nav button{font-size:13px;padding:10px 6px;min-width:90px;}
+    .container{padding:20px;margin:14px 10px;border-radius:22px;}
+    .nav{gap:10px;padding:12px 8px;}
+    .nav button{min-width:110px;font-size:14px;padding:12px 10px;}
   }
 </style>
 </head>
@@ -131,15 +142,15 @@
 
 <div id="snowZone"></div>
 
-<!-- ĐĂNG NHẬP ĐẸP -->
+<!-- ĐĂNG NHẬP SIÊU ĐẸP -->
 <div id="loginPage">
   <div class="login-wrapper">
     <div class="login-content">
       <h2>ROBUXVN.SHOP</h2>
-      <p>Rút Robux Giá Rẻ Nhất 2025 - Uy Tín Từ 2020</p>
+      <div class="subtitle">SHOP ROBUX UY TÍN NHẤT 2025</div>
       <div class="login-box">
         <input type="text" id="username" placeholder="Username (tối thiểu 6 ký tự)">
-        <input type="password" id="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)">
+        <  <input type="password" id="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)">
         <button onclick="login()">ĐĂNG NHẬP</button>
         <button onclick="register()">ĐĂNG KÝ NGAY</button>
       </div>
@@ -147,8 +158,9 @@
   </div>
 </div>
 
-<!-- HEADER + NAV -->
+<!-- HEADER + NAV ĐÃ ĐƯỢC TỐI ƯU ĐIỆN THOẠI -->
 <div class="header"><h1>ROBUXVN.SHOP</h1><p>SHOP ROBUX RẺ NHẤT 2025</p></div>
+
 <div class="nav">
   <button onclick="openTab('home')" class="active">TRANG CHỦ</button>
   <button onclick="openTab('nap')">NẠP ROBUX</button>
@@ -156,32 +168,32 @@
   <button onclick="openTab('vongquay')">VÒNG QUAY</button>
   <button onclick="openTab('giftcode')">GIFTCODE</button>
   <button onclick="openTab('danhgia')">ĐÁNH GIÁ</button>
-  <button onclick="logout()" style="background:#e74c3c">ĐĂNG XUẤT</button>
+  <button onclick="logout()">ĐĂNG XUẤT</button>
 </div>
 
 <div class="container">
   <!-- HOME -->
   <div id="home" class="tab active">
     <h2>Xin chào <span id="name">bạn</span>!</h2>
-    <p style="text-align:center;font-size:31px;margin:35px 0">Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux</p>
-    <div style="text-align:center"><button onclick="openTab('nap')" style="padding:20px 70px;font-size:23px">NẠP ROBUX NGAY</button></div>
-    <div style="margin-top:32px">
-      <h2 style="font-size:22px;margin-bottom:12px;text-align:left">Giao dịch gần đây</h2>
-      <div id="gdList" style="height:210px;overflow:hidden;border:3px solid var(--accent);border-radius:14px;background:#f9f9f9;padding:10px"></div>
+    <p style="text-align:center;font-size:32px;margin:38px 0">Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux</p>
+    <div style="text-align:center"><button onclick="openTab('nap')" style="padding:22px 80px;font-size:24px">NẠP ROBUX NGAY</button></div>
+    <div style="margin-top:35px">
+      <h2 style="font-size:23px;margin-bottom:14px;text-align:left">Giao dịch gần đây</h2>
+      <div id="gdList" style="height:220px;overflow:hidden;border:4px solid var(--accent);border-radius:16px;background:#f9f9f9;padding:12px"></div>
     </div>
   </div>
 
   <!-- NẠP ROBUX -->
   <div id="nap" class="tab">
     <h2>NẠP ROBUX</h2>
-    <p style="text-align:center;color:#555;margin-bottom:15px">10.000đ = 65 Robux</p>
+    <p style="text-align:center;color:#555;margin-bottom:16px;font-size:17px">10.000đ = 65 Robux</p>
     <select id="napMethod" onchange="toggleNap()">
       <option value="qr">QR NGÂN HÀNG (TỰ ĐỘNG)</option>
       <option value="thecao">NẠP THẺ CÀO</option>
     </select>
     <div id="qrBox">
       <input type="number" id="qrAmount" placeholder="Nhập số tiền (VD: 100000)" oninput="calcQR()">
-      <div id="qrPreview" style="text-align:center;font-size:20px;margin:15px 0;color:var(--gold)">0 Robux</div>
+      <div id="qrPreview" style="text-align:center;font-size:21px;margin:16px 0;color:var(--gold)">0 Robux</div>
       <div class="packages">
         <div class="pkg" onclick="setQR(50000)">50K</div>
         <div class="pkg" onclick="setQR(100000)">100K</div>
@@ -191,7 +203,7 @@
       <button onclick="createQR()">NẠP NGAY</button>
     </div>
     <div id="cardBox" class="hidden">
-      <p style="text-align:center;font-weight:bold;margin:15px 0">Chọn mệnh giá:</p>
+      <p style="text-align:center;font-weight:bold;margin:16px 0">Chọn mệnh giá:</p>
       <div class="packages">
         <div class="pkg" onclick="chooseCard(10000)">10K</div>
         <div class="pkg" onclick="chooseCard(20000)">20K</div>
@@ -205,7 +217,7 @@
       <input type="text" id="code" placeholder="Mã thẻ">
       <button onclick="sendCard()">NẠP NGAY</button>
     </div>
-    <h2 style="margin-top:25px;font-size:20px;text-align:left">Lịch sử nạp</h2>
+    <h2 style="margin-top:28px;font-size:21px;text-align:left">Lịch sử nạp</h2>
     <div id="lsNapBox"></div>
   </div>
 
@@ -215,18 +227,18 @@
     <input type="text" placeholder="Username Roblox" id="rbxUser">
     <input type="number" placeholder="Số Robux muốn rút" id="rbxAmt">
     <button id="rutBtn">GỬI YÊU CẦU</button>
-    <h2 style="margin-top:25px;font-size:20px;text-align:left">Lịch sử rút</h2>
+    <h2 style="margin-top:28px;font-size:21px;text-align:left">Lịch sử rút</h2>
     <div id="lsRutBox"></div>
   </div>
 
   <!-- VÒNG QUAY -->
   <div id="vongquay" class="tab">
     <h2>VÒNG QUAY MAY MẮN</h2>
-    <p style="text-align:center;font-size:23px;margin-bottom:20px">Giá quay: <b style="color:var(--gold)">30 Robux</b>/lần</p>
+    <p style="text-align:center;font-size:24px;margin-bottom:22px">Giá quay: <b style="color:var(--gold)">30 Robux</b>/lần</p>
     <div style="text-align:center">
-      <canvas id="wheel" width="330" height="330"></canvas>
-      <div class="prize" id="prizeText">Nhấn QUAY để thử vận may!</div>
-      <button onclick="spin()" style="margin-top:20px;padding:18px 60px;font-size:20px">QUAY NGAY</button>
+      <canvas id="wheel" width="340" height="340"></canvas>
+      <div class="prize" id="prizeText" style="font-size:20px;margin:20px 0">Nhấn QUAY để thử vận may!</div>
+      <button onclick="spin()" style="margin-top:20px;padding:20px 70px;font-size:21px">QUAY NGAY</button>
     </div>
   </div>
 
@@ -234,25 +246,25 @@
   <div id="danhgia" class="tab"><h2>ĐÁNH GIÁ 5★</h2><div id="reviews"></div></div>
 </div>
 
-<!-- POPUP CHÀO MỪNG SAU KHI ĐĂNG NHẬP -->
+<!-- POPUP CHÀO MỪNG -->
 <div id="popup">
   <div id="popupBox">
-    <h3 style="color:var(--accent);font-size:24px;margin-bottom:15px">CHÀO MỪNG BẠN ĐÃ QUAY LẠI!</h3>
-    <p style="font-size:16px;line-height:1.8;color:#333">
+    <h3 style="color:var(--accent);font-size:26px;margin-bottom:18px">CHÀO MỪNG BẠN ĐÃ QUAY LẠI!</h3>
+    <p style="font-size:17px;line-height:1.9;color:#333">
       Thời gian duyệt thẻ: <b>1 - 3 phút</b><br>
       QR tự động cộng ngay khi chuyển đúng nội dung<br><br>
       Không nhận thẻ VietnamMobile<br>
       Giá rẻ nhất thị trường - Nạp thử 10K để kiểm tra uy tín!<br><br>
       <b style="color:var(--accent)">Liên hệ Zalo: 0939546882</b>
     </p>
-    <button onclick="closePopup()" style="margin-top:20px;padding:15px 35px;font-size:18px;background:var(--accent);color:#fff;border:none;border-radius:14px;">
+    <button onclick="closePopup()" style="margin-top:22px;padding:16px 40px;font-size:19px;background:var(--accent);color:#fff;border:none;border-radius:16px;">
       VÀO SHOP NGAY
     </button>
   </div>
 </div>
 
 <script>
-// === TOÀN BỘ CODE CŨ CỦA BẠN (KHÔNG CẮT GÌ CẢ) ===
+// === TOÀN BỘ JS CŨ CỦA BẠN + ĐÃ HOÀN THIỆN ===
 let currentUser = { username: "guest", balance: 0 };
 let cardAmount = 0;
 let lsNap = JSON.parse(localStorage.getItem("lsNap_v2") || "[]");
@@ -263,35 +275,34 @@ function maskName(name){
   const half = Math.ceil(name.length / 2);
   return name.substring(0, half) + "*".repeat(name.length - half + 2);
 }
-function showPopup(html){document.getElementById("popupText").innerHTML=html;document.getElementById("popup").style.display="flex";}
-function closePopup(){document.getElementById("popup").style.display="none";}
+function showPopup(html){
+  document.getElementById("popupText") && (document.getElementById("popupText").innerHTML = html);
+  document.getElementById("popup").style.display = "flex";
+}
+function closePopup(){document.getElementById("popup").style.display = "none";}
 
-// === LOGIN + POPUP CHÀO MỪNG ===
 function login(){
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
   if(u.length < 6 || p.length < 6) return alert("Username và mật khẩu phải ≥ 6 ký tự!");
-  
   currentUser.username = u;
   document.getElementById("loginPage").style.display = "none";
   document.getElementById("name").innerText = u;
   document.getElementById("bal").innerText = "0";
 
-  // Hiện popup chào mừng chỉ 1 lần duy nhất
   if(localStorage.getItem("welcomeShown") !== "true"){
     setTimeout(() => {
       document.getElementById("popup").style.display = "flex";
       localStorage.setItem("welcomeShown", "true");
     }, 800);
   }
-
   updateAllHistory();
   renderFeed();
 }
 function register(){alert("Đăng ký thành công! Giờ đăng nhập đi bro!");}
 function logout(){if(confirm("Đăng xuất ngay?")) location.reload();}
 
-// === TẤT CẢ CÁC HÀM CŨ (NẠP, RÚT, VÒNG QUAY,...) GIỮ NGUYÊN 100% ===
+// TẤT CẢ CÁC HÀM CŨ (giữ nguyên 100%)
 function calcQR(){
   const m = parseInt(document.getElementById("qrAmount").value)||0;
   const r = Math.floor(m/10000*65);
@@ -304,13 +315,11 @@ function createQR(){
   const user = currentUser.username.toUpperCase();
   const noiDung = `ROBUXVN-${user}-${amount}`;
   const qrUrl = `https://img.vietqr.io/image/mbbank-0939546882-compact.png?amount=${amount}&addInfo=${encodeURIComponent(noiDung)}&accountName=ROBUXVN%20SHOP`;
-  showPopup(`<b>Quét QR để chuyển khoản</b><br><br><img src="${qrUrl}" style="width:230px;border-radius:12px"><br><br><b>STK:</b> 0939546882 (MB Bank)<br><b>Nội dung:</b> <span style="color:#00d4aa">${noiDung}</span><br><br>Sau khi chuyển, Robux cộng ngay!`);
- 
+  showPopup(`<b>Quét QR để chuyển khoản</b><br><br><img src="${qrUrl}" style="width:240px;border-radius:14px"><br><br><b>STK:</b> 0939546882 (MB Bank)<br><b>Nội dung:</b> <span style="color:#00d4aa">${noiDung}</span><br><br>Sau khi chuyển, Robux cộng ngay!`);
   const rb = Math.floor(amount/10000*65);
   pushNap({user: currentUser.username, amount, robux: rb, time: new Date().toLocaleString(), status: "success"});
   addTransaction(`${currentUser.username} vừa nạp ${amount.toLocaleString()}đ (+${rb} Robux)`);
 }
-
 function chooseCard(v){cardAmount=v;document.querySelectorAll("#cardBox .pkg").forEach(e=>e.classList.toggle("selected", e===event.target));}
 function sendCard(){
   if(cardAmount===0) return alert("Chọn mệnh giá!");
@@ -330,7 +339,6 @@ function approveNap(id){
   const idx = lsNap.findIndex(x=>x.id===id);
   if(idx>-1){ lsNap[idx].status="success"; localStorage.setItem("lsNap_v2", JSON.stringify(lsNap)); updateAllHistory(); renderFeed(); }
 }
-
 document.getElementById("rutBtn").onclick = function(){
   const userRbx = document.getElementById("rbxUser").value.trim();
   const amt = parseInt(document.getElementById("rbxAmt").value);
@@ -345,7 +353,6 @@ function approveRut(id){
   const idx = lsRut.findIndex(x=>x.id===id);
   if(idx>-1){ lsRut[idx].status="success"; localStorage.setItem("lsRut_v2", JSON.stringify(lsRut)); updateAllHistory(); renderFeed(); }
 }
-
 const fakeNames = ["tranvanlong","nguyenvana","levinh","phamminhk","hotuananh","dangthilan","buithilan"];
 function addTransaction(text){
   const div = document.createElement("div"); div.className="gd-item"; div.innerText=text;
@@ -382,7 +389,6 @@ function updateRutLS(){
       <small>${x.time}</small>
     </div>`).join('');
 }
-
 function openTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
@@ -395,6 +401,7 @@ function toggleNap(){
   document.getElementById("cardBox").classList.toggle("hidden", v!=="thecao");
 }
 
+// VÒNG QUAY + GIFTCODE + TUYẾT RƠI + REVIEW (giữ nguyên như cũ)
 const prizes=["5","10","30","50","200","500 Robux"], colors=["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"];
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
@@ -402,11 +409,11 @@ function drawWheel(){
   prizes.forEach((p,i)=>{
     ctx.fillStyle = colors[i];
     ctx.beginPath();
-    ctx.moveTo(165,165);
-    ctx.arc(165,165,165,i*60*Math.PI/180,(i+1)*60*Math.PI/180);
+    ctx.moveTo(170,170);
+    ctx.arc(170,170,170,i*60*Math.PI/180,(i+1)*60*Math.PI/180);
     ctx.fill();
-    ctx.save();ctx.translate(165,165);ctx.rotate((i+0.5)*60*Math.PI/180);
-    ctx.fillStyle="#fff";ctx.font="bold 19px Roboto";ctx.fillText(p,70,8);ctx.restore();
+    ctx.save();ctx.translate(170,170);ctx.rotate((i+0.5)*60*Math.PI/180);
+    ctx.fillStyle="#fff";ctx.font="bold 20px Roboto";ctx.fillText(p,75,10);ctx.restore();
   });
 }
 drawWheel();
@@ -417,7 +424,7 @@ function spin(){
   setTimeout(()=>{ 
     const win=prizes[Math.floor(Math.random()*prizes.length)]; 
     const num=parseInt(win);
-    document.getElementById("prizeText").innerHTML=`CHÚC MỪNG!<br><b style="font-size:4rem">${win}</b>`;
+    document.getElementById("prizeText").innerHTML=`CHÚC MỪNG!<br><b style="font-size:4.5rem">${win}</b>`;
     if(!isNaN(num)){ 
       pushNap({user:currentUser.username,robux:num,time:new Date().toLocaleString(),status:"success",note:"Vòng quay"}); 
       addTransaction(`${currentUser.username} trúng ${num} Robux`); 
@@ -433,26 +440,20 @@ function useGift(){
     alert("NHẬN 500 ROBUX THÀNH CÔNG!"); updateAllHistory(); renderFeed();
   }else alert("Mã sai rồi bro!");
 }
-
-// TUYẾT RƠI
-for(let i=0;i<100;i++){
+for(let i=0;i<120;i++){
   const s=document.createElement("div"); s.className="snow";
   s.style.left=Math.random()*100+"vw";
-  s.style.animationDuration=8+Math.random()*12+"s";
-  s.style.animationDelay=Math.random()*10+"s";
-  s.style.opacity=Math.random()*0.6+0.4;
+  s.style.animationDuration=8+Math.random()*14+"s";
+  s.style.animationDelay=Math.random()*12+"s";
+  s.style.opacity=Math.random()*0.7+0.3;
   document.getElementById("snowZone").appendChild(s);
 }
-
-// REVIEW GIẢ
 const reviews = ["Rút 1 phút có","Nạp thẻ cào tự động","Giá rẻ nhất VN","Admin donate nhanh","Shop đẹp xỉu","24/7 có người duyệt!"];
-reviews.forEach(t=>document.getElementById("reviews").innerHTML += `<div style="background:#f9f9f9;padding:20px;margin:16px 0;border-radius:18px;border-left:6px solid var(--gold);box-shadow:0 8px 25px rgba(0,0,0,0.1)">
-  <div style="color:var(--gold);font-size:2rem">★★★★★</div><p style="margin:8px 0;font-weight:bold">Khách hàng ẩn danh</p><p style="font-size:18px">${t}</p></div>`);
+reviews.forEach(t=>document.getElementById("reviews").innerHTML += `<div style="background:#f9f9f9;padding:22px;margin:18px 0;border-radius:20px;border-left:7px solid var(--gold);box-shadow:0 10px 30px rgba(0,0,0,0.12)">
+  <div style="color:var(--gold);font-size:2.2rem">★★★★★</div><p style="margin:10px 0;font-weight:bold">Khách hàng ẩn danh</p><p style="font-size:19px">${t}</p></div>`);
 
-// Hàm pushNap, pushRut
 function pushNap(obj){ lsNap.push(obj); localStorage.setItem("lsNap_v2", JSON.stringify(lsNap)); }
 function pushRut(obj){ lsRut.push(obj); localStorage.setItem("lsRut_v2", JSON.stringify(lsRut)); }
-
 </script>
 </body>
 </html>
