@@ -1,32 +1,103 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Admin</title>
-<style>body{background:#000;color:#0f0;font-family:Arial;padding:20px}
-table{width:100%;border-collapse:collapse}th,td{border:1px solid #0f0;padding:10px}</style>
-</head><body>
-<h1>ADMIN - DUYỆT ĐƠN RÚT</h1>
-<input type="password" id="pass" placeholder="Pass admin">
-<button onclick="login()">Vào</button>
-<div id="panel" style="display:none">
-<button onclick="load()">Tải lại đơn</button>
-<table id="tbl"><tr><th>ID</th><th>User</th><th>Roblox</th><th>Robux</th><th>Thời gian</th><th>Hành động</th></tr></table>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>ADMIN - ROBUXVN.SHOP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body{font-family:Arial,sans-serif;background:#111;color:#fff;margin:0;padding:0;}
+  .container{max-width:1000px;margin:20px auto;padding:20px;}
+  h1{text-align:center;color:#00d4aa;margin-bottom:30px;}
+  input,button{padding:12px;border-radius:8px;margin:10px 0;width:100%;font-size:16px;}
+  button{background:#00d4aa;color:#000;border:none;cursor:pointer;}
+  button:hover{background:#00ffc4;}
+  .order{padding:15px;background:#222;margin:10px 0;border-radius:10px;border-left:5px solid #00d4aa;}
+  .order.pending{border-color:#f39c12;}
+  .order.rut{border-left-color:#e74c3c;}
+  .btn-approve{background:#27ae60;color:#fff;}
+  .btn-reject{background:#e74c3c;color:#fff;}
+  .logout{float:right;background:#e74c3c;}
+  table{width:100%;border-collapse:collapse;margin:20px 0;}
+  th,td{padding:12px;border:1px solid #444;text-align:center;}
+  th{background:#00d4aa;color:#000;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>ADMIN PANEL - ROBUXVN.SHOP</h1>
+  <button class="logout" onclick="location.href='/')">Về Trang Chủ</button>
+  <hr>
+
+  <h2>Đăng nhập Admin</h2>
+  <input type="password" id="adminPass" placeholder="Nhập mật khẩu admin">
+  <button onclick="adminLogin()">ĐĂNG NHẬP ADMIN</button>
+
+  <div id="adminPanel" style="display:none">
+    <h2>ĐƠN NẠP CHỜ DUYỆT</h2>
+    <div id="napOrders"></div>
+
+    <h2>ĐƠN RÚT CHỜ DUYỆT</h2>
+    <div id="rutOrders"></div>
+  </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
-async function login(){if(pass.value==="123456"){panel.style.display="block";load();}else alert("Sai pass");}
-async function load(){
-  const r=await axios.get("db.json?"+Date.now());
-  const orders=r.data.orders.filter(o=>o.status==="pending");
-  tbl.innerHTML="<tr><th>ID</th><th>User</th><th>Roblox</th><th>Robux</th><th>Thời gian</th><th>Hành động</th></tr>";
-  orders.forEach(o=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${o.id}</td><td>${o.user}</td><td>${o.rbxUser}</td><td>${o.robux}</td><td>${new Date(o.time).toLocaleString()}</td>
-      <td><button onclick="done(${o.id})">Hoàn thành</button></td>`;
-    tbl.appendChild(tr);
+async function adminLogin(){
+  const pass = document.getElementById("adminPass").value;
+  const res = await fetch('/api/admin/login', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({password: pass})
   });
+  const data = await res.json();
+  if(data.success){
+    document.getElementById("adminPanel").style.display = "block";
+    loadOrders();
+    setInterval(loadOrders, 5000);
+  } else {
+    alert("Sai mật khẩu admin!");
+  }
 }
-async function done(id){
-  await axios.post("/done",{id}); // tạm thời chỉ xóa file db.json để test
-  load();
+
+async function loadOrders(){
+  const res = await fetch('/api/admin/orders');
+  const {nap, rut} = await res.json();
+
+  document.getElementById("napOrders").innerHTML = nap.length === 0 ? "<p>Không có đơn nạp nào</p>" : nap.map(o=>`
+    <div class="order pending">
+      <p><b>${o.user}</b> - ${o.amount.toLocaleString()}đ (${o.robux} Robux)</p>
+      <p>Thẻ: ${o.cardType} | Seri: ${o.seri} | Mã: ${o.code}</p>
+      <button class="btn-approve" onclick="approveNap(${o.id})">DUYỆT</button>
+      <button class="btn-reject" onclick="reject(${o.id},'nap')">TỪ CHỐI</button>
+    </div>
+  `).join('');
+
+  document.getElementById("rutOrders").innerHTML = rut.length === 0 ? "<p>Không có đơn rút nào</p>" : rut.map(o=>`
+    <div class="order rut">
+      <p><b>${o.user}</b> rút <b>${o.robux}</b> Robux → <b>${o.to}</b></p>
+      <button class="btn-approve" onclick="approveRut(${o.id})">DUYỆT RÚT</button>
+      <button class="btn-reject" onclick="reject(${o.id},'rut')">TỪ CHỐI</button>
+    </div>
+  `).join('');
+}
+
+async function approveNap(id){
+  await fetch('/api/admin/approve/nap', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+  alert("Đã duyệt nạp!");
+  loadOrders();
+}
+async function approveRut(id){
+  const res = await fetch('/api/admin/approve/rut', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+  const data = await res.json();
+  alert(data.success ? "Đã duyệt rút!" : "Lỗi: " + data.message);
+  loadOrders();
+}
+async function reject(id, type){
+  if(confirm("Xóa đơn này?")){
+    await fetch('/api/admin/reject', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,type})});
+    loadOrders();
+  }
 }
 </script>
-</body></html>
+</body>
+</html>
