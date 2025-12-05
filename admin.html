@@ -1,103 +1,79 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>ADMIN - ROBUXVN.SHOP</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADMIN PANEL</title>
 <style>
-  body{font-family:Arial,sans-serif;background:#111;color:#fff;margin:0;padding:0;}
-  .container{max-width:1000px;margin:20px auto;padding:20px;}
-  h1{text-align:center;color:#00d4aa;margin-bottom:30px;}
-  input,button{padding:12px;border-radius:8px;margin:10px 0;width:100%;font-size:16px;}
-  button{background:#00d4aa;color:#000;border:none;cursor:pointer;}
-  button:hover{background:#00ffc4;}
-  .order{padding:15px;background:#222;margin:10px 0;border-radius:10px;border-left:5px solid #00d4aa;}
-  .order.pending{border-color:#f39c12;}
-  .order.rut{border-left-color:#e74c3c;}
-  .btn-approve{background:#27ae60;color:#fff;}
-  .btn-reject{background:#e74c3c;color:#fff;}
-  .logout{float:right;background:#e74c3c;}
-  table{width:100%;border-collapse:collapse;margin:20px 0;}
-  th,td{padding:12px;border:1px solid #444;text-align:center;}
-  th{background:#00d4aa;color:#000;}
+body { background:#111; color:#fff; font-family:Arial; padding:20px; }
+.box { background:#222; padding:15px; border-radius:10px; margin:10px 0; }
+button { padding:10px 20px; margin:5px; border:none; cursor:pointer; }
+.approve { background:#27ae60; color:#fff; }
+.reject { background:#e74c3c; color:#fff; }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>ADMIN PANEL - ROBUXVN.SHOP</h1>
-  <button class="logout" onclick="location.href='/')">Về Trang Chủ</button>
-  <hr>
 
-  <h2>Đăng nhập Admin</h2>
-  <input type="password" id="adminPass" placeholder="Nhập mật khẩu admin">
-  <button onclick="adminLogin()">ĐĂNG NHẬP ADMIN</button>
+<h1>ADMIN PANEL</h1>
 
-  <div id="adminPanel" style="display:none">
-    <h2>ĐƠN NẠP CHỜ DUYỆT</h2>
-    <div id="napOrders"></div>
+<h2>Đơn nạp chờ duyệt</h2>
+<div id="nap"></div>
 
-    <h2>ĐƠN RÚT CHỜ DUYỆT</h2>
-    <div id="rutOrders"></div>
-  </div>
-</div>
+<h2>Đơn rút chờ duyệt</h2>
+<div id="rut"></div>
 
 <script>
-async function adminLogin(){
-  const pass = document.getElementById("adminPass").value;
-  const res = await fetch('/api/admin/login', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({password: pass})
-  });
-  const data = await res.json();
-  if(data.success){
-    document.getElementById("adminPanel").style.display = "block";
-    loadOrders();
-    setInterval(loadOrders, 5000);
-  } else {
-    alert("Sai mật khẩu admin!");
-  }
+async function load(){
+    const res = await fetch("/api/admin/orders");
+    const data = await res.json();
+
+    document.getElementById("nap").innerHTML =
+        data.deposits.map(o=>`
+            <div class="box">
+                <b>${o.user}</b> nạp <b>${o.amount}</b>đ (+${o.robux} Robux) <br>
+                <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
+                <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
+            </div>
+        `).join("");
+
+    document.getElementById("rut").innerHTML =
+        data.withdraws.map(o=>`
+            <div class="box">
+                <b>${o.user}</b> rút <b>${o.robux}</b> Robux → ${o.to} <br>
+                <button class="approve" onclick="appRut(${o.id})">DUYỆT</button>
+                <button class="reject" onclick="rej(${o.id},'withdraw')">XOÁ</button>
+            </div>
+        `).join("");
 }
 
-async function loadOrders(){
-  const res = await fetch('/api/admin/orders');
-  const {nap, rut} = await res.json();
-
-  document.getElementById("napOrders").innerHTML = nap.length === 0 ? "<p>Không có đơn nạp nào</p>" : nap.map(o=>`
-    <div class="order pending">
-      <p><b>${o.user}</b> - ${o.amount.toLocaleString()}đ (${o.robux} Robux)</p>
-      <p>Thẻ: ${o.cardType} | Seri: ${o.seri} | Mã: ${o.code}</p>
-      <button class="btn-approve" onclick="approveNap(${o.id})">DUYỆT</button>
-      <button class="btn-reject" onclick="reject(${o.id},'nap')">TỪ CHỐI</button>
-    </div>
-  `).join('');
-
-  document.getElementById("rutOrders").innerHTML = rut.length === 0 ? "<p>Không có đơn rút nào</p>" : rut.map(o=>`
-    <div class="order rut">
-      <p><b>${o.user}</b> rút <b>${o.robux}</b> Robux → <b>${o.to}</b></p>
-      <button class="btn-approve" onclick="approveRut(${o.id})">DUYỆT RÚT</button>
-      <button class="btn-reject" onclick="reject(${o.id},'rut')">TỪ CHỐI</button>
-    </div>
-  `).join('');
+async function appDep(id){
+    await fetch("/api/admin/approve/deposit",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({id})
+    });
+    load();
 }
 
-async function approveNap(id){
-  await fetch('/api/admin/approve/nap', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
-  alert("Đã duyệt nạp!");
-  loadOrders();
+async function appRut(id){
+    await fetch("/api/admin/approve/withdraw",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({id})
+    });
+    load();
 }
-async function approveRut(id){
-  const res = await fetch('/api/admin/approve/rut', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
-  const data = await res.json();
-  alert(data.success ? "Đã duyệt rút!" : "Lỗi: " + data.message);
-  loadOrders();
+
+async function rej(id,type){
+    await fetch("/api/admin/reject",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({id,type})
+    });
+    load();
 }
-async function reject(id, type){
-  if(confirm("Xóa đơn này?")){
-    await fetch('/api/admin/reject', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,type})});
-    loadOrders();
-  }
-}
+
+load();
+setInterval(load,3000);
 </script>
 </body>
 </html>
