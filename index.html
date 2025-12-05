@@ -449,7 +449,7 @@ function createQR(){
   `);
 
   // Lưu lịch sử nạp (giả lập thành công)
-  lsNap.push({user:currentUser.username, amount, robux, time:Date.now(), status:"success"});
+  lsNap.push({user:currentUser.username, amount, robux, time:Date.now(), status:"pending"});
   localStorage.setItem("napHistory", JSON.stringify(lsNap));
   renderRecentTransactions();
   renderHistory();
