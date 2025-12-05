@@ -6,6 +6,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
 <style>
+  #popup {
+        backdrop-filter: blur(6px);
+    }
+
+    #popupBox {
+        border: 4px solid var(--accent);
+        background: linear-gradient(165deg, #ffffff, #f2fffa);
+        box-shadow: 0 0 35px rgba(0, 212, 170, 0.45);
+    }
+
+    #popupBox p {
+        font-size: 17px !important;
+        line-height: 1.55 !important;
+    }
+
+    #popupBox h3 {
+        font-size: 24px !important;
+        letter-spacing: 1px;
+        text-shadow: 0 0 12px rgba(0,212,170,0.45);
+    }
+
+    /* Animation bay lên */
+    @keyframes popupFade {
+        from { opacity: 0; transform: translateY(40px) scale(.85); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    #popupBox {
+        animation: popupFade .45s ease;
+    }
   :root{
     --accent:#00d4aa;
     --gold:#f1c40f;
