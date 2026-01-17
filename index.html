@@ -329,10 +329,10 @@ setInterval(() => {
 </div>
 
 <script>
-let currentUser = {username: "guest", balance: 0};
+let currentUser = {username: "guest", balance: 0, password: ""}; // Thêm password để refresh
 let cardAmount = 0;
-let lsNap = JSON.parse(localStorage.getItem("napHistory") || "[]");
-let lsRut = JSON.parse(localStorage.getItem("rutHistory") || "[]");
+let lsNap = [];
+let lsRut = [];
 
 // Ẩn tên 50%
 function hideName(n){
@@ -369,28 +369,50 @@ setInterval(renderRecentTransactions, 3500);
 renderRecentTransactions();
 
 // Render lịch sử cá nhân
-function renderHistory(){
+async function renderHistory(){
+  const res = await fetch("/api/history/" + currentUser.username);
+  const data = await res.json();
+
+  lsNap = data.deposits;
+  lsRut = data.withdraws;
+
   const napDiv = document.getElementById("lsNap");
+  if(napDiv){
+    const myNap = [...lsNap].reverse();
+    napDiv.innerHTML = myNap.length===0 ? "<div class='hist-item'>Chưa có lịch sử nạp</div>" : myNap.map(t=>`
+      <div class="hist-item">
+        +${t.robux} Robux ${t.amount?`(${t.amount.toLocaleString()}đ)`:""}<br>
+        <small>${new Date(t.time).toLocaleString()}</small>
+        <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":"Thành công"}</div>
+      </div>
+    `).join('');
+  }
+
   const rutDiv = document.getElementById("lsRut");
-  if(!napDiv || !rutDiv) return;
+  if(rutDiv){
+    const myRut = [...lsRut].reverse();
+    rutDiv.innerHTML = myRut.length===0 ? "<div class='hist-item rut'>Chưa có lịch sử rút</div>" : myRut.map(t=>`
+      <div class="hist-item rut">
+        -${t.robux} Robux → <b>${t.to}</b><br>
+        <small>${new Date(t.time).toLocaleString()}</small>
+        <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":"Thành công"}</div>
+      </div>
+    `).join('');
+  }
 
-  const myNap = lsNap.filter(x=>x.user===currentUser.username).reverse();
-  napDiv.innerHTML = myNap.length===0 ? "<div class='hist-item'>Chưa có lịch sử nạp</div>" : myNap.map(t=>`
-    <div class="hist-item">
-      +${t.robux} Robux ${t.amount?`(${t.amount.toLocaleString()}đ)`:""}<br>
-      <small>${new Date(t.time).toLocaleString()}</small>
-      <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":"Thành công"}</div>
-    </div>
-  `).join('');
+  // Cập nhật balance từ server
+  const loginRes = await fetch("/api/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({username: currentUser.username, password: currentUser.password})
+  });
+  const userData = await loginRes.json();
+  if(!userData.error){
+    currentUser.balance = userData.balance;
+    document.getElementById("bal").innerText = userData.balance;
+  }
 
-  const myRut = lsRut.filter(x=>x.user===currentUser.username).reverse();
-  rutDiv.innerHTML = myRut.length===0 ? "<div class='hist-item rut'>Chưa có lịch sử rút</div>" : myRut.map(t=>`
-    <div class="hist-item rut">
-      -${t.robux} Robux → <b>${t.to}</b><br>
-      <small>${new Date(t.time).toLocaleString()}</small>
-      <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":"Thành công"}</div>
-    </div>
-  `).join('');
+  renderRecentTransactions();
 }
 
 /* ---------- POPUP ĐẸP ---------- */
@@ -401,27 +423,26 @@ function showPopup(text){
 function closePopup(){document.getElementById("popup").style.display="none";}
 
 /* ---------- LOGIN ---------- */
-function login(){
- async function login(){
-    const u = username.value.trim();
-    const p = password.value;
+async function login(){
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value;
 
-    const res = await fetch("/api/login",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ username:u, password:p })
-    });
+  const res = await fetch("/api/login",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ username:u, password:p })
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if(data.error) return alert(data.error);
+  if(data.error) return alert(data.error);
 
-    currentUser = data;
-    localStorage.setItem("user", JSON.stringify(data));
+  currentUser = data;
+  currentUser.password = p;
 
-    loginPage.style.display="none";
-    name.innerText = data.username;
-    bal.innerText = data.balance;
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("name").innerText = data.username;
+  document.getElementById("bal").innerText = data.balance;
   alert("Đăng nhập thành công! Chào " + u + "!");
   setTimeout(()=>{
     showPopup(`
@@ -433,7 +454,7 @@ function login(){
       → Hãy thử nạp 10.000đ để test nhé!
     `);
   },600);
-  renderHistory();
+  await renderHistory();
 }
 
 /* ---------- QR NẠP ---------- */
@@ -442,17 +463,7 @@ function calcQR(){
   const r = Math.floor(m/10000*65);
   document.getElementById("qrPreview").innerHTML = `<b>${r.toLocaleString()}</b> Robux`;
 }
-function createQR(){
-  await fetch("/api/deposit",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-        user: currentUser.username,
-        amount,
-        robux,
-        type: "bank"
-    })
-});
+async function createQR(){
   const amount = parseInt(document.getElementById("qrAmount").value);
   if(!amount || amount < 10000) return alert("Tối thiểu 10.000đ nha bro!");
   const robux = Math.floor(amount/10000*65);
@@ -467,11 +478,17 @@ function createQR(){
     Sau khi chuyển khoản, Robux sẽ cộng ngay!
   `);
 
-  // Lưu lịch sử nạp (giả lập thành công)
-  lsNap.push({user:currentUser.username, amount, robux, time:Date.now(), status:"pending"});
-  localStorage.setItem("napHistory", JSON.stringify(lsNap));
-  renderRecentTransactions();
-  renderHistory();
+  await fetch("/api/deposit",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+        user: currentUser.username,
+        amount,
+        robux,
+        type: "bank"
+    })
+  });
+  await renderHistory();
 }
 function setQR(x){document.getElementById("qrAmount").value=x;calcQR();}
 
@@ -481,7 +498,14 @@ function chooseCard(amount){
   document.querySelectorAll("#cardBox .pkg").forEach(p=>p.classList.remove("selected"));
   event.target.classList.add("selected");
 }
-function sendCard(){
+async function sendCard(){
+  if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
+  const seri = document.getElementById("seri").value.trim();
+  const code = document.getElementById("code").value.trim();
+  if(!seri || !code) return alert("Nhập đầy đủ seri + mã thẻ!");
+  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin duyệt 1-3 phút nha!`);
+  
+  const robux = Math.floor(cardAmount/10000*65);
   await fetch("/api/deposit",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
@@ -491,27 +515,21 @@ function sendCard(){
         robux,
         type:"card"
     })
-});
-  if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
-  const seri = document.getElementById("seri").value.trim();
-  const code = document.getElementById("code").value.trim();
-  if(!seri || !code) return alert("Nhập đầy đủ seri + mã thẻ!");
-  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin duyệt 1-3 phút nha!`);
-  
-  const robux = Math.floor(cardAmount/10000*65);
-  lsNap.push({user:currentUser.username, amount:cardAmount, robux, time:Date.now(), status:"pending", note:"Thẻ cào"});
-  localStorage.setItem("napHistory", JSON.stringify(lsNap));
+  });
   
   document.getElementById("seri").value = "";
   document.getElementById("code").value = "";
   cardAmount = 0;
   document.querySelectorAll("#cardBox .pkg").forEach(p=>p.classList.remove("selected"));
-  renderRecentTransactions();
-  renderHistory();
+  await renderHistory();
 }
 
 /* ---------- RÚT ROBUX ---------- */
-function rutRobux(){
+async function rutRobux(){
+  const toUser = document.getElementById("rbxUser").value.trim();
+  const amt = parseInt(document.getElementById("rbxAmt").value);
+  if(!toUser || !amt || amt < 50) return alert("Nhập username Roblox + số Robux (tối thiểu 50)!");
+  
   await fetch("/api/withdraw",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
@@ -520,30 +538,12 @@ function rutRobux(){
         robux: amt,
         to: toUser
     })
-});
-  const toUser = document.getElementById("rbxUser").value.trim();
-  const amt = parseInt(document.getElementById("rbxAmt").value);
-  if(!toUser || !amt || amt < 50) return alert("Nhập username Roblox + số Robux (tối thiểu 50)!");
-  
-  lsRut.push({user:currentUser.username, robux:amt, to:toUser, time:Date.now(), status:"pending"});
-  localStorage.setItem("rutHistory", JSON.stringify(lsRut));
+  });
   
   alert("Yêu cầu rút đã gửi! Admin sẽ donate trong 5-60 phút");
-  renderRecentTransactions();
-  renderHistory();
-  async function renderHistory(){
-    const res = await fetch("/api/history/" + currentUser.username);
-    const data = await res.json();
-
-    lsNap = data.deposits;
-    lsRut = data.withdraws;
-
-    localStorage.setItem("napHistory", JSON.stringify(lsNap));
-    localStorage.setItem("rutHistory", JSON.stringify(lsRut));
-
-    // Code render cũ giữ nguyên
   document.getElementById("rbxUser").value="";
   document.getElementById("rbxAmt").value="";
+  await renderHistory();
 }
 
 /* ---------- CODE CŨ GIỮ NGUYÊN ---------- */
