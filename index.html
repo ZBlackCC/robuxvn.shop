@@ -155,6 +155,7 @@
   .status{position:absolute;top:10px;right:12px;font-size:12px;font-weight:bold;padding:5px 10px;border-radius:8px;}
   .status.pending{background:#fff3cd;color:#e67e22;}
   .status.success{background:#d4edda;color:#27ae60;}
+  .status.failed{background:#f8d7da;color:#c0392b;}
 
   @media (max-width:480px){
     .container{padding:18px;margin:12px 8px;}
@@ -379,7 +380,7 @@ async function renderHistory(){
       <div class="hist-item">
         +${t.robux} Robux ${t.amount?`(${t.amount.toLocaleString()}đ)`:""}<br>
         <small>${new Date(t.time).toLocaleString()}</small>
-        <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":"Thành công"}</div>
+        <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":(t.status==="success"?"Thành công":"Thất bại")}</div>
       </div>
     `).join('');
   }
@@ -391,7 +392,7 @@ async function renderHistory(){
       <div class="hist-item rut">
         -${t.robux} Robux → <b>${t.to}</b><br>
         <small>${new Date(t.time).toLocaleString()}</small>
-        <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":"Thành công"}</div>
+        <div class="status ${t.status}">${t.status==="pending"?"Đang xét duyệt":(t.status==="success"?"Thành công":"Thất bại")}</div>
       </div>
     `).join('');
   }
