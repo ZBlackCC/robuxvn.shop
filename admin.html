@@ -9,28 +9,70 @@ body { background:#111; color:#fff; font-family:Arial; padding:20px; }
 button { padding:10px 20px; margin:5px; border:none; cursor:pointer; }
 .approve { background:#27ae60; color:#fff; }
 .reject { background:#e74c3c; color:#fff; }
+#adminLogin { display: block; }
+#mainPanel { display: none; }
 </style>
 </head>
 <body>
 
-<h1>ADMIN PANEL</h1>
-
-<h2>Chỉnh tỷ giá Robux (10.000đ = X Robux)</h2>
-<div>
-  <input type="number" id="newRate" placeholder="Nhập tỷ giá mới" style="padding:10px; margin:5px;">
-  <button onclick="setRate()" style="background:#3498db; color:#fff;">CẬP NHẬT</button>
+<div id="adminLogin">
+  <h1>Đăng nhập Admin</h1>
+  <input type="text" id="adminUser" placeholder="Username">
+  <input type="password" id="adminPass" placeholder="Mật khẩu">
+  <button onclick="adminLogin()">ĐĂNG NHẬP</button>
 </div>
 
-<h2>Đơn nạp chờ duyệt</h2>
-<div id="nap"></div>
+<div id="mainPanel">
+  <h1>ADMIN PANEL</h1>
 
-<h2>Đơn rút chờ duyệt</h2>
-<div id="rut"></div>
+  <h2>Chỉnh tỷ giá Robux (10.000đ = X Robux)</h2>
+  <div>
+    <input type="number" id="newRate" placeholder="Nhập tỷ giá mới" style="padding:10px; margin:5px;">
+    <button onclick="setRate()" style="background:#3498db; color:#fff;">CẬP NHẬT</button>
+  </div>
+
+  <h2>Đơn nạp chờ duyệt</h2>
+  <div id="nap"></div>
+
+  <h2>Đơn rút chờ duyệt</h2>
+  <div id="rut"></div>
+</div>
 
 <script>
+let adminToken = localStorage.getItem("adminToken") || "";
+
+if (adminToken) {
+  document.getElementById("adminLogin").style.display = "none";
+  document.getElementById("mainPanel").style.display = "block";
+  load();
+}
+
+async function adminLogin() {
+  const u = document.getElementById("adminUser").value;
+  const p = document.getElementById("adminPass").value;
+  const res = await fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: u, password: p })
+  });
+  const data = await res.json();
+  if (data.token) {
+    adminToken = data.token;
+    localStorage.setItem("adminToken", adminToken);
+    document.getElementById("adminLogin").style.display = "none";
+    document.getElementById("mainPanel").style.display = "block";
+    load();
+  } else {
+    alert(data.error);
+  }
+}
+
 async function load(){
-    const res = await fetch("/api/admin/orders");
+    const res = await fetch("/api/admin/orders", {
+      headers: { "Authorization": adminToken }
+    });
     const data = await res.json();
+    if (data.error) return alert(data.error);
 
     document.getElementById("nap").innerHTML =
         data.deposits.map(o=>`
@@ -54,7 +96,7 @@ async function load(){
 async function appDep(id){
     await fetch("/api/admin/approve/deposit",{
         method:"POST",
-        headers:{ "Content-Type":"application/json" },
+        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
         body: JSON.stringify({id})
     });
     load();
@@ -63,7 +105,7 @@ async function appDep(id){
 async function appRut(id){
     await fetch("/api/admin/approve/withdraw",{
         method:"POST",
-        headers:{ "Content-Type":"application/json" },
+        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
         body: JSON.stringify({id})
     });
     load();
@@ -72,7 +114,7 @@ async function appRut(id){
 async function rej(id,type){
     await fetch("/api/admin/reject",{
         method:"POST",
-        headers:{ "Content-Type":"application/json" },
+        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
         body: JSON.stringify({id,type})
     });
     load();
@@ -83,14 +125,13 @@ async function setRate(){
     if(!rate) return alert("Nhập tỷ giá!");
     await fetch("/api/admin/set_rate",{
         method:"POST",
-        headers:{ "Content-Type":"application/json" },
+        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
         body: JSON.stringify({rate})
     });
     alert("Tỷ giá cập nhật thành công!");
     document.getElementById("newRate").value = "";
 }
 
-load();
 setInterval(load,3000);
 </script>
 </body>
