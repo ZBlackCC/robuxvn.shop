@@ -182,6 +182,22 @@ app.post("/api/admin/reject", (req, res) => {
 });
 
 // =============================================
+// 📌 GET/SET TỶ GIÁ ROBUX
+// =============================================
+app.get("/api/rate", (req, res) => {
+    const data = db();
+    res.json({ rate: data.rate || 65 });
+});
+
+app.post("/api/admin/set_rate", (req, res) => {
+    const { rate } = req.body;
+    const data = db();
+    data.rate = parseInt(rate);
+    save(data);
+    res.json({ success: true });
+});
+
+// =============================================
 // 📌 RUN SERVER
 // =============================================
 app.listen(3000, () => console.log("SERVER RUNNING PORT 3000"));
