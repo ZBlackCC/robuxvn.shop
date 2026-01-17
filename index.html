@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>ROBUXVN.SHOP - RÚT ROBUX GIÁ RẺ NHẤT 2025</title>
+<title>ROBUXVN.SHOP - RÚT ROBUX GIÁ RẺ NHẤT 2026</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
 <style>
@@ -48,14 +48,6 @@
     min-height:100vh;
     overflow-x:hidden;
   }
-  /* TUYẾT RƠI */
-  .snow{
-    position:fixed;top:-10px;width:8px;height:8px;
-    background:#fff;border-radius:50%;pointer-events:none;
-    box-shadow:0 0 12px #fff;opacity:0.8;z-index:9999;
-    animation:snowfall linear infinite;
-  }
-  @keyframes snowfall{to{transform:translateY(100vh) rotate(360deg);}}
   /* HEADER */
   .header{
     background:linear-gradient(135deg,#00d4aa,#00a085);
@@ -179,18 +171,80 @@
 </style>
 </head>
 <body>
-<div id="snowZone"></div>
 
-<!-- TUYẾT RƠI -->
+<!-- PHÁO HOA -->
+<canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;"></canvas>
+
 <script>
-setInterval(() => {
-  const s = document.createElement("div");
-  s.className = "snow";
-  s.style.left = Math.random() * 100 + "vw";
-  s.style.animationDuration = Math.random() * 4 + 6 + "s";
-  document.getElementById("snowZone").appendChild(s);
-  setTimeout(() => s.remove(), 12000);
-}, 150);
+// Hiệu ứng pháo hoa đẹp
+const canvas = document.getElementById('fireworksCanvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const ctx = canvas.getContext('2d');
+
+let particles = [];
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.radius = Math.random() * 2 + 1;
+    this.velocity = {
+      x: (Math.random() - 0.5) * 20,
+      y: (Math.random() - 0.5) * 20
+    };
+    this.alpha = 1;
+    this.friction = 0.99;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  update() {
+    this.velocity.x *= this.friction;
+    this.velocity.y *= this.friction;
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    this.alpha -= 0.01;
+  }
+}
+
+function createFirework() {
+  const x = Math.random() * canvas.width;
+  const y = Math.random() * canvas.height / 2 + canvas.height / 2;
+  const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+  for (let i = 0; i < 50; i++) {
+    particles.push(new Particle(x, y, color));
+  }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach((particle, i) => {
+    if (particle.alpha > 0) {
+      particle.draw();
+      particle.update();
+    } else {
+      particles.splice(i, 1);
+    }
+  });
+}
+
+animate();
+
+setInterval(createFirework, 1500); // Tạo pháo hoa mỗi 1.5 giây
 </script>
 
 <!-- LOGIN -->
@@ -207,7 +261,7 @@ setInterval(() => {
 <!-- HEADER -->
 <div class="header">
   <h1>ROBUXVN.SHOP</h1>
-  <p>SHOP ROBUX RẺ NHẤT 2025</p>
+  <p>SHOP ROBUX RẺ NHẤT 2026</p>
 </div>
 
 <div class="nav">
@@ -472,7 +526,7 @@ async function createQR(){
     <img src="${qrUrl}" style="width:230px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.4)"><br><br>
     <b>STK:</b> 0939546882 (MB Bank)<br>
     <b>Nội dung:</b> <span style="color:#00d4aa">${noiDung}</span><br><br>
-    Sau khi chuyển khoản, Robux sẽ cộng ngay!
+    Sau khi chuyển khoản, đơn sẽ được admin duyệt thủ công!
   `);
 
   await fetch("/api/deposit",{
@@ -500,7 +554,7 @@ async function sendCard(){
   const seri = document.getElementById("seri").value.trim();
   const code = document.getElementById("code").value.trim();
   if(!seri || !code) return alert("Nhập đầy đủ seri + mã thẻ!");
-  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin duyệt 1-3 phút nha!`);
+  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin sẽ duyệt thủ công trong 1-3 phút!`);
   
   const robux = Math.floor(cardAmount/10000 * robuxRate);
   await fetch("/api/deposit",{
@@ -537,7 +591,7 @@ async function rutRobux(){
     })
   });
   
-  alert("Yêu cầu rút đã gửi! Admin sẽ donate trong 5-60 phút");
+  alert("Yêu cầu rút đã gửi! Admin sẽ duyệt thủ công và donate trong 5-60 phút");
   document.getElementById("rbxUser").value="";
   document.getElementById("rbxAmt").value="";
   await renderHistory();
