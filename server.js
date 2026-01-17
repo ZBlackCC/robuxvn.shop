@@ -17,6 +17,18 @@ function save(data) {
     fs.writeFileSync("database.json", JSON.stringify(data, null, 2));
 }
 
+// Function to check and update expired pending to failed (12 hours = 43200000 ms)
+function updateExpired(data, type) {
+  const now = Date.now();
+  const array = type === 'deposits' ? data.deposits : data.withdraws;
+  array.forEach(item => {
+    if (item.status === "pending" && (now - item.time) > 43200000) {
+      item.status = "failed";
+    }
+  });
+  save(data);
+}
+
 // =============================================
 // 📌 ĐĂNG KÝ – ĐĂNG NHẬP
 // =============================================
@@ -112,7 +124,8 @@ app.post("/api/withdraw", (req, res) => {
 app.get("/api/history/:username", (req, res) => {
     const name = req.params.username;
     const data = db();
-
+    updateExpired(data, 'deposits');
+    updateExpired(data, 'withdraws');
     res.json({
         deposits: data.deposits.filter(x => x.user === name),
         withdraws: data.withdraws.filter(x => x.user === name)
@@ -123,7 +136,12 @@ app.get("/api/history/:username", (req, res) => {
 // 📌 ADMIN GET LIST (đơn chờ duyệt)
 // =============================================
 app.get("/api/admin/orders", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
     const data = db();
+    updateExpired(data, 'deposits');
+    updateExpired(data, 'withdraws');
     res.json({
         deposits: data.deposits.filter(x => x.status === "pending"),
         withdraws: data.withdraws.filter(x => x.status === "pending")
@@ -134,6 +152,9 @@ app.get("/api/admin/orders", (req, res) => {
 // 📌 ADMIN DUYỆT NẠP
 // =============================================
 app.post("/api/admin/approve/deposit", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
     const { id } = req.body;
     const data = db();
 
@@ -151,6 +172,9 @@ app.post("/api/admin/approve/deposit", (req, res) => {
 // 📌 ADMIN DUYỆT RÚT
 // =============================================
 app.post("/api/admin/approve/withdraw", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
     const { id } = req.body;
     const data = db();
 
@@ -168,6 +192,9 @@ app.post("/api/admin/approve/withdraw", (req, res) => {
 // 📌 ADMIN XOÁ ĐƠN
 // =============================================
 app.post("/api/admin/reject", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
     const { id, type } = req.body;
     const data = db();
 
@@ -190,11 +217,27 @@ app.get("/api/rate", (req, res) => {
 });
 
 app.post("/api/admin/set_rate", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
     const { rate } = req.body;
     const data = db();
     data.rate = parseInt(rate);
     save(data);
     res.json({ success: true });
+});
+
+// =============================================
+// 📌 ADMIN LOGIN
+// =============================================
+app.post("/api/admin/login", (req, res) => {
+    const { username, password } = req.body;
+    const data = db();
+    if (username === data.admin.username && password === data.admin.password) {
+        res.json({ token: "admin_token" });
+    } else {
+        res.json({ error: "Sai tài khoản hoặc mật khẩu!" });
+    }
 });
 
 // =============================================
