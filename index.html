@@ -213,7 +213,6 @@ setInterval(() => {
   <button onclick="openTab('home')" class="active">TRANG CHỦ</button>
   <button onclick="openTab('nap')">NẠP ROBUX</button>
   <button onclick="openTab('rut')">RÚT ROBUX</button>
-  <button onclick="openTab('vongquay')">VÒNG QUAY</button>
   <button onclick="openTab('giftcode')">GIFTCODE</button>
   <button onclick="openTab('danhgia')">ĐÁNH GIÁ</button>
   <button onclick="logout()" style="background:#e74c3c">ĐĂNG XUẤT</button>
@@ -240,7 +239,7 @@ setInterval(() => {
   <!-- NẠP ROBUX -->
   <div id="nap" class="tab">
     <h2>NẠP ROBUX</h2>
-    <p style="text-align:center;color:#555;margin-bottom:15px">10.000đ = 65 Robux</p>
+    <p style="text-align:center;color:#555;margin-bottom:15px" id="rateDisplay">10.000đ = 65 Robux</p>
     <select id="napMethod" onchange="toggleNap()">
       <option value="qr">QR NGÂN HÀNG (TỰ ĐỘNG)</option>
       <option value="thecao">NẠP THẺ CÀO</option>
@@ -289,19 +288,6 @@ setInterval(() => {
     <div id="lsRut"></div>
   </div>
 
-  <!-- VÒNG QUAY -->
-  <div id="vongquay" class="tab">
-    <h2>VÒNG QUAY MAY MẮN</h2>
-    <p style="text-align:center;font-size:23px;margin-bottom:20px">
-      Giá quay: <b style="color:var(--gold)">30 Robux</b>/lần
-    </p>
-    <div style="text-align:center">
-      <canvas id="wheel" width="330" height="330"></canvas>
-      <div class="prize" id="prizeText">Nhấn QUAY để thử vận may!</div>
-      <button onclick="spin()" style="margin-top:20px;padding:18px 60px;font-size:20px">QUAY NGAY</button>
-    </div>
-  </div>
-
   <!-- GIFTCODE -->
   <div id="giftcode" class="tab">
     <h2>NHẬP GIFTCODE</h2>
@@ -333,6 +319,16 @@ let currentUser = {username: "guest", balance: 0, password: ""}; // Thêm passwo
 let cardAmount = 0;
 let lsNap = [];
 let lsRut = [];
+let robuxRate = 65; // Default, sẽ fetch từ server
+
+// Fetch tỷ giá khi load
+async function fetchRate() {
+  const res = await fetch("/api/rate");
+  const data = await res.json();
+  robuxRate = data.rate;
+  document.getElementById("rateDisplay").innerText = `10.000đ = ${robuxRate} Robux`;
+}
+fetchRate();
 
 // Ẩn tên 50%
 function hideName(n){
@@ -460,13 +456,13 @@ async function login(){
 /* ---------- QR NẠP ---------- */
 function calcQR(){
   const m = parseInt(document.getElementById("qrAmount").value)||0;
-  const r = Math.floor(m/10000*65);
+  const r = Math.floor(m/10000 * robuxRate);
   document.getElementById("qrPreview").innerHTML = `<b>${r.toLocaleString()}</b> Robux`;
 }
 async function createQR(){
   const amount = parseInt(document.getElementById("qrAmount").value);
   if(!amount || amount < 10000) return alert("Tối thiểu 10.000đ nha bro!");
-  const robux = Math.floor(amount/10000*65);
+  const robux = Math.floor(amount/10000 * robuxRate);
   const noiDung = `ROBUXVN-${currentUser.username.toUpperCase()}-${amount}`;
   const qrUrl = `https://img.vietqr.io/image/mbbank-0939546882-compact.png?amount=${amount}&addInfo=${encodeURIComponent(noiDung)}&accountName=ROBUXVN%20SHOP`;
   
@@ -505,7 +501,7 @@ async function sendCard(){
   if(!seri || !code) return alert("Nhập đầy đủ seri + mã thẻ!");
   alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin duyệt 1-3 phút nha!`);
   
-  const robux = Math.floor(cardAmount/10000*65);
+  const robux = Math.floor(cardAmount/10000 * robuxRate);
   await fetch("/api/deposit",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
@@ -566,32 +562,6 @@ function useGift(){
   if(["NOEL2025","ROBUXVN","FREE500"].includes(c)){
     alert("NHẬN 500 ROBUX THÀNH CÔNG!");
   }else alert("Mã giftcode sai rồi bro!");
-}
-const prizes = ["5","10","30","50","200","500 Robux"];
-const colors = ["#95a5a6","#7289da","#2ecc71","#3498db","#e74c3c","#f1c40f"];
-function drawWheel(){
-  const ctx = document.getElementById("wheel").getContext("2d");
-  prizes.forEach((p,i)=>{
-    ctx.fillStyle = colors[i];
-    ctx.beginPath();
-    ctx.moveTo(165,165);
-    ctx.arc(165,165,165,i*60*Math.PI/180,(i+1)*60*Math.PI/180);
-    ctx.fill();
-    ctx.save();ctx.translate(165,165);ctx.rotate((i+0.5)*60*Math.PI/180);
-    ctx.fillStyle="#fff";ctx.font="bold 19px Roboto";ctx.fillText(p,70,8);ctx.restore();
-  });
-}
-drawWheel();
-let spinning = false;
-function spin(){
-  if(spinning) return; spinning=true;
-  document.getElementById("wheel").style.transform = `rotate(${3600 + Math.random()*360}deg)`;
-  setTimeout(()=>{
-    const win = prizes[Math.floor(Math.random()*prizes.length)];
-    document.getElementById("prizeText").innerHTML = `CHÚC MỪNG!<br><b style="font-size:4rem">${win}</b>`;
-    alert("Trúng " + win + "!");
-    spinning=false;
-  },6000);
 }
 const reviews = ["Rút 1 phút có","Nạp thẻ cào tự động","Giá rẻ nhất VN","Admin donate nhanh","Shop đẹp xỉu","24/7 có người duyệt!"];
 reviews.forEach(t=>{
