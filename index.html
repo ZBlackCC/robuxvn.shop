@@ -6,157 +6,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
 <style>
-  #popup {
-    backdrop-filter: blur(6px);
-  }
-
-  #popupBox {
-    border: 4px solid var(--accent);
-    background: linear-gradient(165deg, #ffffff, #f2fffa);
-    box-shadow: 0 0 35px rgba(0, 212, 170, 0.45);
-  }
-
-  #popupBox p {
-    font-size: 17px !important;
-    line-height: 1.55 !important;
-  }
-
-  #popupBox h3 {
-    font-size: 24px !important;
-    letter-spacing: 1px;
-    text-shadow: 0 0 12px rgba(0,212,170,0.45);
-  }
-
-  @keyframes popupFade {
-    from { opacity: 0; transform: translateY(40px) scale(.85); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  #popupBox {
-    animation: popupFade .45s ease;
-  }
-
-  :root{
-    --accent:#00d4aa;
-    --gold:#f1c40f;
-    --border:#00d4aa;
-  }
-
+  /* Giữ nguyên toàn bộ style gốc của bạn */
+  #popup { backdrop-filter: blur(6px); }
+  #popupBox { border: 4px solid var(--accent); background: linear-gradient(165deg, #ffffff, #f2fffa); box-shadow: 0 0 35px rgba(0, 212, 170, 0.45); }
+  #popupBox p { font-size: 17px !important; line-height: 1.55 !important; }
+  #popupBox h3 { font-size: 24px !important; letter-spacing: 1px; text-shadow: 0 0 12px rgba(0,212,170,0.45); }
+  @keyframes popupFade { from { opacity: 0; transform: translateY(40px) scale(.85); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  #popupBox { animation: popupFade .45s ease; }
+  :root{ --accent:#00d4aa; --gold:#f1c40f; --border:#00d4aa; }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{
-    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-    font-family:'Roboto',sans-serif;
-    min-height:100vh;
-    overflow-x:hidden;
-  }
-
-  .header{
-    background:linear-gradient(135deg,#00d4aa,#00a085);
-    padding:24px 10px;text-align:center;
-    box-shadow:0 10px 40px rgba(0,212,170,0.5);
-  }
-
-  .header h1{
-    font-family:'Orbitron',sans-serif;
-    font-size:clamp(1.8rem, 7vw, 3.4rem);
-    color:#fff;
-    text-shadow:0 0 18px #000, 3px 3px 0 var(--gold);
-    letter-spacing:2px;
-    line-height:1.2;
-    word-break:break-word;
-  }
-
-  .header p{
-    color:#fff;
-    font-size:clamp(1.1rem, 4vw, 1.5rem);
-    margin-top:8px;
-    font-weight:900;
-    text-shadow:0 0 12px #000;
-  }
-
-  #loginPage{
-    position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:99999;
-    display:flex;align-items:center;justify-content:center;padding:15px;
-  }
-
-  .login-box{
-    background:#fff;padding:35px 30px;border-radius:25px;
-    width:100%;max-width:370px;box-shadow:0 20px 60px rgba(0,212,170,0.7);
-    border:5px solid var(--accent);text-align:center;
-  }
-
-  .nav{
-    display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto;
-    gap:6px;padding:10px 5px;background:#fff;position:sticky;top:0;z-index:99;
-    box-shadow:0 5px 20px rgba(0,0,0,0.15);scrollbar-width:none;
-    border-bottom:3px solid var(--accent);
-  }
-
+  body{ background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); font-family:'Roboto',sans-serif; min-height:100vh; overflow-x:hidden; }
+  .header{ background:linear-gradient(135deg,#00d4aa,#00a085); padding:24px 10px;text-align:center; box-shadow:0 10px 40px rgba(0,212,170,0.5); }
+  .header h1{ font-family:'Orbitron',sans-serif; font-size:clamp(1.8rem, 7vw, 3.4rem); color:#fff; text-shadow:0 0 18px #000, 3px 3px 0 var(--gold); letter-spacing:2px; line-height:1.2; word-break:break-word; }
+  .header p{ color:#fff; font-size:clamp(1.1rem, 4vw, 1.5rem); margin-top:8px; font-weight:900; text-shadow:0 0 12px #000; }
+  #loginPage{ position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:99999; display:flex;align-items:center;justify-content:center;padding:15px; }
+  .login-box{ background:#fff;padding:35px 30px;border-radius:25px; width:100%;max-width:370px;box-shadow:0 20px 60px rgba(0,212,170,0.7); border:5px solid var(--accent);text-align:center; }
+  .nav{ display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto; gap:6px;padding:10px 5px;background:#fff;position:sticky;top:0;z-index:99; box-shadow:0 5px 20px rgba(0,0,0,0.15);scrollbar-width:none; border-bottom:3px solid var(--accent); }
   .nav::-webkit-scrollbar{display:none}
-
-  .nav button{
-    white-space:nowrap;background:#fff;color:#000;padding:11px 10px;
-    border-radius:14px;font-weight:700;font-size:13px;min-width:88px;
-    transition:.3s;display:flex;align-items:center;justify-content:center;
-    text-align:center;line-height:1.2;
-  }
-
-  .nav button:hover,.nav button.active{
-    background:var(--accent);color:#fff;
-    transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,212,170,0.5);
-  }
-
-  .container{
-    max-width:760px;margin:18px auto;background:#fff;
-    padding:24px;border-radius:25px;
-    border:5px solid var(--border);
-    box-shadow:0 18px 55px rgba(0,212,170,0.32);
-    overflow:hidden;
-  }
-
-  h2{color:var(--accent);text-align:center;margin-bottom:20px;
-     font-size:clamp(1.8rem,5vw,2.5rem);}
-
-  input,button,select{
-    width:100%;padding:15px;margin:10px 0;
-    border-radius:14px;font-size:16.5px;font-weight:600;
-  }
-
+  .nav button{ white-space:nowrap;background:#fff;color:#000;padding:11px 10px; border-radius:14px;font-weight:700;font-size:13px;min-width:88px; transition:.3s;display:flex;align-items:center;justify-content:center; text-align:center;line-height:1.2; }
+  .nav button:hover,.nav button.active{ background:var(--accent);color:#fff; transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,212,170,0.5); }
+  .container{ max-width:760px;margin:18px auto;background:#fff; padding:24px;border-radius:25px; border:5px solid var(--border); box-shadow:0 18px 55px rgba(0,212,170,0.32); overflow:hidden; }
+  h2{color:var(--accent);text-align:center;margin-bottom:20px; font-size:clamp(1.8rem,5vw,2.5rem);}
+  input,button,select{ width:100%;padding:15px;margin:10px 0; border-radius:14px;font-size:16.5px;font-weight:600; }
   input,select{background:#f8f9fa;border:3px solid #ddd;}
   input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 18px rgba(0,212,170,0.4);}
-
-  button{
-    background:linear-gradient(45deg,var(--accent),#00b894);
-    color:#fff;border:none;cursor:pointer;
-    box-shadow:0 8px 25px rgba(0,212,170,0.4);
-  }
-
+  button{ background:linear-gradient(45deg,var(--accent),#00b894); color:#fff;border:none;cursor:pointer; box-shadow:0 8px 25px rgba(0,212,170,0.4); }
   button:hover{transform:translateY(-5px);box-shadow:0 16px 35px rgba(0,212,170,0.6);}
-
-  .packages{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0;
-  }
-
-  .pkg{
-    background:#f0f2f5;padding:16px;border-radius:14px;text-align:center;
-    cursor:pointer;font-weight:bold;font-size:15px;
-    border:2.5px solid #ddd;transition:.3s;
-  }
-
-  .pkg:hover,.pkg.selected{
-    background:var(--accent);color:#fff;border-color:var(--accent);
-    transform:scale(1.06);
-  }
-
-  #robuxPreview{
-    font-size:clamp(27px,7vw,37px);color:var(--gold);
-    text-align:center;margin:22px 0;font-weight:bold;
-    text-shadow:0 0 18px var(--gold);
-  }
-
+  .packages{ display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0; }
+  .pkg{ background:#f0f2f5;padding:16px;border-radius:14px;text-align:center; cursor:pointer;font-weight:bold;font-size:15px; border:2.5px solid #ddd;transition:.3s; }
+  .pkg:hover,.pkg.selected{ background:var(--accent);color:#fff;border-color:var(--accent); transform:scale(1.06); }
+  #robuxPreview{ font-size:clamp(27px,7vw,37px);color:var(--gold); text-align:center;margin:22px 0;font-weight:bold; text-shadow:0 0 18px var(--gold); }
   .tab{display:none}.tab.active{display:block}
   .hidden{display:none}
-
   .gd-item{padding:12px;background:#fff;margin:7px 0;border-radius:10px;border-left:5px solid var(--accent);font-size:14.5px;}
   #gdList{height:230px;overflow:hidden;border:3px solid var(--accent);border-radius:14px;background:#f9f9f9;padding:10px;}
   .hist-item{padding:15px;margin:10px 0;border-radius:12px;background:#fafafa;border-left:6px solid var(--accent);position:relative;}
@@ -165,82 +46,40 @@
   .status.pending{background:#fff3cd;color:#e67e22;}
   .status.success{background:#d4edda;color:#27ae60;}
   .status.failed{background:#f8d7da;color:#c0392b;}
-
-  @media (max-width:480px){
-    .container{padding:18px;margin:12px 8px;}
-    .packages{grid-template-columns:repeat(3,1fr);gap:10px;}
-    .pkg{font-size:14px;padding:14px 6px;}
-    .nav button{font-size:12.5px;min-width:80px;padding:10px 6px;}
-  }
-
-  #popup{
-    position:fixed; inset:0;
-    background:rgba(0,0,0,0.7);
-    display:none; justify-content:center; align-items:center;
-    z-index:999999;
-  }
-
-  #popupBox{
-    background:#fff; padding:25px; border-radius:18px;
-    width:90%; max-width:360px; text-align:center;
-    animation:pop .35s ease;
-  }
-
+  @media (max-width:480px){ .container{padding:18px;margin:12px 8px;} .packages{grid-template-columns:repeat(3,1fr);gap:10px;} .pkg{font-size:14px;padding:14px 6px;} .nav button{font-size:12.5px;min-width:80px;padding:10px 6px;} }
+  #popup{ position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:999999; }
+  #popupBox{ background:#fff; padding:25px; border-radius:18px; width:90%; max-width:360px; text-align:center; animation:pop .35s ease; }
   @keyframes pop {from{transform:scale(.6); opacity:0} to{transform:scale(1); opacity:1}}
-
-  /* Dòng chữ Lộc Phát 2 bên (Tết) */
-  .tet-text {
-    position: fixed;
-    bottom: 20px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #ff0000;
-    text-shadow: 0 0 15px #ffd700, 0 0 30px #ff4500;
-    z-index: 9998;
-    pointer-events: none;
-    animation: glow 2s infinite alternate;
-  }
-
-  .tet-left { left: 20px; transform: rotate(-15deg); }
-  .tet-right { right: 20px; transform: rotate(15deg); }
-
-  @keyframes glow {
-    from { text-shadow: 0 0 10px #ffd700, 0 0 20px #ff4500; }
-    to   { text-shadow: 0 0 20px #ffd700, 0 0 40px #ff4500; }
-  }
-
-  @media (max-width: 768px) {
-    .tet-text { font-size: 1.8rem; bottom: 10px; }
-  }
 </style>
 </head>
 <body>
 
-<!-- PHÁO HOA (đã fix: giảm số lượng hạt + tần suất) -->
-<canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;"></canvas>
+<!-- PHÁO HOA (fix: nổ mạnh đầu tiên, sau đó chim xuống, mờ dần, lộ website) -->
+<canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1;"></canvas>
 
 <script>
-// Hiệu ứng pháo hoa nhẹ hơn, ít lag hơn
+// Pháo hoa: nổ mạnh lúc đầu, sau đó mờ dần và chim xuống
 const canvas = document.getElementById('fireworksCanvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 
 let particles = [];
+let isFirstFirework = true; // Cờ để nổ mạnh lần đầu
 
 class Particle {
   constructor(x, y, color) {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.radius = Math.random() * 2 + 1;
+    this.radius = Math.random() * 2.5 + 1; // hạt to hơn lúc đầu
     this.velocity = {
-      x: (Math.random() - 0.5) * 15,  // Giảm tốc độ
-      y: (Math.random() - 0.5) * 15
+      x: (Math.random() - 0.5) * (isFirstFirework ? 25 : 10),
+      y: (Math.random() - 0.5) * (isFirstFirework ? 30 : 15) - 20
     };
-    this.alpha = 1;
-    this.friction = 0.98;  // Giảm ma sát để hạt bay lâu hơn một chút
+    this.alpha = isFirstFirework ? 1 : 0.6;
+    this.friction = 0.97;
+    this.gravity = 0.1; // chim xuống
   }
 
   draw() {
@@ -254,27 +93,38 @@ class Particle {
   }
 
   update() {
+    this.velocity.y += this.gravity;
     this.velocity.x *= this.friction;
     this.velocity.y *= this.friction;
     this.x += this.velocity.x;
     this.y += this.velocity.y;
-    this.alpha -= 0.008;  // Giảm alpha chậm hơn để hạt tồn tại lâu hơn
+    this.alpha -= isFirstFirework ? 0.008 : 0.018; // mờ nhanh hơn sau lần đầu
   }
 }
 
 function createFirework() {
   const x = Math.random() * canvas.width;
-  const y = Math.random() * canvas.height / 3;  // Bắn từ trên xuống
-  const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+  const y = canvas.height / 5; // nổ trên cao
+  const color = `hsl(${Math.random() * 360}, 100%, ${isFirstFirework ? 70 : 60}%)`;
 
-  for (let i = 0; i < 30; i++) {  // Giảm từ 50 xuống 30 hạt
+  const particleCount = isFirstFirework ? 60 : 20; // lần đầu nhiều, sau ít
+  for (let i = 0; i < particleCount; i++) {
     particles.push(new Particle(x, y, color));
+  }
+
+  // Sau lần nổ đầu tiên, chuyển sang chế độ nhẹ
+  if (isFirstFirework) {
+    isFirstFirework = false;
+    setTimeout(() => {
+      // Sau 4 giây đầu, giảm alpha toàn bộ hạt cũ để lộ website
+      particles.forEach(p => p.alpha = Math.min(p.alpha, 0.3));
+    }, 4000);
   }
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';  // Tăng độ mờ nền để pháo rõ hơn
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; // mờ nền nhẹ
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((particle, i) => {
@@ -289,14 +139,14 @@ function animate() {
 
 animate();
 
-setInterval(createFirework, 4000);  // Tăng khoảng cách từ 1.5s → 4s để ít pháo hơn, đỡ nặng
+// Nổ mạnh lần đầu ngay khi load
+createFirework();
+
+// Sau đó bắn thưa thớt
+setInterval(createFirework, 10000); // mỗi 10 giây một lần nhẹ
 </script>
 
-<!-- Dòng chữ Lộc Phát 2 bên (Tết) -->
-<div class="tet-text tet-left">Lộc Phát</div>
-<div class="tet-text tet-right">Lộc Phát</div>
-
-<!-- LOGIN (đã thêm input Mã giới thiệu) -->
+<!-- LOGIN (giữ nguyên) -->
 <div id="loginPage">
   <div class="login-box">
     <h2>ROBUXVN.SHOP</h2>
