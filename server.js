@@ -1,15 +1,35 @@
 import express from "express";
 import fs from "fs";
 import cors from "cors";
+import path from "path"; // Thêm path để xử lý đường dẫn file tốt hơn
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static("public")); // phục vụ index.html, admin.html từ thư mục public
 
-// Route gốc: trả về index.html khi truy cập domain chính (fix lỗi Cannot GET /)
+// Phục vụ file tĩnh từ thư mục gốc (root) thay vì public
+app.use(express.static(".")); // "." nghĩa là thư mục gốc repo
+
+// Route gốc: trả về index.html từ root
 app.get("/", (req, res) => {
-  res.sendFile("index.html", { root: "./public" });
+  const filePath = path.join(process.cwd(), "index.html");
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("Lỗi gửi index.html:", err);
+      res.status(404).send("Không tìm thấy index.html");
+    }
+  });
+});
+
+// Route cho admin.html
+app.get("/admin.html", (req, res) => {
+  const filePath = path.join(process.cwd(), "admin.html");
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("Lỗi gửi admin.html:", err);
+      res.status(404).send("Không tìm thấy admin.html");
+    }
+  });
 });
 
 // =============================================
@@ -47,8 +67,8 @@ app.post("/api/register", (req, res) => {
     data.users[username] = {
         password,
         balance: 0,
-        referredBy: refCode || null, // Lưu người giới thiệu (username của người mời)
-        refCode: username // Mã ref của chính mình là username
+        referredBy: refCode || null,
+        refCode: username
     };
 
     save(data);
@@ -171,7 +191,7 @@ app.post("/api/admin/approve/deposit", (req, res) => {
     d.status = "success";
     data.users[d.user].balance += d.robux;
 
-    // Bonus ref: Nếu user được ref và đây là đơn nạp ĐẦU TIÊN
+    // Bonus ref nếu là đơn nạp đầu tiên
     const user = data.users[d.user];
     if (user.referredBy) {
         const hasDepositBefore = data.deposits.some(dep => 
@@ -179,7 +199,7 @@ app.post("/api/admin/approve/deposit", (req, res) => {
             dep.status === "success" && 
             dep.id !== id
         );
-        if (!hasDepositBefore) { // Đơn đầu tiên
+        if (!hasDepositBefore) {
             const referrer = data.users[user.referredBy];
             if (referrer) {
                 referrer.balance += 50;
@@ -252,11 +272,10 @@ app.post("/api/admin/set_rate", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN LOGIN (dùng meohia / 071103)
+// 📌 ADMIN LOGIN (meohia / 071103)
 // =============================================
 app.post("/api/admin/login", (req, res) => {
     const { username, password } = req.body;
-    const data = db();
     if (username === "meohia" && password === "071103") {
         res.json({ token: "admin_token" });
     } else {
@@ -265,7 +284,7 @@ app.post("/api/admin/login", (req, res) => {
 });
 
 // =============================================
-// 📌 RUN SERVER (fix port cho Railway)
+// 📌 RUN SERVER (port cho Railway)
 // =============================================
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`SERVER RUNNING ON PORT ${port}`));
