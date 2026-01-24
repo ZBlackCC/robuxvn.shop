@@ -50,15 +50,41 @@
   #popup{ position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:999999; }
   #popupBox{ background:#fff; padding:25px; border-radius:18px; width:90%; max-width:360px; text-align:center; animation:pop .35s ease; }
   @keyframes pop {from{transform:scale(.6); opacity:0} to{transform:scale(1); opacity:1}}
+
+  /* Dòng chữ Lộc Phát 2 bên (Tết) */
+  .tet-text {
+    position: fixed;
+    bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 0 0 15px #ffd700, 0 0 30px #ff4500;
+    z-index: 9998;
+    pointer-events: none;
+    animation: glow 2s infinite alternate;
+  }
+
+  .tet-left { left: 20px; transform: rotate(-15deg); }
+  .tet-right { right: 20px; transform: rotate(15deg); }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 10px #ffd700, 0 0 20px #ff4500; }
+    to { text-shadow: 0 0 20px #ffd700, 0 0 40px #ff4500; }
+  }
+
+  @media (max-width: 768px) {
+    .tet-text { font-size: 1.8rem; bottom: 10px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- PHÁO HOA (dưới web, nổ nhỏ li ti 1 lần, transparent, không đè lên) -->
+<!-- PHÁO HOA (tia vỡ ra đơn giản ở 2 bên chỗ trống, không màu mè) -->
 <canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: -1;"></canvas>
 
 <script>
-// Pháo hoa nhỏ li ti, chỉ nổ 1 lần, dưới nền, transparent
+// Pháo hoa tia vỡ ra đơn giản ở 2 bên, nổ 1 lần, không màu mè
 const canvas = document.getElementById('fireworksCanvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -67,18 +93,17 @@ const ctx = canvas.getContext('2d');
 let particles = [];
 
 class Particle {
-  constructor(x, y, color) {
+  constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.color = color;
-    this.radius = Math.random() * 1.2 + 0.5; // hạt nhỏ li ti
+    this.color = 'rgba(255, 255, 255, 0.7)'; // tia trắng đơn giản
+    this.radius = Math.random() * 1.5 + 1;
     this.velocity = {
-      x: (Math.random() - 0.5) * 8,
-      y: (Math.random() - 0.5) * 10 - 15
+      x: (Math.random() - 0.5) * 15,
+      y: (Math.random() - 0.5) * 15
     };
-    this.alpha = 0.4; // rất trong suốt
-    this.friction = 0.97;
-    this.gravity = 0.08;
+    this.alpha = 1;
+    this.friction = 0.98;
   }
 
   draw() {
@@ -92,29 +117,27 @@ class Particle {
   }
 
   update() {
-    this.velocity.y += this.gravity;
     this.velocity.x *= this.friction;
     this.velocity.y *= this.friction;
     this.x += this.velocity.x;
     this.y += this.velocity.y;
-    this.alpha -= 0.018; // mờ nhanh để biến mất
+    this.alpha -= 0.01;
   }
 }
 
 function createFirework() {
-  // Nổ ngẫu nhiên, nhỏ li ti
-  const x = Math.random() * canvas.width;
-  const y = canvas.height / 3;
-  const color = `hsla(${Math.random() * 360}, 80%, 70%, 0.4)`;
-
-  for (let i = 0; i < 15; i++) { // chỉ 15 hạt nhỏ
-    particles.push(new Particle(x, y, color));
-  }
+  const positions = [canvas.width * 0.1, canvas.width * 0.9]; // 2 bên chỗ trống
+  positions.forEach(x => {
+    const y = canvas.height / 2; // giữa chiều cao
+    for (let i = 0; i < 30; i++) { // tia vỡ ra
+      particles.push(new Particle(x, y));
+    }
+  });
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.01)'; // mờ cực nhẹ
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((particle, i) => {
@@ -129,10 +152,8 @@ function animate() {
 
 animate();
 
-// Nổ nhỏ 1 lần duy nhất khi load
+// Nổ 1 lần duy nhất lúc load
 createFirework();
-
-// Không lặp lại nữa
 </script>
 
 <!-- LOGIN (đã thêm auto-login vĩnh viễn từ localStorage) -->
@@ -163,11 +184,11 @@ createFirework();
 </div>
 
 <div class="container">
-  <!-- HOME -->
+  <!-- HOME (thêm quy đổi VND) -->
   <div id="home" class="tab active">
     <h2>Xin chào <span id="name">bạn</span>!</h2>
     <p style="text-align:center;font-size:31px;margin:35px 0">
-      Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux
+      Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux <small id="vndConvert" style="color:#555">(~0đ theo giá hôm nay)</small>
     </p>
     <div style="text-align:center">
       <button onclick="openTab('nap')" style="padding:20px 70px;font-size:23px">NẠP ROBUX NGAY</button>
@@ -180,10 +201,11 @@ createFirework();
     </div>
   </div>
 
-  <!-- NẠP ROBUX -->
+  <!-- NẠP ROBUX (thêm mã giới thiệu bên ngoài) -->
   <div id="nap" class="tab">
     <h2>NẠP ROBUX</h2>
     <p style="text-align:center;color:#555;margin-bottom:15px" id="rateDisplay">10.000đ = 65 Robux</p>
+    <p style="text-align:center;color:#f1c40f;font-weight:bold" id="refDisplay">Mã giới thiệu của bạn: guest</p>
     <select id="napMethod" onchange="toggleNap()">
       <option value="qr">QR NGÂN HÀNG (TỰ ĐỘNG)</option>
       <option value="thecao">NẠP THẺ CÀO</option>
@@ -273,6 +295,8 @@ window.addEventListener('load', () => {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("name").innerText = currentUser.username;
     document.getElementById("bal").innerText = currentUser.balance;
+    document.getElementById("refDisplay").innerText = `Mã giới thiệu của bạn: ${currentUser.refCode || 'guest'}`;
+    document.getElementById("vndConvert").innerText = `(~${(currentUser.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
     renderHistory(); // load lịch sử ngay
   }
   fetchRate();
@@ -283,6 +307,7 @@ async function fetchRate() {
   const data = await res.json();
   robuxRate = data.rate;
   document.getElementById("rateDisplay").innerText = `10.000đ = ${robuxRate} Robux`;
+  document.getElementById("vndConvert").innerText = `(~${(currentUser.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
 }
 
 function hideName(n){
@@ -356,6 +381,8 @@ async function renderHistory(){
   if(!userData.error){
     currentUser.balance = userData.balance;
     document.getElementById("bal").innerText = userData.balance;
+    document.getElementById("vndConvert").innerText = `(~${(currentUser.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
+    document.getElementById("refDisplay").innerText = `Mã giới thiệu của bạn: ${currentUser.refCode || 'không có'}`;
   }
 
   renderRecentTransactions();
@@ -390,6 +417,8 @@ async function login(){
   document.getElementById("loginPage").style.display="none";
   document.getElementById("name").innerText = data.username;
   document.getElementById("bal").innerText = data.balance;
+  document.getElementById("vndConvert").innerText = `(~${(data.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
+  document.getElementById("refDisplay").innerText = `Mã giới thiệu của bạn: ${data.refCode || 'không có'}`;
   alert("Đăng nhập thành công! Chào " + u + "!");
   setTimeout(()=>{
     showPopup(`
