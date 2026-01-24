@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Shop Robux giá rẻ uy tín 2026",
   "main": "server.js",
-  "type": "module",  // <-- THÊM DÒNG NÀY
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
