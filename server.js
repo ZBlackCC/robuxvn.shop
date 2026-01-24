@@ -5,7 +5,12 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static("public")); // chứa index.html + admin.html
+app.use(express.static("public")); // phục vụ index.html, admin.html từ thư mục public
+
+// Route gốc: trả về index.html khi truy cập domain chính (fix lỗi Cannot GET /)
+app.get("/", (req, res) => {
+  res.sendFile("index.html", { root: "./public" });
+});
 
 // =============================================
 // 📌 HÀM ĐỌC / GHI DATABASE
@@ -33,7 +38,7 @@ function updateExpired(data, type) {
 // 📌 ĐĂNG KÝ – ĐĂNG NHẬP (THÊM REF)
 // =============================================
 app.post("/api/register", (req, res) => {
-    const { username, password, refCode } = req.body; // Thêm refCode
+    const { username, password, refCode } = req.body;
     const data = db();
 
     if (data.users[username])
@@ -42,7 +47,7 @@ app.post("/api/register", (req, res) => {
     data.users[username] = {
         password,
         balance: 0,
-        referredBy: refCode || null, // Người giới thiệu
+        referredBy: refCode || null, // Lưu người giới thiệu (username của người mời)
         refCode: username // Mã ref của chính mình là username
     };
 
@@ -66,7 +71,7 @@ app.post("/api/login", (req, res) => {
 });
 
 // =============================================
-// 📌 NẠP TIỀN (giữ nguyên)
+// 📌 NẠP TIỀN
 // =============================================
 app.post("/api/deposit", (req, res) => {
     const { user, amount, robux, type } = req.body;
@@ -90,7 +95,7 @@ app.post("/api/deposit", (req, res) => {
 });
 
 // =============================================
-// 📌 RÚT ROBUX (giữ nguyên)
+// 📌 RÚT ROBUX
 // =============================================
 app.post("/api/withdraw", (req, res) => {
     const { user, robux, to } = req.body;
@@ -121,7 +126,7 @@ app.post("/api/withdraw", (req, res) => {
 });
 
 // =============================================
-// 📌 LỊCH SỬ NẠP / RÚT (giữ nguyên)
+// 📌 LỊCH SỬ NẠP / RÚT
 // =============================================
 app.get("/api/history/:username", (req, res) => {
     const name = req.params.username;
@@ -135,7 +140,7 @@ app.get("/api/history/:username", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN GET LIST (giữ nguyên)
+// 📌 ADMIN GET LIST (đơn chờ duyệt)
 // =============================================
 app.get("/api/admin/orders", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
@@ -188,7 +193,7 @@ app.post("/api/admin/approve/deposit", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN DUYỆT RÚT (giữ nguyên)
+// 📌 ADMIN DUYỆT RÚT
 // =============================================
 app.post("/api/admin/approve/withdraw", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
@@ -208,7 +213,7 @@ app.post("/api/admin/approve/withdraw", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN XOÁ ĐƠN (giữ nguyên)
+// 📌 ADMIN XOÁ ĐƠN
 // =============================================
 app.post("/api/admin/reject", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
@@ -228,7 +233,7 @@ app.post("/api/admin/reject", (req, res) => {
 });
 
 // =============================================
-// 📌 GET/SET TỶ GIÁ ROBUX (giữ nguyên)
+// 📌 GET/SET TỶ GIÁ ROBUX
 // =============================================
 app.get("/api/rate", (req, res) => {
     const data = db();
@@ -247,7 +252,7 @@ app.post("/api/admin/set_rate", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN LOGIN (dùng meohia/071103)
+// 📌 ADMIN LOGIN (dùng meohia / 071103)
 // =============================================
 app.post("/api/admin/login", (req, res) => {
     const { username, password } = req.body;
@@ -260,7 +265,7 @@ app.post("/api/admin/login", (req, res) => {
 });
 
 // =============================================
-// 📌 RUN SERVER (fix cho Railway)
+// 📌 RUN SERVER (fix port cho Railway)
 // =============================================
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`SERVER RUNNING ON PORT ${port}`));
