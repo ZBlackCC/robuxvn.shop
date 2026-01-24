@@ -7,40 +7,41 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
 <style>
   #popup {
-        backdrop-filter: blur(6px);
-    }
+    backdrop-filter: blur(6px);
+  }
 
-    #popupBox {
-        border: 4px solid var(--accent);
-        background: linear-gradient(165deg, #ffffff, #f2fffa);
-        box-shadow: 0 0 35px rgba(0, 212, 170, 0.45);
-    }
+  #popupBox {
+    border: 4px solid var(--accent);
+    background: linear-gradient(165deg, #ffffff, #f2fffa);
+    box-shadow: 0 0 35px rgba(0, 212, 170, 0.45);
+  }
 
-    #popupBox p {
-        font-size: 17px !important;
-        line-height: 1.55 !important;
-    }
+  #popupBox p {
+    font-size: 17px !important;
+    line-height: 1.55 !important;
+  }
 
-    #popupBox h3 {
-        font-size: 24px !important;
-        letter-spacing: 1px;
-        text-shadow: 0 0 12px rgba(0,212,170,0.45);
-    }
+  #popupBox h3 {
+    font-size: 24px !important;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(0,212,170,0.45);
+  }
 
-    /* Animation bay lên */
-    @keyframes popupFade {
-        from { opacity: 0; transform: translateY(40px) scale(.85); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
+  @keyframes popupFade {
+    from { opacity: 0; transform: translateY(40px) scale(.85); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
 
-    #popupBox {
-        animation: popupFade .45s ease;
-    }
+  #popupBox {
+    animation: popupFade .45s ease;
+  }
+
   :root{
     --accent:#00d4aa;
     --gold:#f1c40f;
     --border:#00d4aa;
   }
+
   *{margin:0;padding:0;box-sizing:border-box}
   body{
     background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
@@ -48,12 +49,13 @@
     min-height:100vh;
     overflow-x:hidden;
   }
-  /* HEADER */
+
   .header{
     background:linear-gradient(135deg,#00d4aa,#00a085);
     padding:24px 10px;text-align:center;
     box-shadow:0 10px 40px rgba(0,212,170,0.5);
   }
+
   .header h1{
     font-family:'Orbitron',sans-serif;
     font-size:clamp(1.8rem, 7vw, 3.4rem);
@@ -63,6 +65,7 @@
     line-height:1.2;
     word-break:break-word;
   }
+
   .header p{
     color:#fff;
     font-size:clamp(1.1rem, 4vw, 1.5rem);
@@ -70,34 +73,39 @@
     font-weight:900;
     text-shadow:0 0 12px #000;
   }
-  /* LOGIN */
+
   #loginPage{
     position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:99999;
     display:flex;align-items:center;justify-content:center;padding:15px;
   }
+
   .login-box{
     background:#fff;padding:35px 30px;border-radius:25px;
     width:100%;max-width:370px;box-shadow:0 20px 60px rgba(0,212,170,0.7);
     border:5px solid var(--accent);text-align:center;
   }
-  /* NAV - FIX TRÀN CHỮ + CĂN GIỮA HOÀN HẢO */
+
   .nav{
     display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto;
     gap:6px;padding:10px 5px;background:#fff;position:sticky;top:0;z-index:99;
     box-shadow:0 5px 20px rgba(0,0,0,0.15);scrollbar-width:none;
     border-bottom:3px solid var(--accent);
   }
+
   .nav::-webkit-scrollbar{display:none}
+
   .nav button{
     white-space:nowrap;background:#fff;color:#000;padding:11px 10px;
     border-radius:14px;font-weight:700;font-size:13px;min-width:88px;
     transition:.3s;display:flex;align-items:center;justify-content:center;
     text-align:center;line-height:1.2;
   }
+
   .nav button:hover,.nav button.active{
     background:var(--accent);color:#fff;
     transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,212,170,0.5);
   }
+
   .container{
     max-width:760px;margin:18px auto;background:#fff;
     padding:24px;border-radius:25px;
@@ -105,41 +113,50 @@
     box-shadow:0 18px 55px rgba(0,212,170,0.32);
     overflow:hidden;
   }
+
   h2{color:var(--accent);text-align:center;margin-bottom:20px;
      font-size:clamp(1.8rem,5vw,2.5rem);}
+
   input,button,select{
     width:100%;padding:15px;margin:10px 0;
     border-radius:14px;font-size:16.5px;font-weight:600;
   }
+
   input,select{background:#f8f9fa;border:3px solid #ddd;}
   input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 18px rgba(0,212,170,0.4);}
+
   button{
     background:linear-gradient(45deg,var(--accent),#00b894);
     color:#fff;border:none;cursor:pointer;
     box-shadow:0 8px 25px rgba(0,212,170,0.4);
   }
+
   button:hover{transform:translateY(-5px);box-shadow:0 16px 35px rgba(0,212,170,0.6);}
+
   .packages{
     display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0;
   }
+
   .pkg{
     background:#f0f2f5;padding:16px;border-radius:14px;text-align:center;
     cursor:pointer;font-weight:bold;font-size:15px;
     border:2.5px solid #ddd;transition:.3s;
   }
+
   .pkg:hover,.pkg.selected{
     background:var(--accent);color:#fff;border-color:var(--accent);
     transform:scale(1.06);
   }
+
   #robuxPreview{
     font-size:clamp(27px,7vw,37px);color:var(--gold);
     text-align:center;margin:22px 0;font-weight:bold;
     text-shadow:0 0 18px var(--gold);
   }
+
   .tab{display:none}.tab.active{display:block}
   .hidden{display:none}
 
-  /* GIAO DỊCH GẦN ĐÂY + LỊCH SỬ */
   .gd-item{padding:12px;background:#fff;margin:7px 0;border-radius:10px;border-left:5px solid var(--accent);font-size:14.5px;}
   #gdList{height:230px;overflow:hidden;border:3px solid var(--accent);border-radius:14px;background:#f9f9f9;padding:10px;}
   .hist-item{padding:15px;margin:10px 0;border-radius:12px;background:#fafafa;border-left:6px solid var(--accent);position:relative;}
@@ -155,18 +172,20 @@
     .pkg{font-size:14px;padding:14px 6px;}
     .nav button{font-size:12.5px;min-width:80px;padding:10px 6px;}
   }
-  /* POPUP ĐẸP */
+
   #popup{
     position:fixed; inset:0;
     background:rgba(0,0,0,0.7);
     display:none; justify-content:center; align-items:center;
     z-index:999999;
   }
+
   #popupBox{
     background:#fff; padding:25px; border-radius:18px;
     width:90%; max-width:360px; text-align:center;
     animation:pop .35s ease;
   }
+
   @keyframes pop {from{transform:scale(.6); opacity:0} to{transform:scale(1); opacity:1}}
 </style>
 </head>
@@ -176,7 +195,7 @@
 <canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;"></canvas>
 
 <script>
-// Hiệu ứng pháo hoa đẹp
+// Hiệu ứng pháo hoa đẹp (giữ nguyên)
 const canvas = document.getElementById('fireworksCanvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -244,15 +263,16 @@ function animate() {
 
 animate();
 
-setInterval(createFirework, 1500); // Tạo pháo hoa mỗi 1.5 giây
+setInterval(createFirework, 1500);
 </script>
 
-<!-- LOGIN -->
+<!-- LOGIN (đã thêm input Mã giới thiệu) -->
 <div id="loginPage">
   <div class="login-box">
     <h2>ROBUXVN.SHOP</h2>
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Mật khẩu">
+    <input type="text" id="refCode" placeholder="Mã giới thiệu (nếu có)">
     <button onclick="login()">ĐĂNG NHẬP</button>
     <button onclick="register()" style="background:#f1c40f;color:#000">ĐĂNG KÝ NGAY</button>
   </div>
@@ -370,13 +390,12 @@ setInterval(createFirework, 1500); // Tạo pháo hoa mỗi 1.5 giây
 </div>
 
 <script>
-let currentUser = {username: "guest", balance: 0, password: ""}; // Thêm password để refresh
+let currentUser = {username: "guest", balance: 0, password: ""};
 let cardAmount = 0;
 let lsNap = [];
 let lsRut = [];
-let robuxRate = 65; // Default, sẽ fetch từ server
+let robuxRate = 65;
 
-// Fetch tỷ giá khi load
 async function fetchRate() {
   const res = await fetch("/api/rate");
   const data = await res.json();
@@ -385,14 +404,12 @@ async function fetchRate() {
 }
 fetchRate();
 
-// Ẩn tên 50%
 function hideName(n){
   if(!n || n.length < 4) return "*****";
   const half = Math.ceil(n.length / 2);
   return n.substring(0, half) + "*".repeat(n.length - half);
 }
 
-// Fake giao dịch
 const fakeNames = ["datmuoi","nguyenvan","trananh","phamthi","levan","hotuan","dangkim","buivan","lythithu","vuminh","khanhvy","minhthu","hoanganh","tuananh","ngochan"];
 function fakeTransaction(){
   const names = fakeNames[Math.floor(Math.random()*fakeNames.length)];
@@ -407,7 +424,6 @@ function fakeTransaction(){
   }
 }
 
-// Render giao dịch trang chủ
 function renderRecentTransactions(){
   const real = [];
   lsNap.slice(-6).forEach(t=>real.push(`${hideName(t.user)} nạp ${t.amount?.toLocaleString()||"??"}đ (+${t.robux} Robux)`));
@@ -419,7 +435,6 @@ function renderRecentTransactions(){
 setInterval(renderRecentTransactions, 3500);
 renderRecentTransactions();
 
-// Render lịch sử cá nhân
 async function renderHistory(){
   const res = await fetch("/api/history/" + currentUser.username);
   const data = await res.json();
@@ -451,7 +466,6 @@ async function renderHistory(){
     `).join('');
   }
 
-  // Cập nhật balance từ server
   const loginRes = await fetch("/api/login",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
@@ -466,14 +480,12 @@ async function renderHistory(){
   renderRecentTransactions();
 }
 
-/* ---------- POPUP ĐẸP ---------- */
 function showPopup(text){
   document.getElementById("popupText").innerHTML = text;
   document.getElementById("popup").style.display="flex";
 }
 function closePopup(){document.getElementById("popup").style.display="none";}
 
-/* ---------- LOGIN ---------- */
 async function login(){
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
@@ -508,12 +520,30 @@ async function login(){
   await renderHistory();
 }
 
-/* ---------- QR NẠP ---------- */
+async function register(){
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value;
+  const ref = document.getElementById("refCode").value.trim();
+
+  const res = await fetch("/api/register",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ username:u, password:p, refCode: ref })
+  });
+
+  const data = await res.json();
+
+  if(data.error) return alert(data.error);
+
+  alert("Đăng ký thành công! Giờ đăng nhập đi bro!");
+}
+
 function calcQR(){
   const m = parseInt(document.getElementById("qrAmount").value)||0;
   const r = Math.floor(m/10000 * robuxRate);
   document.getElementById("qrPreview").innerHTML = `<b>${r.toLocaleString()}</b> Robux`;
 }
+
 async function createQR(){
   const amount = parseInt(document.getElementById("qrAmount").value);
   if(!amount || amount < 10000) return alert("Tối thiểu 10.000đ nha bro!");
@@ -541,14 +571,15 @@ async function createQR(){
   });
   await renderHistory();
 }
+
 function setQR(x){document.getElementById("qrAmount").value=x;calcQR();}
 
-/* ---------- THẺ CÀO ---------- */
 function chooseCard(amount){
   cardAmount = amount;
   document.querySelectorAll("#cardBox .pkg").forEach(p=>p.classList.remove("selected"));
   event.target.classList.add("selected");
 }
+
 async function sendCard(){
   if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
   const seri = document.getElementById("seri").value.trim();
@@ -575,7 +606,6 @@ async function sendCard(){
   await renderHistory();
 }
 
-/* ---------- RÚT ROBUX ---------- */
 async function rutRobux(){
   const toUser = document.getElementById("rbxUser").value.trim();
   const amt = parseInt(document.getElementById("rbxAmt").value);
@@ -597,8 +627,6 @@ async function rutRobux(){
   await renderHistory();
 }
 
-/* ---------- CODE CŨ GIỮ NGUYÊN ---------- */
-function register(){alert("Đăng ký thành công! Giờ đăng nhập đi bro!");}
 function logout(){if(confirm("Đăng xuất ngay hả bro?")) location.reload();}
 function openTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
