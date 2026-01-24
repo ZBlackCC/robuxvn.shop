@@ -1,16 +1,16 @@
 import express from "express";
 import fs from "fs";
 import cors from "cors";
-import path from "path"; // Thêm path để xử lý đường dẫn file tốt hơn
+import path from "path";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Phục vụ file tĩnh từ thư mục gốc (root repo)
+// Phục vụ file tĩnh từ thư mục gốc
 app.use(express.static("."));
 
-// Route gốc: trả về index.html từ root
+// Route gốc: trả về index.html
 app.get("/", (req, res) => {
   const filePath = path.join(process.cwd(), "index.html");
   res.sendFile(filePath, (err) => {
@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// FIX: Route rõ ràng cho admin.html (để tránh lỗi Cannot GET /admin.html)
+// Route cho admin.html
 app.get("/admin.html", (req, res) => {
   const filePath = path.join(process.cwd(), "admin.html");
   res.sendFile(filePath, (err) => {
@@ -161,7 +161,7 @@ app.get("/api/history/:username", (req, res) => {
 
 // =============================================
 // 📌 ADMIN GET LIST (đơn chờ duyệt)
-// =============================================
+ // =============================================
 app.get("/api/admin/orders", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
         return res.json({ error: "Unauthorized" });
@@ -280,6 +280,82 @@ app.post("/api/admin/login", (req, res) => {
         res.json({ token: "admin_token" });
     } else {
         res.json({ error: "Sai tài khoản hoặc mật khẩu!" });
+    }
+});
+
+// =============================================
+// 📌 THÊM API CHO KHIẾU NẠI
+// =============================================
+app.post("/api/complaint", (req, res) => {
+    const { user, text } = req.body;
+    const data = db();
+
+    const newComplaint = {
+        id: Date.now(),
+        user: user || 'admin',
+        text,
+        status: "pending",
+        time: Date.now()
+    };
+
+    data.complaints.push(newComplaint);
+    save(data);
+
+    res.json({ success: true });
+});
+
+// =============================================
+// 📌 ADMIN GET LIST KHIẾU NẠI
+// =============================================
+app.get("/api/admin/complaints", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
+    const data = db();
+    res.json(data.complaints.filter(c => c.status === "pending"));
+});
+
+// =============================================
+// 📌 ADMIN XOÁ KHIẾU NẠI (DUYỆT = XOÁ)
+// =============================================
+app.post("/api/admin/reject_complaint", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
+    const { id } = req.body;
+    const data = db();
+    data.complaints = data.complaints.filter(c => c.id !== id);
+    save(data);
+    res.json({ success: true });
+});
+
+// =============================================
+// 📌 ADMIN GET LIST REF ĐỂ DUYỆT HOA HỒNG
+// =============================================
+app.get("/api/admin/refs", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
+    const data = db();
+    const refs = Object.values(data.users).filter(u => u.referredBy);
+    res.json(refs);
+});
+
+// =============================================
+// 📌 ADMIN ADD BONUS HOA HỒNG REF THỦ CÔNG
+// =============================================
+app.post("/api/admin/add_bonus", (req, res) => {
+    if (req.headers.authorization !== "admin_token") {
+        return res.json({ error: "Unauthorized" });
+    }
+    const { user, bonus } = req.body;
+    const data = db();
+    if (data.users[user]) {
+      data.users[user].balance += bonus;
+      save(data);
+      res.json({ success: true });
+    } else {
+      res.json({ error: "Không tìm thấy user!" });
     }
 });
 
