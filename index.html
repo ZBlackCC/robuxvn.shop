@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
 <style>
-  /* Giữ nguyên toàn bộ style gốc của bạn */
+  /* Giữ nguyên toàn bộ style gốc */
   #popup { backdrop-filter: blur(6px); }
   #popupBox { border: 4px solid var(--accent); background: linear-gradient(165deg, #ffffff, #f2fffa); box-shadow: 0 0 35px rgba(0, 212, 170, 0.45); }
   #popupBox p { font-size: 17px !important; line-height: 1.55 !important; }
@@ -54,32 +54,31 @@
 </head>
 <body>
 
-<!-- PHÁO HOA (fix: nổ mạnh đầu tiên, sau đó chim xuống, mờ dần, lộ website) -->
+<!-- PHÁO HOA (chỉ nổ 1 lần lúc vào, transparent, chim xuống, lộ website) -->
 <canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1;"></canvas>
 
 <script>
-// Pháo hoa: nổ mạnh lúc đầu, sau đó mờ dần và chim xuống
+// Pháo hoa chỉ nổ 1 lần, transparent, chim xuống nhanh
 const canvas = document.getElementById('fireworksCanvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 
 let particles = [];
-let isFirstFirework = true; // Cờ để nổ mạnh lần đầu
 
 class Particle {
   constructor(x, y, color) {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.radius = Math.random() * 2.5 + 1; // hạt to hơn lúc đầu
+    this.radius = Math.random() * 2 + 1;
     this.velocity = {
-      x: (Math.random() - 0.5) * (isFirstFirework ? 25 : 10),
-      y: (Math.random() - 0.5) * (isFirstFirework ? 30 : 15) - 20
+      x: (Math.random() - 0.5) * 20,
+      y: (Math.random() - 0.5) * 25 - 40  // bay lên cao rồi rơi xuống
     };
-    this.alpha = isFirstFirework ? 1 : 0.6;
-    this.friction = 0.97;
-    this.gravity = 0.1; // chim xuống
+    this.alpha = 0.6; // transparent từ đầu
+    this.friction = 0.96;
+    this.gravity = 0.15; // rơi nhanh
   }
 
   draw() {
@@ -98,33 +97,26 @@ class Particle {
     this.velocity.y *= this.friction;
     this.x += this.velocity.x;
     this.y += this.velocity.y;
-    this.alpha -= isFirstFirework ? 0.008 : 0.018; // mờ nhanh hơn sau lần đầu
+    this.alpha -= 0.025; // mờ rất nhanh để lộ website
   }
 }
 
 function createFirework() {
-  const x = Math.random() * canvas.width;
-  const y = canvas.height / 5; // nổ trên cao
-  const color = `hsl(${Math.random() * 360}, 100%, ${isFirstFirework ? 70 : 60}%)`;
+  // Chỉ nổ 2 bên trái phải
+  const positions = [canvas.width * 0.25, canvas.width * 0.75]; // trái + phải
+  positions.forEach(x => {
+    const y = canvas.height / 4; // nổ trên cao
+    const color = `hsla(${Math.random() * 360}, 100%, 70%, 0.5)`; // trong suốt
 
-  const particleCount = isFirstFirework ? 60 : 20; // lần đầu nhiều, sau ít
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle(x, y, color));
-  }
-
-  // Sau lần nổ đầu tiên, chuyển sang chế độ nhẹ
-  if (isFirstFirework) {
-    isFirstFirework = false;
-    setTimeout(() => {
-      // Sau 4 giây đầu, giảm alpha toàn bộ hạt cũ để lộ website
-      particles.forEach(p => p.alpha = Math.min(p.alpha, 0.3));
-    }, 4000);
-  }
+    for (let i = 0; i < 40; i++) { // nổ mạnh nhưng transparent
+      particles.push(new Particle(x, y, color));
+    }
+  });
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; // mờ nền nhẹ
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.02)'; // mờ nền nhẹ
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((particle, i) => {
@@ -139,14 +131,13 @@ function animate() {
 
 animate();
 
-// Nổ mạnh lần đầu ngay khi load
+// Nổ 1 lần duy nhất khi load
 createFirework();
 
-// Sau đó bắn thưa thớt
-setInterval(createFirework, 10000); // mỗi 10 giây một lần nhẹ
+// Không setInterval nữa → chỉ nổ 1 lần
 </script>
 
-<!-- LOGIN (giữ nguyên) -->
+<!-- LOGIN (thêm auto-login từ localStorage) -->
 <div id="loginPage">
   <div class="login-box">
     <h2>ROBUXVN.SHOP</h2>
@@ -276,13 +267,25 @@ let lsNap = [];
 let lsRut = [];
 let robuxRate = 65;
 
+// Auto-login từ localStorage khi load trang
+window.addEventListener('load', () => {
+  const savedUser = localStorage.getItem('currentUser');
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("name").innerText = currentUser.username;
+    document.getElementById("bal").innerText = currentUser.balance;
+    renderHistory(); // load lịch sử ngay
+  }
+  fetchRate();
+});
+
 async function fetchRate() {
   const res = await fetch("/api/rate");
   const data = await res.json();
   robuxRate = data.rate;
   document.getElementById("rateDisplay").innerText = `10.000đ = ${robuxRate} Robux`;
 }
-fetchRate();
 
 function hideName(n){
   if(!n || n.length < 4) return "*****";
@@ -383,6 +386,9 @@ async function login(){
   currentUser = data;
   currentUser.password = p;
 
+  // Lưu thông tin đăng nhập vào localStorage
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
   document.getElementById("loginPage").style.display="none";
   document.getElementById("name").innerText = data.username;
   document.getElementById("bal").innerText = data.balance;
@@ -416,6 +422,13 @@ async function register(){
   if(data.error) return alert(data.error);
 
   alert("Đăng ký thành công! Giờ đăng nhập đi bro!");
+}
+
+function logout(){
+  if(confirm("Đăng xuất ngay hả bro?")) {
+    localStorage.removeItem('currentUser'); // Xóa thông tin lưu
+    location.reload();
+  }
 }
 
 function calcQR(){
@@ -507,7 +520,6 @@ async function rutRobux(){
   await renderHistory();
 }
 
-function logout(){if(confirm("Đăng xuất ngay hả bro?")) location.reload();}
 function openTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
