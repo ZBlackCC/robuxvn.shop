@@ -187,15 +187,41 @@
   }
 
   @keyframes pop {from{transform:scale(.6); opacity:0} to{transform:scale(1); opacity:1}}
+
+  /* Dòng chữ Lộc Phát 2 bên (Tết) */
+  .tet-text {
+    position: fixed;
+    bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 0 0 15px #ffd700, 0 0 30px #ff4500;
+    z-index: 9998;
+    pointer-events: none;
+    animation: glow 2s infinite alternate;
+  }
+
+  .tet-left { left: 20px; transform: rotate(-15deg); }
+  .tet-right { right: 20px; transform: rotate(15deg); }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 10px #ffd700, 0 0 20px #ff4500; }
+    to   { text-shadow: 0 0 20px #ffd700, 0 0 40px #ff4500; }
+  }
+
+  @media (max-width: 768px) {
+    .tet-text { font-size: 1.8rem; bottom: 10px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- PHÁO HOA -->
+<!-- PHÁO HOA (đã fix: giảm số lượng hạt + tần suất) -->
 <canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;"></canvas>
 
 <script>
-// Hiệu ứng pháo hoa đẹp (giữ nguyên)
+// Hiệu ứng pháo hoa nhẹ hơn, ít lag hơn
 const canvas = document.getElementById('fireworksCanvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -210,11 +236,11 @@ class Particle {
     this.color = color;
     this.radius = Math.random() * 2 + 1;
     this.velocity = {
-      x: (Math.random() - 0.5) * 20,
-      y: (Math.random() - 0.5) * 20
+      x: (Math.random() - 0.5) * 15,  // Giảm tốc độ
+      y: (Math.random() - 0.5) * 15
     };
     this.alpha = 1;
-    this.friction = 0.99;
+    this.friction = 0.98;  // Giảm ma sát để hạt bay lâu hơn một chút
   }
 
   draw() {
@@ -232,23 +258,23 @@ class Particle {
     this.velocity.y *= this.friction;
     this.x += this.velocity.x;
     this.y += this.velocity.y;
-    this.alpha -= 0.01;
+    this.alpha -= 0.008;  // Giảm alpha chậm hơn để hạt tồn tại lâu hơn
   }
 }
 
 function createFirework() {
   const x = Math.random() * canvas.width;
-  const y = Math.random() * canvas.height / 2 + canvas.height / 2;
-  const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+  const y = Math.random() * canvas.height / 3;  // Bắn từ trên xuống
+  const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 30; i++) {  // Giảm từ 50 xuống 30 hạt
     particles.push(new Particle(x, y, color));
   }
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';  // Tăng độ mờ nền để pháo rõ hơn
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((particle, i) => {
@@ -263,8 +289,12 @@ function animate() {
 
 animate();
 
-setInterval(createFirework, 1500);
+setInterval(createFirework, 4000);  // Tăng khoảng cách từ 1.5s → 4s để ít pháo hơn, đỡ nặng
 </script>
+
+<!-- Dòng chữ Lộc Phát 2 bên (Tết) -->
+<div class="tet-text tet-left">Lộc Phát</div>
+<div class="tet-text tet-right">Lộc Phát</div>
 
 <!-- LOGIN (đã thêm input Mã giới thiệu) -->
 <div id="loginPage">
