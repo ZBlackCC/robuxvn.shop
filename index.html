@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
 <style>
-  /* Giữ nguyên toàn bộ style gốc */
+  /* Giữ nguyên toàn bộ style gốc của bạn */
   #popup { backdrop-filter: blur(6px); }
   #popupBox { border: 4px solid var(--accent); background: linear-gradient(165deg, #ffffff, #f2fffa); box-shadow: 0 0 35px rgba(0, 212, 170, 0.45); }
   #popupBox p { font-size: 17px !important; line-height: 1.55 !important; }
@@ -54,11 +54,11 @@
 </head>
 <body>
 
-<!-- PHÁO HOA (chỉ nổ 1 lần lúc vào, transparent, chim xuống, lộ website) -->
-<canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1;"></canvas>
+<!-- PHÁO HOA (dưới web, nổ nhỏ li ti 1 lần, transparent, không đè lên) -->
+<canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: -1;"></canvas>
 
 <script>
-// Pháo hoa chỉ nổ 1 lần, transparent, chim xuống nhanh
+// Pháo hoa nhỏ li ti, chỉ nổ 1 lần, dưới nền, transparent
 const canvas = document.getElementById('fireworksCanvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -71,14 +71,14 @@ class Particle {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.radius = Math.random() * 2 + 1;
+    this.radius = Math.random() * 1.2 + 0.5; // hạt nhỏ li ti
     this.velocity = {
-      x: (Math.random() - 0.5) * 20,
-      y: (Math.random() - 0.5) * 25 - 40  // bay lên cao rồi rơi xuống
+      x: (Math.random() - 0.5) * 8,
+      y: (Math.random() - 0.5) * 10 - 15
     };
-    this.alpha = 0.6; // transparent từ đầu
-    this.friction = 0.96;
-    this.gravity = 0.15; // rơi nhanh
+    this.alpha = 0.4; // rất trong suốt
+    this.friction = 0.97;
+    this.gravity = 0.08;
   }
 
   draw() {
@@ -97,26 +97,24 @@ class Particle {
     this.velocity.y *= this.friction;
     this.x += this.velocity.x;
     this.y += this.velocity.y;
-    this.alpha -= 0.025; // mờ rất nhanh để lộ website
+    this.alpha -= 0.018; // mờ nhanh để biến mất
   }
 }
 
 function createFirework() {
-  // Chỉ nổ 2 bên trái phải
-  const positions = [canvas.width * 0.25, canvas.width * 0.75]; // trái + phải
-  positions.forEach(x => {
-    const y = canvas.height / 4; // nổ trên cao
-    const color = `hsla(${Math.random() * 360}, 100%, 70%, 0.5)`; // trong suốt
+  // Nổ ngẫu nhiên, nhỏ li ti
+  const x = Math.random() * canvas.width;
+  const y = canvas.height / 3;
+  const color = `hsla(${Math.random() * 360}, 80%, 70%, 0.4)`;
 
-    for (let i = 0; i < 40; i++) { // nổ mạnh nhưng transparent
-      particles.push(new Particle(x, y, color));
-    }
-  });
+  for (let i = 0; i < 15; i++) { // chỉ 15 hạt nhỏ
+    particles.push(new Particle(x, y, color));
+  }
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.02)'; // mờ nền nhẹ
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.01)'; // mờ cực nhẹ
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((particle, i) => {
@@ -131,13 +129,13 @@ function animate() {
 
 animate();
 
-// Nổ 1 lần duy nhất khi load
+// Nổ nhỏ 1 lần duy nhất khi load
 createFirework();
 
-// Không setInterval nữa → chỉ nổ 1 lần
+// Không lặp lại nữa
 </script>
 
-<!-- LOGIN (thêm auto-login từ localStorage) -->
+<!-- LOGIN (đã thêm auto-login vĩnh viễn từ localStorage) -->
 <div id="loginPage">
   <div class="login-box">
     <h2>ROBUXVN.SHOP</h2>
@@ -267,7 +265,7 @@ let lsNap = [];
 let lsRut = [];
 let robuxRate = 65;
 
-// Auto-login từ localStorage khi load trang
+// Auto-login vĩnh viễn từ localStorage
 window.addEventListener('load', () => {
   const savedUser = localStorage.getItem('currentUser');
   if (savedUser) {
@@ -386,7 +384,7 @@ async function login(){
   currentUser = data;
   currentUser.password = p;
 
-  // Lưu thông tin đăng nhập vào localStorage
+  // Lưu vĩnh viễn vào localStorage
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
   document.getElementById("loginPage").style.display="none";
@@ -426,7 +424,7 @@ async function register(){
 
 function logout(){
   if(confirm("Đăng xuất ngay hả bro?")) {
-    localStorage.removeItem('currentUser'); // Xóa thông tin lưu
+    localStorage.removeItem('currentUser'); // Xóa lưu trữ
     location.reload();
   }
 }
