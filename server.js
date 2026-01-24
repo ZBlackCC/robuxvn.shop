@@ -7,8 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Phục vụ file tĩnh từ thư mục gốc (root) thay vì public
-app.use(express.static(".")); // "." nghĩa là thư mục gốc repo
+// Phục vụ file tĩnh từ thư mục gốc (root repo)
+app.use(express.static("."));
 
 // Route gốc: trả về index.html từ root
 app.get("/", (req, res) => {
@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// Route cho admin.html
+// FIX: Route rõ ràng cho admin.html (để tránh lỗi Cannot GET /admin.html)
 app.get("/admin.html", (req, res) => {
   const filePath = path.join(process.cwd(), "admin.html");
   res.sendFile(filePath, (err) => {
