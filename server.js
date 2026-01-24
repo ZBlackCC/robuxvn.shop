@@ -30,10 +30,10 @@ function updateExpired(data, type) {
 }
 
 // =============================================
-// 📌 ĐĂNG KÝ – ĐĂNG NHẬP
+// 📌 ĐĂNG KÝ – ĐĂNG NHẬP (THÊM REF)
 // =============================================
 app.post("/api/register", (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, refCode } = req.body; // Thêm refCode
     const data = db();
 
     if (data.users[username])
@@ -41,7 +41,9 @@ app.post("/api/register", (req, res) => {
 
     data.users[username] = {
         password,
-        balance: 0
+        balance: 0,
+        referredBy: refCode || null, // Người giới thiệu
+        refCode: username // Mã ref của chính mình là username
     };
 
     save(data);
@@ -64,7 +66,7 @@ app.post("/api/login", (req, res) => {
 });
 
 // =============================================
-// 📌 NẠP TIỀN
+// 📌 NẠP TIỀN (giữ nguyên)
 // =============================================
 app.post("/api/deposit", (req, res) => {
     const { user, amount, robux, type } = req.body;
@@ -88,7 +90,7 @@ app.post("/api/deposit", (req, res) => {
 });
 
 // =============================================
-// 📌 RÚT ROBUX
+// 📌 RÚT ROBUX (giữ nguyên)
 // =============================================
 app.post("/api/withdraw", (req, res) => {
     const { user, robux, to } = req.body;
@@ -119,7 +121,7 @@ app.post("/api/withdraw", (req, res) => {
 });
 
 // =============================================
-// 📌 LỊCH SỬ NẠP / RÚT
+// 📌 LỊCH SỬ NẠP / RÚT (giữ nguyên)
 // =============================================
 app.get("/api/history/:username", (req, res) => {
     const name = req.params.username;
@@ -133,7 +135,7 @@ app.get("/api/history/:username", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN GET LIST (đơn chờ duyệt)
+// 📌 ADMIN GET LIST (giữ nguyên)
 // =============================================
 app.get("/api/admin/orders", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
@@ -149,7 +151,7 @@ app.get("/api/admin/orders", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN DUYỆT NẠP
+// 📌 ADMIN DUYỆT NẠP (THÊM BONUS REF)
 // =============================================
 app.post("/api/admin/approve/deposit", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
@@ -164,12 +166,29 @@ app.post("/api/admin/approve/deposit", (req, res) => {
     d.status = "success";
     data.users[d.user].balance += d.robux;
 
+    // Bonus ref: Nếu user được ref và đây là đơn nạp ĐẦU TIÊN
+    const user = data.users[d.user];
+    if (user.referredBy) {
+        const hasDepositBefore = data.deposits.some(dep => 
+            dep.user === d.user && 
+            dep.status === "success" && 
+            dep.id !== id
+        );
+        if (!hasDepositBefore) { // Đơn đầu tiên
+            const referrer = data.users[user.referredBy];
+            if (referrer) {
+                referrer.balance += 50;
+                console.log(`Bonus 50 Robux cho ${user.referredBy} từ user ${d.user}`);
+            }
+        }
+    }
+
     save(data);
     res.json({ success: true });
 });
 
 // =============================================
-// 📌 ADMIN DUYỆT RÚT
+// 📌 ADMIN DUYỆT RÚT (giữ nguyên)
 // =============================================
 app.post("/api/admin/approve/withdraw", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
@@ -189,7 +208,7 @@ app.post("/api/admin/approve/withdraw", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN XOÁ ĐƠN
+// 📌 ADMIN XOÁ ĐƠN (giữ nguyên)
 // =============================================
 app.post("/api/admin/reject", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
@@ -209,7 +228,7 @@ app.post("/api/admin/reject", (req, res) => {
 });
 
 // =============================================
-// 📌 GET/SET TỶ GIÁ ROBUX
+// 📌 GET/SET TỶ GIÁ ROBUX (giữ nguyên)
 // =============================================
 app.get("/api/rate", (req, res) => {
     const data = db();
@@ -228,12 +247,12 @@ app.post("/api/admin/set_rate", (req, res) => {
 });
 
 // =============================================
-// 📌 ADMIN LOGIN
+// 📌 ADMIN LOGIN (dùng meohia/071103)
 // =============================================
 app.post("/api/admin/login", (req, res) => {
     const { username, password } = req.body;
     const data = db();
-    if (username === data.admin.username && password === data.admin.password) {
+    if (username === "meohia" && password === "071103") {
         res.json({ token: "admin_token" });
     } else {
         res.json({ error: "Sai tài khoản hoặc mật khẩu!" });
@@ -241,6 +260,7 @@ app.post("/api/admin/login", (req, res) => {
 });
 
 // =============================================
-// 📌 RUN SERVER
+// 📌 RUN SERVER (fix cho Railway)
 // =============================================
-app.listen(3000, () => console.log("SERVER RUNNING PORT 3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`SERVER RUNNING ON PORT ${port}`));
