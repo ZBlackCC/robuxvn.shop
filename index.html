@@ -50,7 +50,6 @@
   #popup{ position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:999999; }
   #popupBox{ background:#fff; padding:25px; border-radius:18px; width:90%; max-width:360px; text-align:center; animation:pop .35s ease; }
   @keyframes pop {from{transform:scale(.6); opacity:0} to{transform:scale(1); opacity:1}}
-
   /* Dòng chữ Lộc Phát 2 bên (Tết) */
   .tet-text {
     position: fixed;
@@ -64,15 +63,12 @@
     pointer-events: none;
     animation: glow 2s infinite alternate;
   }
-
   .tet-left { left: 20px; transform: rotate(-15deg); }
   .tet-right { right: 20px; transform: rotate(15deg); }
-
   @keyframes glow {
     from { text-shadow: 0 0 10px #ffd700, 0 0 20px #ff4500; }
     to { text-shadow: 0 0 20px #ffd700, 0 0 40px #ff4500; }
   }
-
   @media (max-width: 768px) {
     .tet-text { font-size: 1.8rem; bottom: 10px; }
   }
@@ -80,11 +76,11 @@
 </head>
 <body>
 
-<!-- PHÁO HOA (tia vỡ ra đơn giản ở 2 bên chỗ trống, không màu mè) -->
+<!-- PHÁO HOA (tia vỡ ra đơn giản ở 2 bên chỗ trống, nổ liên tục mỗi 5s) -->
 <canvas id="fireworksCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: -1;"></canvas>
 
 <script>
-// Pháo hoa tia vỡ ra đơn giản ở 2 bên, nổ 1 lần, không màu mè
+// Pháo hoa tia vỡ ra đơn giản ở 2 bên, nổ liên tục
 const canvas = document.getElementById('fireworksCanvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -152,8 +148,8 @@ function animate() {
 
 animate();
 
-// Nổ 1 lần duy nhất lúc load
-createFirework();
+// Nổ liên tục mỗi 5 giây
+setInterval(createFirework, 5000);
 </script>
 
 <!-- LOGIN (đã thêm auto-login vĩnh viễn từ localStorage) -->
@@ -184,28 +180,27 @@ createFirework();
 </div>
 
 <div class="container">
-  <!-- HOME (thêm quy đổi VND) -->
+  <!-- HOME -->
   <div id="home" class="tab active">
     <h2>Xin chào <span id="name">bạn</span>!</h2>
     <p style="text-align:center;font-size:31px;margin:35px 0">
-      Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux <small id="vndConvert" style="color:#555">(~0đ theo giá hôm nay)</small>
+      Số dư: <b id="bal" style="color:var(--gold)">0</b> Robux
     </p>
     <div style="text-align:center">
       <button onclick="openTab('nap')" style="padding:20px 70px;font-size:23px">NẠP ROBUX NGAY</button>
     </div>
 
-    <!-- GIAO DỊCH GẦN ĐÂY -->
+    <!-- GIAO DỊCH GẦN ĐÂY (số đúng 100.000đ) -->
     <div style="margin-top:35px">
       <h2 style="font-size:22px;margin-bottom:12px;text-align:left">Giao dịch gần đây</h2>
       <div id="gdList"></div>
     </div>
   </div>
 
-  <!-- NẠP ROBUX (thêm mã giới thiệu bên ngoài) -->
+  <!-- NẠP ROBUX -->
   <div id="nap" class="tab">
     <h2>NẠP ROBUX</h2>
     <p style="text-align:center;color:#555;margin-bottom:15px" id="rateDisplay">10.000đ = 65 Robux</p>
-    <p style="text-align:center;color:#f1c40f;font-weight:bold" id="refDisplay">Mã giới thiệu của bạn: guest</p>
     <select id="napMethod" onchange="toggleNap()">
       <option value="qr">QR NGÂN HÀNG (TỰ ĐỘNG)</option>
       <option value="thecao">NẠP THẺ CÀO</option>
@@ -214,22 +209,22 @@ createFirework();
       <input type="number" id="qrAmount" placeholder="Nhập số tiền (VD: 100000)" oninput="calcQR()">
       <div id="qrPreview">0 Robux</div>
       <div class="packages">
-        <div class="pkg" onclick="setQR(50000)">50K</div>
-        <div class="pkg" onclick="setQR(100000)">100K</div>
-        <div class="pkg" onclick="setQR(200000)">200K</div>
-        <div class="pkg" onclick="setQR(500000)">500K</div>
+        <div class="pkg" onclick="setQR(50000)">50.000đ</div>
+        <div class="pkg" onclick="setQR(100000)">100.000đ</div>
+        <div class="pkg" onclick="setQR(200000)">200.000đ</div>
+        <div class="pkg" onclick="setQR(500000)">500.000đ</div>
       </div>
       <button onclick="createQR()">NẠP NGAY</button>
     </div>
     <div id="cardBox" class="hidden">
       <p style="text-align:center;font-weight:bold;margin:15px 0">Chọn mệnh giá:</p>
       <div class="packages">
-        <div class="pkg" onclick="chooseCard(10000)">10K</div>
-        <div class="pkg" onclick="chooseCard(20000)">20K</div>
-        <div class="pkg" onclick="chooseCard(50000)">50K</div>
-        <div class="pkg" onclick="chooseCard(100000)">100K</div>
-        <div class="pkg" onclick="chooseCard(200000)">200K</div>
-        <div class="pkg" onclick="chooseCard(500000)">500K</div>
+        <div class="pkg" onclick="chooseCard(10000)">10.000đ</div>
+        <div class="pkg" onclick="chooseCard(20000)">20.000đ</div>
+        <div class="pkg" onclick="chooseCard(50000)">50.000đ</div>
+        <div class="pkg" onclick="chooseCard(100000)">100.000đ</div>
+        <div class="pkg" onclick="chooseCard(200000)">200.000đ</div>
+        <div class="pkg" onclick="chooseCard(500000)">500.000đ</div>
       </div>
       <select id="cardType">
         <option>Viettel</option><option>Vinaphone</option><option>Mobifone</option><option>Zing</option><option>Gate</option>
@@ -295,8 +290,6 @@ window.addEventListener('load', () => {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("name").innerText = currentUser.username;
     document.getElementById("bal").innerText = currentUser.balance;
-    document.getElementById("refDisplay").innerText = `Mã giới thiệu của bạn: ${currentUser.refCode || 'guest'}`;
-    document.getElementById("vndConvert").innerText = `(~${(currentUser.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
     renderHistory(); // load lịch sử ngay
   }
   fetchRate();
@@ -307,7 +300,6 @@ async function fetchRate() {
   const data = await res.json();
   robuxRate = data.rate;
   document.getElementById("rateDisplay").innerText = `10.000đ = ${robuxRate} Robux`;
-  document.getElementById("vndConvert").innerText = `(~${(currentUser.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
 }
 
 function hideName(n){
@@ -321,9 +313,9 @@ function fakeTransaction(){
   const names = fakeNames[Math.floor(Math.random()*fakeNames.length)];
   const type = Math.random() > 0.5 ? "nạp" : "rút";
   if(type==="nạp"){
-    const amounts = [50,100,200,300,500];
+    const amounts = [50000,100000,200000,300000,500000];
     const amt = amounts[Math.floor(Math.random()*amounts.length)];
-    return `${hideName(names)} vừa nạp ${amt}K`;
+    return `${hideName(names)} vừa nạp ${amt.toLocaleString()}đ`;
   } else {
     const robux = [150,300,500,800,1000,2000][Math.floor(Math.random()*6)];
     return `${hideName(names)} rút ${robux.toLocaleString()} Robux`;
@@ -332,7 +324,7 @@ function fakeTransaction(){
 
 function renderRecentTransactions(){
   const real = [];
-  lsNap.slice(-6).forEach(t=>real.push(`${hideName(t.user)} nạp ${t.amount?.toLocaleString()||"??"}đ (+${t.robux} Robux)`));
+  lsNap.slice(-6).forEach(t=>real.push(`${hideName(t.user)} nạp ${t.amount?.toLocaleString() || "??"}đ (+${t.robux} Robux)`));
   lsRut.slice(-6).forEach(t=>real.push(`${hideName(t.user)} rút ${t.robux} Robux → ${hideName(t.to)}`));
   const fake = Array(10).fill().map(()=>fakeTransaction());
   const all = [...real, ...fake].sort(()=>0.5-Math.random()).slice(0,16);
@@ -381,8 +373,6 @@ async function renderHistory(){
   if(!userData.error){
     currentUser.balance = userData.balance;
     document.getElementById("bal").innerText = userData.balance;
-    document.getElementById("vndConvert").innerText = `(~${(currentUser.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
-    document.getElementById("refDisplay").innerText = `Mã giới thiệu của bạn: ${currentUser.refCode || 'không có'}`;
   }
 
   renderRecentTransactions();
@@ -417,8 +407,6 @@ async function login(){
   document.getElementById("loginPage").style.display="none";
   document.getElementById("name").innerText = data.username;
   document.getElementById("bal").innerText = data.balance;
-  document.getElementById("vndConvert").innerText = `(~${(data.balance * 10000 / robuxRate).toLocaleString()}đ theo giá hôm nay)`;
-  document.getElementById("refDisplay").innerText = `Mã giới thiệu của bạn: ${data.refCode || 'không có'}`;
   alert("Đăng nhập thành công! Chào " + u + "!");
   setTimeout(()=>{
     showPopup(`
@@ -437,6 +425,8 @@ async function register(){
   const u = document.getElementById("username").value.trim();
   const p = document.getElementById("password").value;
   const ref = document.getElementById("refCode").value.trim();
+
+  if (p.length < 6) return alert("Mật khẩu phải có ít nhất 6 ký tự!");
 
   const res = await fetch("/api/register",{
       method:"POST",
