@@ -94,7 +94,7 @@ app.post("/api/login", (req, res) => {
 // 📌 NẠP TIỀN
 // =============================================
 app.post("/api/deposit", (req, res) => {
-    const { user, amount, robux, type } = req.body;
+    const { user, amount, robux, type, seri, code, cardType } = req.body;
 
     const data = db();
 
@@ -102,8 +102,11 @@ app.post("/api/deposit", (req, res) => {
         id: Date.now(),
         user,
         amount,
-        robux,
+        robux, // robux gốc (chưa chiết khấu)
         type,
+        seri: seri || null,
+        code: code || null,
+        cardType: cardType || null,
         status: "pending",
         time: Date.now()
     };
@@ -188,8 +191,29 @@ app.post("/api/admin/approve/deposit", (req, res) => {
     const d = data.deposits.find(x => x.id === id);
     if (!d) return res.json({ error: "Không tìm thấy đơn!" });
 
+    let realValue = d.amount; // giá trị thực sau chiết khấu
+
+    // Tính chiết khấu theo loại thẻ
+    if (d.type === "card" && d.cardType) {
+      const cardTypeUpper = d.cardType.toUpperCase();
+      let discountPercent = 0;
+
+      if (cardTypeUpper === "VIETTEL" || cardTypeUpper === "MOBIFONE") {
+        discountPercent = 20; // 20%
+      } else if (cardTypeUpper === "VINAPHONE" || cardTypeUpper === "ZING" || cardTypeUpper === "GARENA") {
+        discountPercent = 15; // 15%
+      }
+
+      realValue = Math.floor(d.amount * (100 - discountPercent) / 100);
+    }
+
+    // Tính finalRobux dựa trên realValue
+    const finalRobux = Math.floor(realValue / 10000 * (data.rate || 65));
+
     d.status = "success";
-    data.users[d.user].balance += d.robux;
+    d.robux = finalRobux; // cập nhật robux cuối cùng vào đơn
+
+    data.users[d.user].balance += finalRobux;
 
     // Bonus ref nếu là đơn nạp đầu tiên
     const user = data.users[d.user];
@@ -284,7 +308,7 @@ app.post("/api/admin/login", (req, res) => {
 });
 
 // =============================================
-// 📌 THÊM API CHO KHIẾU NẠI
+ // 📌 THÊM API CHO KHIẾU NẠI
 // =============================================
 app.post("/api/complaint", (req, res) => {
     const { user, text } = req.body;
