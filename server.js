@@ -166,7 +166,7 @@ app.post("/api/admin/approve/deposit", (req, res) => {
     const d = data.deposits.find(x => x.id === id);
     if (!d) return res.json({ error: "Không tìm thấy đơn!" });
 
-    let finalRobux = d.robux; // mặc định QR không chiết khấu
+    let finalRobux = d.robux;
 
     if (d.type === "card" && d.cardType) {
       const cardTypeUpper = d.cardType.toUpperCase();
@@ -179,10 +179,9 @@ app.post("/api/admin/approve/deposit", (req, res) => {
     }
 
     d.status = "success";
-    d.robux = finalRobux; // lưu Robux thực nhận
+    d.robux = finalRobux;
     data.users[d.user].balance += finalRobux;
 
-    // Bonus ref (giữ nguyên)
     const user = data.users[d.user];
     if (user.referredBy) {
         const hasDepositBefore = data.deposits.some(dep => 
