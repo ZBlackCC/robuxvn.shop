@@ -516,42 +516,23 @@ async function sendCard(){
   if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
   const seriRaw = document.getElementById("seri").value.trim();
   const codeRaw = document.getElementById("code").value.trim();
-  const cardType = document.getElementById("cardType").value.toUpperCase();
 
-  // Lọc nghiêm ngặt: chỉ số, đúng độ dài theo nhà mạng
-  let seriLength = 0;
-  let codeLength = 0;
-
-  if (["VIETTEL", "VINAPHONE", "MOBIFONE"].includes(cardType)) {
-    seriLength = 12;
-    codeLength = 14;
-  } else if (["ZING", "GATE"].includes(cardType)) {
-    seriLength = 15;
-    codeLength = 15;
-  } else {
-    return alert("Loại thẻ không hỗ trợ!");
-  }
-
-  const seri = seriRaw.replace(/\s/g, ''); // bỏ khoảng trắng
+  // Bỏ khoảng trắng thừa
+  const seri = seriRaw.replace(/\s/g, '');
   const code = codeRaw.replace(/\s/g, '');
 
-  if (seri !== seriRaw || code !== codeRaw) {
-    alert("Seri hoặc mã thẻ có khoảng trắng hoặc ký tự lạ! Chỉ nhập số liên tục.");
+  // Kiểm tra chỉ số, không chữ cái/ký tự lạ
+  if (!/^\d+$/.test(seri) || seri.length < 10) {
+    alert("Thẻ sai định dạng! Seri phải là số liên tục, ít nhất 10 ký tự.");
+    return;
+  }
+  if (!/^\d+$/.test(code) || code.length < 10) {
+    alert("Thẻ sai định dạng! Mã thẻ phải là số liên tục, ít nhất 10 ký tự.");
     return;
   }
 
-  if (!/^\d+$/.test(seri) || seri.length !== seriLength) {
-    alert(`Sai seri ${cardType}: phải đúng ${seriLength} số liên tục (không chữ, không khoảng trắng)!`);
-    return;
-  }
-
-  if (!/^\d+$/.test(code) || code.length !== codeLength) {
-    alert(`Sai mã thẻ ${cardType}: phải đúng ${codeLength} số liên tục (không chữ, không khoảng trắng)!`);
-    return;
-  }
-
-  // Nếu đúng định dạng → gửi đơn
-  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi thành công!\nAdmin sẽ duyệt trong 1-3 phút.`);
+  // Nếu đúng → gửi đơn
+  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin sẽ duyệt thủ công trong 1-3 phút!`);
   
   const robux = Math.floor(cardAmount / 10000 * robuxRate);
   await fetch("/api/deposit",{
@@ -564,7 +545,7 @@ async function sendCard(){
         type:"card",
         seri,
         code,
-        cardType
+        cardType: document.getElementById("cardType").value
     })
   });
   
