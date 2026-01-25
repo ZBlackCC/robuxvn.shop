@@ -516,11 +516,31 @@ async function sendCard(){
   if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
   const seri = document.getElementById("seri").value.trim();
   const code = document.getElementById("code").value.trim();
-  const cardType = document.getElementById("cardType").value;
-  if(!seri || !code) return alert("Nhập đầy đủ seri + mã thẻ!");
+  const cardType = document.getElementById("cardType").value.toUpperCase();
+
+  // Lọc seri/code theo định dạng nhà mạng
+  let seriLength = 0;
+  let codeLength = 0;
+
+  if (cardType === "VIETTEL" || cardType === "MOBIFONE" || cardType === "VINAPHONE") {
+    seriLength = 12;
+    codeLength = 14;
+  } else if (cardType === "ZING" || cardType === "GATE") {
+    seriLength = 15;
+    codeLength = 15;
+  }
+
+  // Kiểm tra chỉ số (không chữ cái)
+  if (!/^\d+$/.test(seri) || seri.length !== seriLength) {
+    return alert(`Sai định dạng seri ${cardType}: phải ${seriLength} số liên tục!`);
+  }
+  if (!/^\d+$/.test(code) || code.length !== codeLength) {
+    return alert(`Sai định dạng mã thẻ ${cardType}: phải ${codeLength} số liên tục!`);
+  }
+
   alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin sẽ duyệt thủ công trong 1-3 phút!`);
   
-  const robux = Math.floor(cardAmount / 10000 * robuxRate); // robux gốc gửi server
+  const robux = Math.floor(cardAmount / 10000 * robuxRate);
   await fetch("/api/deposit",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
