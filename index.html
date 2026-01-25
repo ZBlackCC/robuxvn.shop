@@ -72,6 +72,8 @@
   @media (max-width: 768px) {
     .tet-text { font-size: 1.8rem; bottom: 10px; }
   }
+  /* Thêm hiển thị chiết khấu thẻ cào */
+  #cardDiscount { text-align:center; font-weight:bold; color:#f1c40f; margin:10px 0; }
 </style>
 </head>
 <body>
@@ -124,8 +126,8 @@ class Particle {
 function createFirework() {
   const positions = [canvas.width * 0.1, canvas.width * 0.9]; // 2 bên chỗ trống
   positions.forEach(x => {
-    const y = canvas.height / 2; // giữa chiều cao
-    for (let i = 0; i < 30; i++) { // tia vỡ ra
+    const y = canvas.height / 2;
+    for (let i = 0; i < 30; i++) {
       particles.push(new Particle(x, y));
     }
   });
@@ -148,7 +150,6 @@ function animate() {
 
 animate();
 
-// Nổ liên tục mỗi 5 giây
 setInterval(createFirework, 5000);
 </script>
 
@@ -190,7 +191,7 @@ setInterval(createFirework, 5000);
       <button onclick="openTab('nap')" style="padding:20px 70px;font-size:23px">NẠP ROBUX NGAY</button>
     </div>
 
-    <!-- GIAO DỊCH GẦN ĐÂY (số đúng 100.000đ) -->
+    <!-- GIAO DỊCH GẦN ĐÂY -->
     <div style="margin-top:35px">
       <h2 style="font-size:22px;margin-bottom:12px;text-align:left">Giao dịch gần đây</h2>
       <div id="gdList"></div>
@@ -226,9 +227,14 @@ setInterval(createFirework, 5000);
         <div class="pkg" onclick="chooseCard(200000)">200.000đ</div>
         <div class="pkg" onclick="chooseCard(500000)">500.000đ</div>
       </div>
-      <select id="cardType">
-        <option>Viettel</option><option>Vinaphone</option><option>Mobifone</option><option>Zing</option><option>Gate</option>
+      <select id="cardType" onchange="updateCardDiscount()">
+        <option>Viettel</option>
+        <option>Vinaphone</option>
+        <option>Mobifone</option>
+        <option>Zing</option>
+        <option>Gate</option>
       </select>
+      <p id="cardDiscount" style="text-align:center; font-weight:bold; color:#f1c40f; margin:10px 0;">Chiết khấu 20% - Thực nhận 0 Robux</p>
       <input type="text" id="seri" placeholder="Số seri">
       <input type="text" id="code" placeholder="Mã thẻ">
       <button onclick="sendCard()">NẠP NGAY</button>
@@ -290,7 +296,7 @@ window.addEventListener('load', () => {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("name").innerText = currentUser.username;
     document.getElementById("bal").innerText = currentUser.balance;
-    renderHistory(); // load lịch sử ngay
+    renderHistory();
   }
   fetchRate();
 });
@@ -401,7 +407,6 @@ async function login(){
   currentUser = data;
   currentUser.password = p;
 
-  // Lưu vĩnh viễn vào localStorage
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
   document.getElementById("loginPage").style.display="none";
@@ -443,7 +448,7 @@ async function register(){
 
 function logout(){
   if(confirm("Đăng xuất ngay hả bro?")) {
-    localStorage.removeItem('currentUser'); // Xóa lưu trữ
+    localStorage.removeItem('currentUser');
     location.reload();
   }
 }
@@ -488,16 +493,34 @@ function chooseCard(amount){
   cardAmount = amount;
   document.querySelectorAll("#cardBox .pkg").forEach(p=>p.classList.remove("selected"));
   event.target.classList.add("selected");
+  updateCardDiscount();
+}
+
+function updateCardDiscount() {
+  if (cardAmount === 0) {
+    document.getElementById("cardDiscount").innerText = "Chọn mệnh giá để xem chiết khấu";
+    return;
+  }
+  const cardType = document.getElementById("cardType").value.toUpperCase();
+  let discount = 0;
+  if (cardType === "VIETTEL" || cardType === "MOBIFONE") discount = 20;
+  else if (cardType === "VINAPHONE" || cardType === "ZING" || cardType === "GATE") discount = 15;
+
+  const realValue = Math.floor(cardAmount * (100 - discount) / 100);
+  const realRobux = Math.floor(realValue / 10000 * robuxRate);
+
+  document.getElementById("cardDiscount").innerText = `Chiết khấu ${discount}% - Thực nhận ${realRobux.toLocaleString()} Robux`;
 }
 
 async function sendCard(){
   if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
   const seri = document.getElementById("seri").value.trim();
   const code = document.getElementById("code").value.trim();
+  const cardType = document.getElementById("cardType").value;
   if(!seri || !code) return alert("Nhập đầy đủ seri + mã thẻ!");
   alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin sẽ duyệt thủ công trong 1-3 phút!`);
   
-  const robux = Math.floor(cardAmount/10000 * robuxRate);
+  const robux = Math.floor(cardAmount / 10000 * robuxRate); // robux gốc gửi server
   await fetch("/api/deposit",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
@@ -505,7 +528,10 @@ async function sendCard(){
         user: currentUser.username,
         amount: cardAmount,
         robux,
-        type:"card"
+        type:"card",
+        seri,
+        code,
+        cardType
     })
   });
   
@@ -513,6 +539,7 @@ async function sendCard(){
   document.getElementById("code").value = "";
   cardAmount = 0;
   document.querySelectorAll("#cardBox .pkg").forEach(p=>p.classList.remove("selected"));
+  document.getElementById("cardDiscount").innerText = "Chiết khấu 20% - Thực nhận 0 Robux";
   await renderHistory();
 }
 
@@ -548,6 +575,7 @@ function toggleNap(){
   const v = document.getElementById("napMethod").value;
   document.getElementById("qrBox").classList.toggle("hidden", v==="thecao");
   document.getElementById("cardBox").classList.toggle("hidden", v!=="thecao");
+  if (v === "thecao") updateCardDiscount();
 }
 function useGift(){
   const c = document.getElementById("giftInput").value.trim().toUpperCase();
