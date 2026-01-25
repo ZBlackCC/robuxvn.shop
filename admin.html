@@ -4,22 +4,35 @@
 <meta charset="UTF-8">
 <title>ADMIN PANEL</title>
 <style>
-body { background:#111; color:#fff; font-family:Arial; padding:20px; }
-.box { background:#222; padding:15px; border-radius:10px; margin:10px 0; box-shadow:0 2px 5px rgba(0,255,0,0.1); } /* Dễ nhìn hơn */
-button { padding:10px 20px; margin:5px; border:none; cursor:pointer; border-radius:5px; } /* Dễ nhìn hơn */
+body { background:#111; color:#fff; font-family:Arial; padding:20px; margin:0; }
+.box { background:#222; padding:15px; border-radius:10px; margin:10px 0; box-shadow:0 2px 5px rgba(0,255,0,0.1); }
+button { padding:10px 20px; margin:5px; border:none; cursor:pointer; border-radius:5px; }
 .approve { background:#27ae60; color:#fff; }
 .reject { background:#e74c3c; color:#fff; }
-#adminLogin { display: block; }
+#adminLogin { display: block; text-align:center; }
 #mainPanel { display: none; }
-h2 { color:#00d4aa; } /* Dễ nhìn hơn */
+h2 { color:#00d4aa; margin-top:30px; }
+.hamburger { display:none; cursor:pointer; position:fixed; top:10px; right:20px; z-index:1000; }
+.bar { background:#fff; height:3px; width:25px; margin:5px 0; transition:0.4s; }
+@media (max-width: 768px) {
+  .hamburger { display:block; }
+  .nav { display:none; flex-direction:column; position:fixed; top:50px; right:20px; background:#222; padding:15px; box-shadow:0 5px 15px rgba(0,0,0,0.5); z-index:999; }
+  .nav.active { display:flex; }
+}
 </style>
 </head>
 <body>
 
+<div class="hamburger" onclick="toggleNav()">
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+</div>
+
 <div id="adminLogin">
   <h1>Đăng nhập Admin</h1>
-  <input type="text" id="adminUser" placeholder="Username">
-  <input type="password" id="adminPass" placeholder="Mật khẩu">
+  <input type="text" id="adminUser" placeholder="Username"><br><br>
+  <input type="password" id="adminPass" placeholder="Mật khẩu"><br><br>
   <button onclick="adminLogin()">ĐĂNG NHẬP</button>
 </div>
 
@@ -42,23 +55,11 @@ h2 { color:#00d4aa; } /* Dễ nhìn hơn */
   <div id="rut"></div>
 
   <h2>Lịch sử duyệt đơn</h2>
-  <div id="history"></div>
-
-  <h2>Duyệt Hoa Hồng Ref (Thủ công)</h2>
-  <div id="refs"></div>
-
-  <h2>Khiếu nại từ khách (Pending)</h2>
-  <div id="complaints"></div>
-  <div>
-    <h3>Gửi khiếu nai (nếu cần)</h3>
-    <textarea id="complaintText" placeholder="Nội dung khiếu nai" style="width:100%; height:100px; padding:10px;"></textarea>
-    <button onclick="sendComplaint()" style="background:#f39c12; color:#fff;">GỬI KHIẾU NẠI</button>
-  </div>
+  <div id="history" style="max-height:400px; overflow-y:auto; background:#222; padding:10px; border-radius:10px;"></div>
 </div>
 
 <script>
 let adminToken = localStorage.getItem("adminToken") || "";
-let previousPendingCount = 0; // Theo dõi số đơn pending cũ
 
 if (adminToken) {
   document.getElementById("adminLogin").style.display = "none";
@@ -66,15 +67,21 @@ if (adminToken) {
   load();
 }
 
+function toggleNav() {
+  document.querySelector('.nav')?.classList.toggle('active');
+}
+
 async function adminLogin() {
-  const u = document.getElementById("adminUser").value;
-  const p = document.getElementById("adminPass").value;
+  const u = document.getElementById("adminUser").value.trim();
+  const p = document.getElementById("adminPass").value.trim();
+
   const res = await fetch("/api/admin/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: u, password: p })
   });
   const data = await res.json();
+
   if (data.token) {
     adminToken = data.token;
     localStorage.setItem("adminToken", adminToken);
@@ -82,166 +89,104 @@ async function adminLogin() {
     document.getElementById("mainPanel").style.display = "block";
     load();
   } else {
-    alert(data.error);
+    alert(data.error || "Đăng nhập thất bại!");
   }
 }
 
 async function load(){
-    const res = await fetch("/api/admin/orders", {
-      headers: { "Authorization": adminToken }
-    });
-    const data = await res.json();
-    if (data.error) return alert(data.error);
+  const res = await fetch("/api/admin/orders", {
+    headers: { "Authorization": adminToken }
+  });
+  const data = await res.json();
+  if (data.error) return alert(data.error);
 
-    // Phân biệt đơn nạp
-    const cardDeposits = data.deposits.filter(o => o.type === "card");
-    const bankDeposits = data.deposits.filter(o => o.type === "bank");
+  // Phân biệt đơn nạp
+  const cardDeposits = data.deposits.filter(o => o.type === "card");
+  const bankDeposits = data.deposits.filter(o => o.type === "bank");
 
-    document.getElementById("napCard").innerHTML = cardDeposits.map(o=>`
-      <div class="box">
-        <b>${o.user}</b> nạp thẻ ${o.amount}đ (+${o.robux} Robux) <br>
-        <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
-        <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
-      </div>
-    `).join("");
+  document.getElementById("napCard").innerHTML = cardDeposits.map(o=>`
+    <div class="box">
+      <b>${o.user}</b> nạp thẻ ${o.amount.toLocaleString()}đ (+${o.robux} Robux)<br>
+      <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
+      <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
+    </div>
+  `).join("");
 
-    document.getElementById("napQR").innerHTML = bankDeposits.map(o=>`
-      <div class="box">
-        <b>${o.user}</b> nạp QR ${o.amount}đ (+${o.robux} Robux) <br>
-        <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
-        <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
-      </div>
-    `).join("");
+  document.getElementById("napQR").innerHTML = bankDeposits.map(o=>`
+    <div class="box">
+      <b>${o.user}</b> nạp QR ${o.amount.toLocaleString()}đ (+${o.robux} Robux)<br>
+      <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
+      <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
+    </div>
+  `).join("");
 
-    document.getElementById("rut").innerHTML = data.withdraws.map(o=>`
-      <div class="box">
-        <b>${o.user}</b> rút ${o.robux} Robux → ${o.to} <br>
-        <button class="approve" onclick="appRut(${o.id})">DUYỆT</button>
-        <button class="reject" onclick="rej(${o.id},'withdraw')">XOÁ</button>
-      </div>
-    `).join("");
+  document.getElementById("rut").innerHTML = data.withdraws.map(o=>`
+    <div class="box">
+      <b>${o.user}</b> rút ${o.robux.toLocaleString()} Robux → ${o.to}<br>
+      <button class="approve" onclick="appRut(${o.id})">DUYỆT</button>
+      <button class="reject" onclick="rej(${o.id},'withdraw')">XOÁ</button>
+    </div>
+  `).join("");
 
-    // Lịch sử duyệt đơn (all with status success/failed)
-    const historyRes = await fetch("/api/history/all", { headers: { "Authorization": adminToken } });
-    const historyData = await historyRes.json();
-    document.getElementById("history").innerHTML = historyData.deposits.map(o=>`
-      <div class="box" style="background:#333;">
-        <b>${o.user}</b> nạp ${o.amount}đ (+${o.robux} Robux) - Status: ${o.status} <br>
-        <small>${new Date(o.time).toLocaleString()}</small>
-      </div>
-    `).join("") + historyData.withdraws.map(o=>`
-      <div class="box" style="background:#333;">
-        <b>${o.user}</b> rút ${o.robux} Robux → ${o.to} - Status: ${o.status} <br>
-        <small>${new Date(o.time).toLocaleString()}</small>
-      </div>
-    `).join("");
-
-    // Duyệt hoa hồng ref thủ công
-    const refsRes = await fetch("/api/admin/refs", { headers: { "Authorization": adminToken } });
-    const refsData = await refsRes.json();
-    document.getElementById("refs").innerHTML = refsData.map(u=>`
-      <div class="box">
-        <b>${u.username}</b> được ref bởi <b>${u.referredBy}</b> - Balance: ${u.balance} <br>
-        <input type="number" id="bonus_${u.username}" placeholder="Bonus Robux" style="width:100px; padding:5px;">
-        <button onclick="addBonus('${u.referredBy}', document.getElementById('bonus_${u.username}').value)" style="background:#f39c12; color:#fff;">THÊM BONUS</button>
-      </div>
-    `).join("");
-
-    // Khiếu nại pending
-    const complaintsRes = await fetch("/api/admin/complaints", { headers: { "Authorization": adminToken } });
-    const complaintsData = await complaintsRes.json();
-    document.getElementById("complaints").innerHTML = complaintsData.map(c=>`
-      <div class="box" style="background:#444;">
-        <b>${c.user}</b>: ${c.text} <br>
-        <small>${new Date(c.time).toLocaleString()}</small> <br>
-        <button class="reject" onclick="rejComplaint(${c.id})">XOÁ</button>
-      </div>
-    `).join("");
-
-    // Chuông rung thông báo đơn nạp mới
-    const currentPending = data.deposits.length;
-    if (currentPending > previousPendingCount) {
-      const audio = new Audio('https://freesound.org/data/previews/66/66161_634166-lq.mp3'); // Chuông rung đơn giản
-      audio.play();
-      navigator.vibrate([200, 100, 200]); // Rung
-      alert("Có đơn nạp mới!");
-      previousPendingCount = currentPending;
-    }
+  // Lịch sử duyệt đơn (dễ nhìn)
+  const historyRes = await fetch("/api/history/all", { headers: { "Authorization": adminToken } });
+  const historyData = await historyRes.json() || { deposits: [], withdraws: [] };
+  let historyHTML = "";
+  historyData.deposits.forEach(o => {
+    historyHTML += `<div class="box" style="background:#333;">
+      <b>${o.user}</b> nạp ${o.amount.toLocaleString()}đ (+${o.robux} Robux) - ${o.status.toUpperCase()}<br>
+      <small>${new Date(o.time).toLocaleString()}</small>
+    </div>`;
+  });
+  historyData.withdraws.forEach(o => {
+    historyHTML += `<div class="box" style="background:#333;">
+      <b>${o.user}</b> rút ${o.robux.toLocaleString()} Robux → ${o.to} - ${o.status.toUpperCase()}<br>
+      <small>${new Date(o.time).toLocaleString()}</small>
+    </div>`;
+  });
+  document.getElementById("history").innerHTML = historyHTML || "<div class='box'>Chưa có lịch sử</div>";
 }
 
 async function appDep(id){
-    await fetch("/api/admin/approve/deposit",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-        body: JSON.stringify({id})
-    });
-    load();
+  await fetch("/api/admin/approve/deposit",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
+    body: JSON.stringify({id})
+  });
+  load();
 }
 
 async function appRut(id){
-    await fetch("/api/admin/approve/withdraw",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-        body: JSON.stringify({id})
-    });
-    load();
+  await fetch("/api/admin/approve/withdraw",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
+    body: JSON.stringify({id})
+  });
+  load();
 }
 
 async function rej(id,type){
-    await fetch("/api/admin/reject",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-        body: JSON.stringify({id,type})
-    });
-    load();
-}
-
-async function addBonus(user, bonus){
-    if (!bonus) return alert("Nhập bonus!");
-    await fetch("/api/admin/add_bonus",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-        body: JSON.stringify({user, bonus: parseInt(bonus)})
-    });
-    alert("Bonus thêm thành công!");
-    load();
-}
-
-async function sendComplaint(){
-    const text = document.getElementById("complaintText").value;
-    if (!text) return alert("Nhập nội dung!");
-    await fetch("/api/complaint",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-        body: JSON.stringify({text})
-    });
-    alert("Khiếu nai gửi thành công!");
-    document.getElementById("complaintText").value = "";
-    load();
-}
-
-async function rejComplaint(id){
-    await fetch("/api/admin/reject_complaint",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-        body: JSON.stringify({id})
-    });
-    load();
+  await fetch("/api/admin/reject",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
+    body: JSON.stringify({id,type})
+  });
+  load();
 }
 
 async function setRate(){
-    const rate = document.getElementById("newRate").value;
-    if(!rate) return alert("Nhập tỷ giá!");
-    await fetch("/api/admin/set_rate",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-        body: JSON.stringify({rate})
-    });
-    alert("Tỷ giá cập nhật thành công!");
-    document.getElementById("newRate").value = "";
+  const rate = document.getElementById("newRate").value;
+  if(!rate) return alert("Nhập tỷ giá!");
+  await fetch("/api/admin/set_rate",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
+    body: JSON.stringify({rate})
+  });
+  alert("Tỷ giá cập nhật thành công!");
+  document.getElementById("newRate").value = "";
 }
 
-setInterval(load,3000);
+setInterval(load, 5000); // Cập nhật nhanh hơn để thấy thay đổi
 </script>
 </body>
 </html>
