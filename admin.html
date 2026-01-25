@@ -114,9 +114,8 @@ async function load(){
 
     document.getElementById("napCard").innerHTML = cardDeposits.map(o=>`
       <div class="box">
-        <b>${o.user}</b> nạp thẻ ${o.amount.toLocaleString()}đ<br>
-        Seri: ${o.seri || 'N/A'} | Code: ${o.code || 'N/A'} | Loại: ${o.cardType || 'N/A'}<br>
-        Chiết khấu áp dụng - Thực nhận ${o.robux} Robux<br>
+        <b>${o.user}</b> nạp thẻ ${o.amount.toLocaleString()}đ (+${o.robux} Robux thực nhận)<br>
+        Seri: <b>${o.seri || 'N/A'}</b> | Code: <b>${o.code || 'N/A'}</b> | Loại: <b>${o.cardType || 'N/A'}</b><br>
         <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
         <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
       </div>
