@@ -151,12 +151,14 @@ async function load(){
 
   } catch (err) {
     console.error("Lỗi load:", err);
-    alert("Lỗi tải dữ liệu: " + err.message);
+    alert("Lỗi tải dữ liệu: " + err.message + "\nKiểm tra console (F12)");
   }
 }
 
 async function appDep(id){
   try {
+    console.log("GỬI DUYỆT NẠP - ID:", id, "Token:", adminToken);
+
     const res = await fetch("/api/admin/approve/deposit", {
       method: "POST",
       headers: { 
@@ -166,17 +168,23 @@ async function appDep(id){
       body: JSON.stringify({ id })
     });
 
-    // Đọc text trước để debug
     const text = await res.text();
 
-    // Nếu server trả HTML (bắt đầu bằng <) → lỗi route hoặc token
+    console.log("DUYỆT NẠP - Status:", res.status);
+    console.log("DUYỆT NẠP - Response (20 ký tự đầu):", text.substring(0, 200));
+
     if (text.trim().startsWith('<')) {
-      console.error("Server trả về HTML thay vì JSON:", text.substring(0, 300));
-      alert("Lỗi duyệt nạp: Server trả về trang HTML thay vì JSON.\nKiểm tra:\n1. Route /api/admin/approve/deposit có trong server.js?\n2. Token admin_token có đúng?\nMở F12 xem console để xem chi tiết.");
+      alert("LỖI: Server trả về HTML thay vì JSON!\nNguyên nhân:\n1. Route /api/admin/approve/deposit KHÔNG TỒN TẠI trong server.js\n2. Token admin_token KHÔNG KHỚP (login lại thử)\n3. Deploy chưa cập nhật code mới\n\nMở F12 → Console xem chi tiết response.");
       return;
     }
 
-    const result = JSON.parse(text);
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch (e) {
+      alert("Lỗi parse JSON: " + e.message + "\nServer trả về: " + text.substring(0, 200));
+      return;
+    }
 
     if (result.success) {
       alert("Duyệt nạp thành công!");
@@ -185,13 +193,15 @@ async function appDep(id){
       alert("Duyệt thất bại: " + (result.error || "Lỗi không rõ"));
     }
   } catch (err) {
-    console.error("Lỗi duyệt nạp:", err);
-    alert("Lỗi duyệt nạp: " + err.message + "\nMở F12 xem console để biết chi tiết.");
+    console.error("Lỗi gọi API duyệt nạp:", err);
+    alert("Lỗi gọi API duyệt nạp: " + err.message + "\nKiểm tra console (F12)");
   }
 }
 
 async function appRut(id){
   try {
+    console.log("GỬI DUYỆT RÚT - ID:", id, "Token:", adminToken);
+
     const res = await fetch("/api/admin/approve/withdraw", {
       method: "POST",
       headers: { 
@@ -203,9 +213,11 @@ async function appRut(id){
 
     const text = await res.text();
 
+    console.log("DUYỆT RÚT - Status:", res.status);
+    console.log("DUYỆT RÚT - Response:", text.substring(0, 200));
+
     if (text.trim().startsWith('<')) {
-      console.error("Server trả về HTML:", text.substring(0, 300));
-      alert("Lỗi duyệt rút: Server trả về trang HTML.\nKiểm tra route /api/admin/approve/withdraw và token.");
+      alert("LỖI duyệt rút: Server trả về HTML!\nKiểm tra route /api/admin/approve/withdraw và token.");
       return;
     }
 
