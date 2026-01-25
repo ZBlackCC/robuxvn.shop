@@ -235,8 +235,8 @@ setInterval(createFirework, 5000);
         <option>Gate</option>
       </select>
       <p id="cardDiscount" style="text-align:center; font-weight:bold; color:#f1c40f; margin:10px 0;">Chiết khấu 20% - Thực nhận 0 Robux</p>
-      <input type="text" id="seri" placeholder="Số seri">
-      <input type="text" id="code" placeholder="Mã thẻ">
+      <input type="text" id="seri" placeholder="Số seri (chỉ số)">
+      <input type="text" id="code" placeholder="Mã thẻ (chỉ số)">
       <button onclick="sendCard()">NẠP NGAY</button>
     </div>
     <!-- LỊCH SỬ NẠP -->
@@ -514,31 +514,44 @@ function updateCardDiscount() {
 
 async function sendCard(){
   if(cardAmount===0) return alert("Chọn mệnh giá trước đã bro!");
-  const seri = document.getElementById("seri").value.trim();
-  const code = document.getElementById("code").value.trim();
+  const seriRaw = document.getElementById("seri").value.trim();
+  const codeRaw = document.getElementById("code").value.trim();
   const cardType = document.getElementById("cardType").value.toUpperCase();
 
-  // Lọc seri/code theo định dạng nhà mạng
+  // Lọc nghiêm ngặt: chỉ số, đúng độ dài theo nhà mạng
   let seriLength = 0;
   let codeLength = 0;
 
-  if (cardType === "VIETTEL" || cardType === "MOBIFONE" || cardType === "VINAPHONE") {
+  if (["VIETTEL", "VINAPHONE", "MOBIFONE"].includes(cardType)) {
     seriLength = 12;
     codeLength = 14;
-  } else if (cardType === "ZING" || cardType === "GATE") {
+  } else if (["ZING", "GATE"].includes(cardType)) {
     seriLength = 15;
     codeLength = 15;
+  } else {
+    return alert("Loại thẻ không hỗ trợ!");
   }
 
-  // Kiểm tra chỉ số (không chữ cái)
+  const seri = seriRaw.replace(/\s/g, ''); // bỏ khoảng trắng
+  const code = codeRaw.replace(/\s/g, '');
+
+  if (seri !== seriRaw || code !== codeRaw) {
+    alert("Seri hoặc mã thẻ có khoảng trắng hoặc ký tự lạ! Chỉ nhập số liên tục.");
+    return;
+  }
+
   if (!/^\d+$/.test(seri) || seri.length !== seriLength) {
-    return alert(`Sai định dạng seri ${cardType}: phải ${seriLength} số liên tục!`);
-  }
-  if (!/^\d+$/.test(code) || code.length !== codeLength) {
-    return alert(`Sai định dạng mã thẻ ${cardType}: phải ${codeLength} số liên tục!`);
+    alert(`Sai seri ${cardType}: phải đúng ${seriLength} số liên tục (không chữ, không khoảng trắng)!`);
+    return;
   }
 
-  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi!\nAdmin sẽ duyệt thủ công trong 1-3 phút!`);
+  if (!/^\d+$/.test(code) || code.length !== codeLength) {
+    alert(`Sai mã thẻ ${cardType}: phải đúng ${codeLength} số liên tục (không chữ, không khoảng trắng)!`);
+    return;
+  }
+
+  // Nếu đúng định dạng → gửi đơn
+  alert(`Thẻ ${cardAmount.toLocaleString()}đ đã gửi thành công!\nAdmin sẽ duyệt trong 1-3 phút.`);
   
   const robux = Math.floor(cardAmount / 10000 * robuxRate);
   await fetch("/api/deposit",{
