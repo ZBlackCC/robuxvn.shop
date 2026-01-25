@@ -75,118 +75,173 @@ async function adminLogin() {
   const u = document.getElementById("adminUser").value.trim();
   const p = document.getElementById("adminPass").value.trim();
 
-  const res = await fetch("/api/admin/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: u, password: p })
-  });
-  const data = await res.json();
+  try {
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: u, password: p })
+    });
 
-  if (data.token) {
-    adminToken = data.token;
-    localStorage.setItem("adminToken", adminToken);
-    document.getElementById("adminLogin").style.display = "none";
-    document.getElementById("mainPanel").style.display = "block";
-    load();
-  } else {
-    alert(data.error || "Đăng nhập thất bại!");
+    const data = await res.json();
+
+    if (data.token) {
+      adminToken = data.token;
+      localStorage.setItem("adminToken", adminToken);
+      document.getElementById("adminLogin").style.display = "none";
+      document.getElementById("mainPanel").style.display = "block";
+      load();
+    } else {
+      alert(data.error || "Sai tài khoản/mật khẩu!");
+    }
+  } catch (err) {
+    alert("Lỗi kết nối server: " + err.message);
   }
 }
 
 async function load(){
-  const res = await fetch("/api/admin/orders", {
-    headers: { "Authorization": adminToken }
-  });
-  const data = await res.json();
-  if (data.error) return alert(data.error);
+  try {
+    const res = await fetch("/api/admin/orders", {
+      headers: { "Authorization": adminToken }
+    });
 
-  // Phân biệt đơn nạp
-  const cardDeposits = data.deposits.filter(o => o.type === "card");
-  const bankDeposits = data.deposits.filter(o => o.type === "bank");
+    if (!res.ok) throw new Error("Lỗi tải dữ liệu: " + res.status);
 
-  document.getElementById("napCard").innerHTML = cardDeposits.map(o=>`
-    <div class="box">
-      <b>${o.user}</b> nạp thẻ ${o.amount.toLocaleString()}đ (+${o.robux} Robux)<br>
-      <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
-      <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
-    </div>
-  `).join("");
+    const data = await res.json();
+    if (data.error) return alert(data.error);
 
-  document.getElementById("napQR").innerHTML = bankDeposits.map(o=>`
-    <div class="box">
-      <b>${o.user}</b> nạp QR ${o.amount.toLocaleString()}đ (+${o.robux} Robux)<br>
-      <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
-      <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
-    </div>
-  `).join("");
+    // Phân biệt đơn nạp
+    const cardDeposits = data.deposits.filter(o => o.type === "card");
+    const bankDeposits = data.deposits.filter(o => o.type === "bank");
 
-  document.getElementById("rut").innerHTML = data.withdraws.map(o=>`
-    <div class="box">
-      <b>${o.user}</b> rút ${o.robux.toLocaleString()} Robux → ${o.to}<br>
-      <button class="approve" onclick="appRut(${o.id})">DUYỆT</button>
-      <button class="reject" onclick="rej(${o.id},'withdraw')">XOÁ</button>
-    </div>
-  `).join("");
+    document.getElementById("napCard").innerHTML = cardDeposits.map(o=>`
+      <div class="box">
+        <b>${o.user}</b> nạp thẻ ${o.amount.toLocaleString()}đ (+${o.robux} Robux)<br>
+        <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
+        <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
+      </div>
+    `).join("");
 
-  // Lịch sử duyệt đơn (dễ nhìn)
-  const historyRes = await fetch("/api/history/all", { headers: { "Authorization": adminToken } });
-  const historyData = await historyRes.json() || { deposits: [], withdraws: [] };
-  let historyHTML = "";
-  historyData.deposits.forEach(o => {
-    historyHTML += `<div class="box" style="background:#333;">
-      <b>${o.user}</b> nạp ${o.amount.toLocaleString()}đ (+${o.robux} Robux) - ${o.status.toUpperCase()}<br>
-      <small>${new Date(o.time).toLocaleString()}</small>
-    </div>`;
-  });
-  historyData.withdraws.forEach(o => {
-    historyHTML += `<div class="box" style="background:#333;">
-      <b>${o.user}</b> rút ${o.robux.toLocaleString()} Robux → ${o.to} - ${o.status.toUpperCase()}<br>
-      <small>${new Date(o.time).toLocaleString()}</small>
-    </div>`;
-  });
-  document.getElementById("history").innerHTML = historyHTML || "<div class='box'>Chưa có lịch sử</div>";
+    document.getElementById("napQR").innerHTML = bankDeposits.map(o=>`
+      <div class="box">
+        <b>${o.user}</b> nạp QR ${o.amount.toLocaleString()}đ (+${o.robux} Robux)<br>
+        <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
+        <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
+      </div>
+    `).join("");
+
+    document.getElementById("rut").innerHTML = data.withdraws.map(o=>`
+      <div class="box">
+        <b>${o.user}</b> rút ${o.robux.toLocaleString()} Robux → ${o.to}<br>
+        <button class="approve" onclick="appRut(${o.id})">DUYỆT</button>
+        <button class="reject" onclick="rej(${o.id},'withdraw')">XOÁ</button>
+      </div>
+    `).join("");
+
+    // Lịch sử duyệt đơn
+    const historyHTML = [...cardDeposits, ...bankDeposits, ...data.withdraws]
+      .map(o => `
+        <div class="box" style="background:#333;">
+          <b>${o.user}</b> ${o.type.includes('deposit') ? 'nạp' : 'rút'} 
+          ${o.amount ? o.amount.toLocaleString() + 'đ' : o.robux.toLocaleString() + ' Robux'} 
+          - ${o.status.toUpperCase()}<br>
+          <small>${new Date(o.time).toLocaleString()}</small>
+        </div>
+      `).join("") || "<div class='box'>Chưa có lịch sử</div>";
+
+    document.getElementById("history").innerHTML = historyHTML;
+
+  } catch (err) {
+    console.error("Lỗi load:", err);
+    alert("Lỗi tải dữ liệu: " + err.message);
+  }
 }
 
 async function appDep(id){
-  await fetch("/api/admin/approve/deposit",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-    body: JSON.stringify({id})
-  });
-  load();
+  try {
+    const res = await fetch("/api/admin/approve/deposit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": adminToken },
+      body: JSON.stringify({ id })
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      alert("Duyệt nạp thành công!");
+      load();
+    } else {
+      alert("Duyệt thất bại: " + (result.error || "Lỗi không rõ"));
+    }
+  } catch (err) {
+    alert("Lỗi duyệt nạp: " + err.message);
+  }
 }
 
 async function appRut(id){
-  await fetch("/api/admin/approve/withdraw",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-    body: JSON.stringify({id})
-  });
-  load();
+  try {
+    const res = await fetch("/api/admin/approve/withdraw", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": adminToken },
+      body: JSON.stringify({ id })
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      alert("Duyệt rút thành công!");
+      load();
+    } else {
+      alert("Duyệt thất bại: " + (result.error || "Lỗi không rõ"));
+    }
+  } catch (err) {
+    alert("Lỗi duyệt rút: " + err.message);
+  }
 }
 
-async function rej(id,type){
-  await fetch("/api/admin/reject",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-    body: JSON.stringify({id,type})
-  });
-  load();
+async function rej(id, type){
+  try {
+    const res = await fetch("/api/admin/reject", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": adminToken },
+      body: JSON.stringify({ id, type })
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      alert("Xóa đơn thành công!");
+      load();
+    } else {
+      alert("Xóa thất bại!");
+    }
+  } catch (err) {
+    alert("Lỗi xóa đơn: " + err.message);
+  }
 }
 
 async function setRate(){
   const rate = document.getElementById("newRate").value;
-  if(!rate) return alert("Nhập tỷ giá!");
-  await fetch("/api/admin/set_rate",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json", "Authorization": adminToken },
-    body: JSON.stringify({rate})
-  });
-  alert("Tỷ giá cập nhật thành công!");
-  document.getElementById("newRate").value = "";
+  if(!rate || isNaN(rate)) return alert("Nhập tỷ giá hợp lệ!");
+  
+  try {
+    const res = await fetch("/api/admin/set_rate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": adminToken },
+      body: JSON.stringify({ rate: parseInt(rate) })
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      alert("Tỷ giá cập nhật thành công!");
+      document.getElementById("newRate").value = "";
+    } else {
+      alert("Cập nhật thất bại!");
+    }
+  } catch (err) {
+    alert("Lỗi cập nhật tỷ giá: " + err.message);
+  }
 }
 
-setInterval(load, 5000); // Cập nhật nhanh hơn để thấy thay đổi
+// Load lần đầu và tự động cập nhật mỗi 5 giây
+if (adminToken) load();
+setInterval(() => { if (adminToken) load(); }, 5000);
 </script>
 </body>
 </html>
