@@ -114,11 +114,13 @@ async function load(){
 
     document.getElementById("napCard").innerHTML = cardDeposits.map(o=>`
       <div class="box">
-        <b>${o.user}</b> nạp thẻ ${o.amount.toLocaleString()}đ (+${o.robux} Robux)<br>
+        <b>${o.user}</b> nạp thẻ ${o.amount.toLocaleString()}đ<br>
+        Seri: ${o.seri || 'N/A'} | Code: ${o.code || 'N/A'} | Loại: ${o.cardType || 'N/A'}<br>
+        Chiết khấu áp dụng - Thực nhận ${o.robux} Robux<br>
         <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
         <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
       </div>
-    `).join("");
+    `).join("") || "<div class='box'>Không có đơn thẻ cào chờ duyệt</div>";
 
     document.getElementById("napQR").innerHTML = bankDeposits.map(o=>`
       <div class="box">
@@ -126,7 +128,7 @@ async function load(){
         <button class="approve" onclick="appDep(${o.id})">DUYỆT</button>
         <button class="reject" onclick="rej(${o.id},'deposit')">XOÁ</button>
       </div>
-    `).join("");
+    `).join("") || "<div class='box'>Không có đơn QR chờ duyệt</div>";
 
     document.getElementById("rut").innerHTML = data.withdraws.map(o=>`
       <div class="box">
@@ -134,58 +136,36 @@ async function load(){
         <button class="approve" onclick="appRut(${o.id})">DUYỆT</button>
         <button class="reject" onclick="rej(${o.id},'withdraw')">XOÁ</button>
       </div>
-    `).join("");
+    `).join("") || "<div class='box'>Không có đơn rút chờ duyệt</div>";
 
-    // Lịch sử duyệt đơn
-    const historyHTML = [...cardDeposits, ...bankDeposits, ...data.withdraws]
-      .map(o => `
-        <div class="box" style="background:#333;">
-          <b>${o.user}</b> ${o.type.includes('deposit') ? 'nạp' : 'rút'} 
-          ${o.amount ? o.amount.toLocaleString() + 'đ' : o.robux.toLocaleString() + ' Robux'} 
-          - ${o.status.toUpperCase()}<br>
-          <small>${new Date(o.time).toLocaleString()}</small>
-        </div>
-      `).join("") || "<div class='box'>Chưa có lịch sử</div>";
+    // Lịch sử duyệt đơn (dễ nhìn)
+    const allOrders = [...data.deposits, ...data.withdraws];
+    const historyHTML = allOrders.length === 0 ? "<div class='box'>Chưa có lịch sử</div>" : allOrders.map(o => `
+      <div class="box" style="background:#333;">
+        <b>${o.user}</b> ${o.type === "card" ? "nạp thẻ cào" : o.type === "bank" ? "nạp QR" : "rút"} 
+        ${o.amount ? o.amount.toLocaleString() + 'đ' : o.robux.toLocaleString() + ' Robux'} 
+        - ${o.status.toUpperCase()}<br>
+        <small>${new Date(o.time).toLocaleString()}</small>
+      </div>
+    `).join("");
 
     document.getElementById("history").innerHTML = historyHTML;
 
   } catch (err) {
     console.error("Lỗi load:", err);
-    alert("Lỗi tải dữ liệu: " + err.message + "\nKiểm tra console (F12)");
+    alert("Lỗi tải dữ liệu: " + err.message);
   }
 }
 
 async function appDep(id){
   try {
-    console.log("GỬI DUYỆT NẠP - ID:", id, "Token:", adminToken);
-
     const res = await fetch("/api/admin/approve/deposit", {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json", 
-        "Authorization": adminToken 
-      },
+      headers: { "Content-Type": "application/json", "Authorization": adminToken },
       body: JSON.stringify({ id })
     });
 
-    const text = await res.text();
-
-    console.log("DUYỆT NẠP - Status:", res.status);
-    console.log("DUYỆT NẠP - Response (20 ký tự đầu):", text.substring(0, 200));
-
-    if (text.trim().startsWith('<')) {
-      alert("LỖI: Server trả về HTML thay vì JSON!\nNguyên nhân:\n1. Route /api/admin/approve/deposit KHÔNG TỒN TẠI trong server.js\n2. Token admin_token KHÔNG KHỚP (login lại thử)\n3. Deploy chưa cập nhật code mới\n\nMở F12 → Console xem chi tiết response.");
-      return;
-    }
-
-    let result;
-    try {
-      result = JSON.parse(text);
-    } catch (e) {
-      alert("Lỗi parse JSON: " + e.message + "\nServer trả về: " + text.substring(0, 200));
-      return;
-    }
-
+    const result = await res.json();
     if (result.success) {
       alert("Duyệt nạp thành công!");
       load();
@@ -193,36 +173,19 @@ async function appDep(id){
       alert("Duyệt thất bại: " + (result.error || "Lỗi không rõ"));
     }
   } catch (err) {
-    console.error("Lỗi gọi API duyệt nạp:", err);
-    alert("Lỗi gọi API duyệt nạp: " + err.message + "\nKiểm tra console (F12)");
+    alert("Lỗi duyệt nạp: " + err.message);
   }
 }
 
 async function appRut(id){
   try {
-    console.log("GỬI DUYỆT RÚT - ID:", id, "Token:", adminToken);
-
     const res = await fetch("/api/admin/approve/withdraw", {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json", 
-        "Authorization": adminToken 
-      },
+      headers: { "Content-Type": "application/json", "Authorization": adminToken },
       body: JSON.stringify({ id })
     });
 
-    const text = await res.text();
-
-    console.log("DUYỆT RÚT - Status:", res.status);
-    console.log("DUYỆT RÚT - Response:", text.substring(0, 200));
-
-    if (text.trim().startsWith('<')) {
-      alert("LỖI duyệt rút: Server trả về HTML!\nKiểm tra route /api/admin/approve/withdraw và token.");
-      return;
-    }
-
-    const result = JSON.parse(text);
-
+    const result = await res.json();
     if (result.success) {
       alert("Duyệt rút thành công!");
       load();
@@ -230,7 +193,6 @@ async function appRut(id){
       alert("Duyệt thất bại: " + (result.error || "Lỗi không rõ"));
     }
   } catch (err) {
-    console.error("Lỗi duyệt rút:", err);
     alert("Lỗi duyệt rút: " + err.message);
   }
 }
@@ -257,13 +219,12 @@ async function rej(id, type){
 
 async function setRate(){
   const rate = document.getElementById("newRate").value;
-  if(!rate || isNaN(rate)) return alert("Nhập tỷ giá hợp lệ!");
-  
+  if(!rate) return alert("Nhập tỷ giá!");
   try {
     const res = await fetch("/api/admin/set_rate", {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": adminToken },
-      body: JSON.stringify({ rate: parseInt(rate) })
+      body: JSON.stringify({ rate })
     });
 
     const result = await res.json();
@@ -278,9 +239,7 @@ async function setRate(){
   }
 }
 
-// Load lần đầu và tự động cập nhật mỗi 5 giây
-if (adminToken) load();
-setInterval(() => { if (adminToken) load(); }, 5000);
+setInterval(load, 5000);
 </script>
 </body>
 </html>
