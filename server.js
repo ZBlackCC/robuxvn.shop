@@ -7,10 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Phục vụ file tĩnh từ thư mục gốc
 app.use(express.static("."));
 
-// Route gốc: trả về index.html
 app.get("/", (req, res) => {
   const filePath = path.join(process.cwd(), "index.html");
   res.sendFile(filePath, (err) => {
@@ -21,7 +19,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// Route cho admin.html
 app.get("/admin.html", (req, res) => {
   const filePath = path.join(process.cwd(), "admin.html");
   res.sendFile(filePath, (err) => {
@@ -32,9 +29,6 @@ app.get("/admin.html", (req, res) => {
   });
 });
 
-// =============================================
-// 📌 HÀM ĐỌC / GHI DATABASE
-// =============================================
 function db() {
     return JSON.parse(fs.readFileSync("database.json", "utf8"));
 }
@@ -42,7 +36,6 @@ function save(data) {
     fs.writeFileSync("database.json", JSON.stringify(data, null, 2));
 }
 
-// Function to check and update expired pending to failed (12 hours = 43200000 ms)
 function updateExpired(data, type) {
   const now = Date.now();
   const array = type === 'deposits' ? data.deposits : data.withdraws;
@@ -54,9 +47,6 @@ function updateExpired(data, type) {
   save(data);
 }
 
-// =============================================
-// 📌 ĐĂNG KÝ – ĐĂNG NHẬP (THÊM REF)
-// =============================================
 app.post("/api/register", (req, res) => {
     const { username, password, refCode } = req.body;
     const data = db();
@@ -90,9 +80,6 @@ app.post("/api/login", (req, res) => {
     });
 });
 
-// =============================================
-// 📌 NẠP TIỀN
-// =============================================
 app.post("/api/deposit", (req, res) => {
     const { user, amount, robux, type, seri, code, cardType } = req.body;
 
@@ -102,7 +89,7 @@ app.post("/api/deposit", (req, res) => {
         id: Date.now(),
         user,
         amount,
-        robux, // robux gốc (chưa chiết khấu)
+        robux,
         type,
         seri: seri || null,
         code: code || null,
@@ -117,9 +104,6 @@ app.post("/api/deposit", (req, res) => {
     res.json({ success: true, deposit: newDep });
 });
 
-// =============================================
-// 📌 RÚT ROBUX
-// =============================================
 app.post("/api/withdraw", (req, res) => {
     const { user, robux, to } = req.body;
 
@@ -148,9 +132,6 @@ app.post("/api/withdraw", (req, res) => {
     res.json({ success: true, withdraw: w });
 });
 
-// =============================================
-// 📌 LỊCH SỬ NẠP / RÚT
-// =============================================
 app.get("/api/history/:username", (req, res) => {
     const name = req.params.username;
     const data = db();
@@ -162,9 +143,6 @@ app.get("/api/history/:username", (req, res) => {
     });
 });
 
-// =============================================
-// 📌 ADMIN GET LIST (đơn chờ duyệt)
-// =============================================
 app.get("/api/admin/orders", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
         return res.json({ error: "Unauthorized" });
@@ -178,9 +156,6 @@ app.get("/api/admin/orders", (req, res) => {
     });
 });
 
-// =============================================
-// 📌 ADMIN DUYỆT NẠP (THÊM BONUS REF)
-// =============================================
 app.post("/api/admin/approve/deposit", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
         return res.json({ error: "Unauthorized" });
@@ -191,31 +166,23 @@ app.post("/api/admin/approve/deposit", (req, res) => {
     const d = data.deposits.find(x => x.id === id);
     if (!d) return res.json({ error: "Không tìm thấy đơn!" });
 
-    let realValue = d.amount; // giá trị thực sau chiết khấu
+    let finalRobux = d.robux; // mặc định QR không chiết khấu
 
-    // Tính chiết khấu theo loại thẻ
     if (d.type === "card" && d.cardType) {
       const cardTypeUpper = d.cardType.toUpperCase();
       let discountPercent = 0;
+      if (cardTypeUpper === "VIETTEL" || cardTypeUpper === "MOBIFONE") discountPercent = 20;
+      else if (cardTypeUpper === "VINAPHONE" || cardTypeUpper === "ZING" || cardTypeUpper === "GATE") discountPercent = 15;
 
-      if (cardTypeUpper === "VIETTEL" || cardTypeUpper === "MOBIFONE") {
-        discountPercent = 20; // 20%
-      } else if (cardTypeUpper === "VINAPHONE" || cardTypeUpper === "ZING" || cardTypeUpper === "GARENA") {
-        discountPercent = 15; // 15%
-      }
-
-      realValue = Math.floor(d.amount * (100 - discountPercent) / 100);
+      const realValue = Math.floor(d.amount * (100 - discountPercent) / 100);
+      finalRobux = Math.floor(realValue / 10000 * (data.rate || 65));
     }
 
-    // Tính finalRobux dựa trên realValue
-    const finalRobux = Math.floor(realValue / 10000 * (data.rate || 65));
-
     d.status = "success";
-    d.robux = finalRobux; // cập nhật robux cuối cùng vào đơn
-
+    d.robux = finalRobux; // lưu Robux thực nhận
     data.users[d.user].balance += finalRobux;
 
-    // Bonus ref nếu là đơn nạp đầu tiên
+    // Bonus ref (giữ nguyên)
     const user = data.users[d.user];
     if (user.referredBy) {
         const hasDepositBefore = data.deposits.some(dep => 
@@ -236,9 +203,6 @@ app.post("/api/admin/approve/deposit", (req, res) => {
     res.json({ success: true });
 });
 
-// =============================================
-// 📌 ADMIN DUYỆT RÚT
-// =============================================
 app.post("/api/admin/approve/withdraw", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
         return res.json({ error: "Unauthorized" });
@@ -256,9 +220,6 @@ app.post("/api/admin/approve/withdraw", (req, res) => {
     res.json({ success: true });
 });
 
-// =============================================
-// 📌 ADMIN XOÁ ĐƠN
-// =============================================
 app.post("/api/admin/reject", (req, res) => {
     if (req.headers.authorization !== "admin_token") {
         return res.json({ error: "Unauthorized" });
@@ -276,9 +237,6 @@ app.post("/api/admin/reject", (req, res) => {
     res.json({ success: true });
 });
 
-// =============================================
-// 📌 GET/SET TỶ GIÁ ROBUX
-// =============================================
 app.get("/api/rate", (req, res) => {
     const data = db();
     res.json({ rate: data.rate || 65 });
@@ -295,9 +253,6 @@ app.post("/api/admin/set_rate", (req, res) => {
     res.json({ success: true });
 });
 
-// =============================================
-// 📌 ADMIN LOGIN (meohia / 071103)
-// =============================================
 app.post("/api/admin/login", (req, res) => {
     const { username, password } = req.body;
     if (username === "meohia" && password === "071103") {
@@ -307,84 +262,5 @@ app.post("/api/admin/login", (req, res) => {
     }
 });
 
-// =============================================
- // 📌 THÊM API CHO KHIẾU NẠI
-// =============================================
-app.post("/api/complaint", (req, res) => {
-    const { user, text } = req.body;
-    const data = db();
-
-    const newComplaint = {
-        id: Date.now(),
-        user: user || 'admin',
-        text,
-        status: "pending",
-        time: Date.now()
-    };
-
-    data.complaints.push(newComplaint);
-    save(data);
-
-    res.json({ success: true });
-});
-
-// =============================================
-// 📌 ADMIN GET LIST KHIẾU NẠI
-// =============================================
-app.get("/api/admin/complaints", (req, res) => {
-    if (req.headers.authorization !== "admin_token") {
-        return res.json({ error: "Unauthorized" });
-    }
-    const data = db();
-    res.json(data.complaints.filter(c => c.status === "pending"));
-});
-
-// =============================================
-// 📌 ADMIN XOÁ KHIẾU NẠI (DUYỆT = XOÁ)
-// =============================================
-app.post("/api/admin/reject_complaint", (req, res) => {
-    if (req.headers.authorization !== "admin_token") {
-        return res.json({ error: "Unauthorized" });
-    }
-    const { id } = req.body;
-    const data = db();
-    data.complaints = data.complaints.filter(c => c.id !== id);
-    save(data);
-    res.json({ success: true });
-});
-
-// =============================================
-// 📌 ADMIN GET LIST REF ĐỂ DUYỆT HOA HỒNG
-// =============================================
-app.get("/api/admin/refs", (req, res) => {
-    if (req.headers.authorization !== "admin_token") {
-        return res.json({ error: "Unauthorized" });
-    }
-    const data = db();
-    const refs = Object.values(data.users).filter(u => u.referredBy);
-    res.json(refs);
-});
-
-// =============================================
-// 📌 ADMIN ADD BONUS HOA HỒNG REF THỦ CÔNG
-// =============================================
-app.post("/api/admin/add_bonus", (req, res) => {
-    if (req.headers.authorization !== "admin_token") {
-        return res.json({ error: "Unauthorized" });
-    }
-    const { user, bonus } = req.body;
-    const data = db();
-    if (data.users[user]) {
-      data.users[user].balance += bonus;
-      save(data);
-      res.json({ success: true });
-    } else {
-      res.json({ error: "Không tìm thấy user!" });
-    }
-});
-
-// =============================================
-// 📌 RUN SERVER (port cho Railway)
-// =============================================
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`SERVER RUNNING ON PORT ${port}`));
